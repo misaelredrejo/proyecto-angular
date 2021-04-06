@@ -1,0 +1,24 @@
+<button mat-button [matMenuTriggerFor]="main_menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      
+      <mat-menu #main_menu="matMenu">
+        <div *ngFor="let item of menu.MenuItems | keyvalue">
+          <div *ngIf="item.value.MenuItems; else elseBlock">
+            <button mat-raised-button color="primary" [matMenuTriggerFor]="menu.childMenu">
+              {{item.value.Link}}
+              <mat-icon>expand_more</mat-icon>
+            </button>
+            <app-menu-item #menu [items]="item.value.MenuItems"></app-menu-item>
+          </div>
+        
+        <ng-template #elseBlock>
+          <button mat-menu-item>
+              {{item.value.Link}}
+          </button>
+        </ng-template>
+      </div>
+      </mat-menu>
+
+
+      

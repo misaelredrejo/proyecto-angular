@@ -1,0 +1,18 @@
+<mat-menu #childMenu="matMenu" [overlapTrigger]="false">
+  <div *ngFor="let child of items | keyvalue">
+    
+    <div *ngIf="child.value.MenuItems; else elseBlock">
+      <button mat-menu-item color="primary" [matMenuTriggerFor]="menu.childMenu">
+        {{child.value.Link}}
+      </button>
+      <app-menu-item #menu [items]="child.value.MenuItems"></app-menu-item>
+    </div>
+
+    <ng-template #elseBlock>
+      <button mat-menu-item [routerLink]="child.route">
+        {{child.value.Link}}
+      </button>
+    </ng-template>
+  </div>
+</mat-menu>
+
