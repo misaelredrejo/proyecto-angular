@@ -1,5 +1,5 @@
-import {MediaMatcher} from '@angular/cdk/layout';
-import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
+import { MediaMatcher } from '@angular/cdk/layout';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { ApiService } from '../shared/api.service';
 
 @Component({
@@ -10,46 +10,8 @@ import { ApiService } from '../shared/api.service';
 export class NavComponent implements OnDestroy {
   menu: any = [];
   literales: any = [];
-  titulo: string = "Configuración NPR"
-
-
-  mobileQuery: MediaQueryList;
-
-  private _mobileQueryListener: () => void;
-
-  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,private apiService: ApiService) {
-    this.mobileQuery = media.matchMedia('(max-width: 600px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener);
-    
-  }
-
-  ngOnDestroy(): void {
-    this.mobileQuery.removeListener(this._mobileQueryListener);
-  }
-
-  ngOnInit() {
-    //this.titulo = localStorage.getItem("titulo");
-
-    this.apiService
-      .getJSON()
-      .subscribe(
-        data => {
-          this.menu = data['menu'];
-          this.literales = data['literales'];
-          console.log(data);
-        },
-        err => {
-          console.log(err);
-        }
-      );
-  }
-
-  changeTitle(codigo: string, literal: string): void {
-    this.titulo = codigo + " - " + literal;
-    //localStorage.setItem("titulo", this.titulo);
-  }
-
+  titulo: string = "Configuración NPR";
+  appitemsInsert = [];
 
   appitems = [
     {
@@ -58,7 +20,7 @@ export class NavComponent implements OnDestroy {
       items: [
         {
           label: 'Item 1.1',
-          link: '/item-1-1',
+          link: '/content/13_AV',
           faIcon: 'fab fa-accusoft'
         },
         {
@@ -117,13 +79,111 @@ export class NavComponent implements OnDestroy {
   config = {
     paddingAtStart: true,
     classname: 'my-custom-class',
-    listBackgroundColor: 'rgb(208, 241, 239)',
     fontColor: 'rgb(8, 54, 71)',
-    backgroundColor: 'rgb(208, 241, 239)',
-    selectedListFontColor: 'red',
   };
 
-  selectedItem(event: any): void {
+
+  mobileQuery: MediaQueryList;
+
+  private _mobileQueryListener: () => void;
+
+  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private apiService: ApiService) {
+    this.mobileQuery = media.matchMedia('(max-width: 600px)');
+    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+    this.mobileQuery.addListener(this._mobileQueryListener);
+
+  }
+
+  ngOnDestroy(): void {
+    this.mobileQuery.removeListener(this._mobileQueryListener);
+  }
+
+  ngOnInit() {
+    //this.titulo = localStorage.getItem("titulo");
+
+    this.apiService
+      .getJSON()
+      .subscribe(
+        data => {
+          this.menu = data['menu'];
+          this.literales = data['literales'];
+          console.log(data);
+
+          /* Rellenar menu */
+          
+          for (let key in this.menu['MenuItems']) {
+            let value = this.menu['MenuItems'][key];
+            let item = {label: value['Link'], titulo: value['Link'] + ' - ' + this.literales[value['Link']]  };
+
+            if (value['MenuItems']) {
+              item['items'] = [{label:'subnivel'}];
+              let itemsSubnivel = [];
+              for (let key1 in value['MenuItems']) {
+                let value1 = value['MenuItems'][key1];
+                itemsSubnivel.push({label: value1['Link'], link: "/content/"+value1['Link']})
+              }
+              item['items'] = itemsSubnivel;
+              
+            } else {
+              item['link'] = "/content/"+value['Link'];
+            }
+            this.appitemsInsert.push(item);
+          }
+          /*
+          for (let key in this.menu['MenuItems']) {
+            let value = this.menu['MenuItems'][key];
+            let item = {label: value['Link'], titulo: value['Link'] + ' - ' + this.literales[value['Link']]  };
+            if (value['MenuItems']) {
+              item['items'] = this.getItem(value['MenuItems']);
+            } else {
+              item['link'] = "/content/"+value['Link'];
+            }
+            this.appitemsInsert.push(item);
+          }*/
+
+          this.appitems = this.appitemsInsert;
+
+        },
+        err => {
+          console.log(err);
+        }
+      );
+
+
+
+  }
+
+  changeTitle(codigo: string, literal: string): void {
+    this.titulo = codigo + " - " + literal;
+    //localStorage.setItem("titulo", this.titulo);
+  }
+
+
+  
+
+  selectedItem(item: any): void {
+    this.titulo = item['titulo'];
+  }
+
+  
+  getItem(menuItem: any): any {
+
+    if (menuItem['MenuItems']) {
+      let items = [];
+      for (let key in menuItem['MenuItems']) {
+        let value = this.menu['MenuItems'][key];
+        if (value['MenuItems']) {
+          items.push(this.getItem(value['MenuItems']));
+        }else {
+          items.push({label: value['Link'], link: '/content/' + value['Link']});
+        }
+      }
+      return items;
+    } else {
+      return {label: menuItem['Link'], link: '/content/' + menuItem['Link']};
+    }
+
+
 
   }
 

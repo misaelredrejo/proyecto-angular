@@ -16,6 +16,7 @@ export class ContentComponent implements OnInit {
   todoEsquema: any[] = [];
   literal: string;
   esquema: any[] = [];
+  panelOpenState = false;
 
   displayedColumns: string[] = ['name', 'value'];
   dataSource = [

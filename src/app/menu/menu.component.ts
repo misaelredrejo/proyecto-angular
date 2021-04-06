@@ -10,6 +10,7 @@ export class MenuComponent implements OnInit {
 
   jsonObject: any = [];
   menu: any = [];
+  literales: any = [];
 
   constructor(private apiService: ApiService) { }
 
@@ -22,6 +23,7 @@ export class MenuComponent implements OnInit {
         data => {
           this.jsonObject = data;
           this.menu = this.jsonObject['menu'];
+          this.literales = this.jsonObject['literales'];
           console.log(data);
         },
         err => {

@@ -17,12 +17,12 @@
         <mat-cell *matCellDef="let element">
           {{element.value}}
           Button with a badge on the left
-          <button mat-raised-button matTooltip="Ver comentarios" color="primary" matBadge="8" matBadgePosition="before" matBadgeColor="accent"
-            class="ml-2" (click)="showAlertComments()">
+          <button mat-raised-button matTooltip="Ver comentarios" color="primary" matBadge="8" matBadgePosition="before"
+            matBadgeColor="accent" class="ml-2" (click)="showAlertComments()">
             <mat-icon>comment</mat-icon>
           </button>
-          <button mat-icon-button matTooltip="Añadir" aria-label="Example icon button with a home icon" (click)="showAlertInsert()"
-            class="ml-1">
+          <button mat-icon-button matTooltip="Añadir" aria-label="Example icon button with a home icon"
+            (click)="showAlertInsert()" class="ml-1">
             <mat-icon>add</mat-icon>
           </button>
         </mat-cell>
@@ -40,6 +40,7 @@
 
 
     <div class="container">
+      <!--
       <mat-card class="example-card">
         <mat-card-header>
           <mat-card-title>Propiedades</mat-card-title>
@@ -62,6 +63,34 @@
           </button>
         </mat-card-actions>
       </mat-card>
+      -->
+
+
+
+      <mat-accordion>
+        <mat-expansion-panel *ngFor="let item of esquema | keyvalue" hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{item.key}}
+            </mat-panel-title>
+            <mat-panel-description>
+              This is a summary of the content
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div *ngIf="item.key == 'properties'; else elseBlock">
+            <mat-list>
+              <mat-list-item *ngFor="let property of item.value | keyvalue"> {{ property.value | json }} </mat-list-item>
+            </mat-list>
+          </div>
+          <ng-template #elseBlock>
+            <p>{{ item.value }}</p>
+          </ng-template>
+
+        </mat-expansion-panel>
+      </mat-accordion>
+
+
+
     </div>
 
 
