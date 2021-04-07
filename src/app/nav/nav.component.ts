@@ -5,7 +5,7 @@ import { ApiService } from '../shared/api.service';
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.sass', './nav.component.css']
+  styleUrls: ['./nav.component.css']
 })
 export class NavComponent implements OnDestroy {
   menu: any = [];
