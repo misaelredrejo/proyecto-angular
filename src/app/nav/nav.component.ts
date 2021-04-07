@@ -14,66 +14,6 @@ export class NavComponent implements OnDestroy {
   appitemsInsert = [];
 
   appitems = [
-    {
-      label: 'Item 1 (with Font awesome icon)',
-      faIcon: 'fab fa-500px',
-      items: [
-        {
-          label: 'Item 1.1',
-          link: '/content/13_AV',
-          faIcon: 'fab fa-accusoft'
-        },
-        {
-          label: 'Item 1.2',
-          faIcon: 'fab fa-accessible-icon',
-          items: [
-            {
-              label: 'Item 1.2.1',
-              link: '/item-1-2-1',
-              faIcon: 'fas fa-allergies'
-            },
-            {
-              label: 'Item 1.2.2',
-              faIcon: 'fas fa-ambulance',
-              items: [
-                {
-                  label: 'Item 1.2.2.1',
-                  link: 'item-1-2-2-1',
-                  faIcon: 'fas fa-anchor'
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      label: 'Item 2',
-      icon: 'alarm',
-      items: [
-        {
-          label: 'Item 2.1',
-          link: '/item-2-1',
-          icon: 'favorite'
-        },
-        {
-          label: 'Item 2.2',
-          link: '/item-2-2',
-          icon: 'favorite_border'
-        }
-      ]
-    },
-    {
-      label: 'Item 3',
-      link: '/item-3',
-      icon: 'offline_pin'
-    },
-    {
-      label: 'Item 4',
-      link: '/item-4',
-      icon: 'star_rate',
-      hidden: true
-    }
   ];
 
   config = {
@@ -107,41 +47,22 @@ export class NavComponent implements OnDestroy {
         data => {
           this.menu = data['menu'];
           this.literales = data['literales'];
-          console.log(data);
 
           /* Rellenar menu */
           
           for (let key in this.menu['MenuItems']) {
             let value = this.menu['MenuItems'][key];
-            let item = {label: value['Link'], titulo: value['Link'] + ' - ' + this.literales[value['Link']]  };
-
+            let labelText = value['Link'] + ' - ' + this.literales[value['Link']];
+            let title = labelText;
+            labelText = (labelText.length > 30 ? labelText.substring(0, 30) + '...' : labelText);
             if (value['MenuItems']) {
-              item['items'] = [{label:'subnivel'}];
-              let itemsSubnivel = [];
-              for (let key1 in value['MenuItems']) {
-                let value1 = value['MenuItems'][key1];
-                itemsSubnivel.push({label: value1['Link'], link: "/content/"+value1['Link']})
-              }
-              item['items'] = itemsSubnivel;
-              
+              this.appitemsInsert.push({ label: labelText, items: this.getItem(value['MenuItems']) });
             } else {
-              item['link'] = "/content/"+value['Link'];
+              this.appitemsInsert.push({ label: labelText, link: "/content/" + value['Link'], titulo: title });
             }
-            this.appitemsInsert.push(item);
           }
-          /*
-          for (let key in this.menu['MenuItems']) {
-            let value = this.menu['MenuItems'][key];
-            let item = {label: value['Link'], titulo: value['Link'] + ' - ' + this.literales[value['Link']]  };
-            if (value['MenuItems']) {
-              item['items'] = this.getItem(value['MenuItems']);
-            } else {
-              item['link'] = "/content/"+value['Link'];
-            }
-            this.appitemsInsert.push(item);
-          }*/
-
           this.appitems = this.appitemsInsert;
+          
 
         },
         err => {
@@ -153,10 +74,11 @@ export class NavComponent implements OnDestroy {
 
   }
 
+  /*
   changeTitle(codigo: string, literal: string): void {
     this.titulo = codigo + " - " + literal;
     //localStorage.setItem("titulo", this.titulo);
-  }
+  }*/
 
 
   
@@ -167,24 +89,19 @@ export class NavComponent implements OnDestroy {
 
   
   getItem(menuItem: any): any {
-
-    if (menuItem['MenuItems']) {
-      let items = [];
-      for (let key in menuItem['MenuItems']) {
-        let value = this.menu['MenuItems'][key];
-        if (value['MenuItems']) {
-          items.push(this.getItem(value['MenuItems']));
-        }else {
-          items.push({label: value['Link'], link: '/content/' + value['Link']});
-        }
+    let items = [];
+    for (let key in menuItem) {
+      let value = menuItem[key];
+      let labelText = value['Link'] + ' - ' + this.literales[value['Link']];
+      let title = labelText;
+      labelText = (labelText.length > 30 ? labelText.substring(0, 30) + '...' : labelText);
+      if (value['MenuItems']) {
+        items.push({ label: labelText, items: this.getItem(value['MenuItems']) });
+      } else {
+        items.push({ label: labelText, link: "/content/" + value['Link'], titulo: title });
       }
-      return items;
-    } else {
-      return {label: menuItem['Link'], link: '/content/' + menuItem['Link']};
     }
-
-
-
+    return items;
   }
 
 
