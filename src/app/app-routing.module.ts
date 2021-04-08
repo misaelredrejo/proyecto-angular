@@ -3,7 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { ContentComponent } from './content/content.component';
 
 const routes: Routes = [
-  { path: 'content/:link', component: ContentComponent }
+  {
+    path: 'content/:link',
+    component: ContentComponent
+  }
 ];
 
 @NgModule({

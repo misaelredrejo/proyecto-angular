@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../shared/api.service';
 import Swal from 'sweetalert2';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-content',
@@ -10,8 +10,8 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
   styleUrls: ['./content.component.css'],
   animations: [
     trigger('detailExpand', [
-      state('collapsed', style({height: '0px', minHeight: '0'})),
-      state('expanded', style({height: '*'})),
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ]
@@ -23,12 +23,11 @@ export class ContentComponent implements OnInit {
   todoEsquema: any[] = [];
   esquema: any[] = [];
   literal: string;
-  displayedColumns: string[] = ['name', 'value'];
   columnsToDisplay: string[] = ['name', 'value'];
   dataSource = [
   ];
   newDataSource = [];
-  
+
 
   constructor(
     private route: ActivatedRoute,
@@ -38,34 +37,40 @@ export class ContentComponent implements OnInit {
 
   ngOnInit(): void {
     this.apiService
-          .getJSON()
-          .subscribe(
-            data => {
-              this.literales = data["literales"];
-              this.todoEsquema = data["esquema"];
+      .getJSON()
+      .subscribe(
+        data => {
+          this.literales = data["literales"];
+          this.todoEsquema = data["esquema"];
 
-              
-              this.route.params.subscribe(params => {
-                this.link = params['link'];
-                this.literal = this.literales[this.link];
-                this.esquema = this.todoEsquema[this.link];
-                this.newDataSource = [];
-                for (let [key, value] of Object.entries(this.esquema["properties"])) {
-                  let ref:string = value['$ref'];
-                  this.newDataSource.push({name: key, value: value["$ref"], detail: this.todoEsquema[ref.substring(2)]});
-                }
-                this.dataSource = this.newDataSource;
-             });
 
-            },
-            err => {
-              console.log(err);
+          this.route.params.subscribe(params => {
+            this.link = params['link'];
+            this.literal = this.literales[this.link];
+            for (let key in this.todoEsquema) {
+              let value = this.todoEsquema[key];
+              if (value['path'] == "/" + this.link) {
+                this.esquema = value;
+              }
             }
-          );
-    
-    
+            //this.esquema = this.todoEsquema[this.link];
+            this.newDataSource = [];
+            for (let [key, value] of Object.entries(this.esquema["properties"])) {
+              let ref: string = value['$ref'];
+              this.newDataSource.push({ name: key, value: ref, detail: this.todoEsquema[ref.substring(2)] });
+            }
+            this.dataSource = this.newDataSource;
+          });
+
+        },
+        err => {
+          console.log(err);
+        }
+      );
+
+
   }
-  
+
   async showAlertInsert(): Promise<void> {
     const { value: text } = await Swal.fire({
       input: 'textarea',
@@ -76,7 +81,7 @@ export class ContentComponent implements OnInit {
       },
       showCancelButton: true
     })
-    
+
     if (text) {
       //Swal.fire(text)
       // Lo guardo
@@ -94,6 +99,48 @@ export class ContentComponent implements OnInit {
       `
     }
     );
+  }
+
+  updateTable(ref: string): void {
+    console.log(ref);
+    this.esquema = this.todoEsquema[ref.substring(2)];
+    console.log(this.esquema);
+    if (this.esquema["properties"]) {
+      this.newDataSource = [];
+      for (let [key, value] of Object.entries(this.esquema["properties"])) {
+        let ref: string = value['$ref'];
+        this.newDataSource.push({ name: key, value: ref, detail: this.todoEsquema[ref.substring(2)] });
+      }
+      this.dataSource = this.newDataSource;
+    }
+
+  }
+
+  nextPath(path: string, ref: string): void {
+    let fullPath = path + ref.substring(1);
+    for (let key in this.todoEsquema) {
+      let value = this.todoEsquema[key];
+      if (value['path'] == fullPath) {
+        this.esquema = value;
+      }
+    }
+    this.literal = this.literales[ref.substring(2)]
+  }
+
+  backPath(path: string): void {
+    let pathArray = path.split("/");
+    let fullPath = "";
+    for (var i = 1; i < pathArray.length - 1; i++) {
+      fullPath += '/'+pathArray[i]
+    }
+    for (let key in this.todoEsquema) {
+      let value = this.todoEsquema[key];
+      if (value['path'] == fullPath) {
+        this.esquema = value;
+      }
+    }
+    this.literal = this.literales[pathArray[pathArray.length -2]]
+
   }
 
 }
