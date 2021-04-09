@@ -17,7 +17,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
   ]
 })
 export class ContentComponent implements OnInit {
-
+  migasDePan: any[] = [];
   link: string;
   literales: any[] = [];
   todoEsquema: any[] = [];
@@ -46,6 +46,7 @@ export class ContentComponent implements OnInit {
 
           this.route.params.subscribe(params => {
             this.link = params['link'];
+            this.migasDePan = this.link.split("/");
             this.literal = this.literales[this.link];
             for (let key in this.todoEsquema) {
               let value = this.todoEsquema[key];
@@ -57,7 +58,7 @@ export class ContentComponent implements OnInit {
             this.newDataSource = [];
             for (let [key, value] of Object.entries(this.esquema["properties"])) {
               let ref: string = value['$ref'];
-              this.newDataSource.push({ name: key, value: ref, detail: this.todoEsquema[ref.substring(2)] });
+              this.newDataSource.push({ name: key  + ' - ' + this.literales[key], value: ref, detail: this.todoEsquema[ref.substring(2)] });
             }
             this.dataSource = this.newDataSource;
           });
@@ -118,6 +119,7 @@ export class ContentComponent implements OnInit {
 
   nextPath(path: string, ref: string): void {
     let fullPath = path + ref.substring(1);
+    this.migasDePan = fullPath.substring(1).split("/");
     for (let key in this.todoEsquema) {
       let value = this.todoEsquema[key];
       if (value['path'] == fullPath) {
@@ -133,6 +135,7 @@ export class ContentComponent implements OnInit {
     for (var i = 1; i < pathArray.length - 1; i++) {
       fullPath += '/'+pathArray[i]
     }
+    this.migasDePan = fullPath.substring(1).split("/");
     for (let key in this.todoEsquema) {
       let value = this.todoEsquema[key];
       if (value['path'] == fullPath) {

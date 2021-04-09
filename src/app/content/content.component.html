@@ -22,7 +22,7 @@
 
     <div class="container w-75 m-auto">
       <div class="row mt-4">
-
+        <div *ngFor="let item of migasDePan;let i=index;"><span *ngIf="i > 0">></span><button mat-button>{{item}}</button></div>
         <mat-card class="example-card">
           <mat-card-header>
             <mat-card-title>{{literal}}</mat-card-title>
@@ -30,22 +30,25 @@
 
           <mat-card-content>
 
-            <div *ngFor="let item of esquema | keyvalue">
+            <div *ngIf="esquema">
+              <div *ngFor="let item of esquema | keyvalue">
 
-              <p *ngIf="item.key != 'properties'">
-
-                <b>{{ item.key }}</b>: {{ item.value  }}
-                <button mat-icon-button matTooltip="Ver comentarios" matBadge="8" matBadgeColor="accent" class="ml-2"
-                  (click)="showAlertComments()">
-                  <mat-icon>comment</mat-icon>
-                </button>
-                <button mat-icon-button matTooltip="Añadir" aria-label="Example icon button with a home icon"
-                  (click)="showAlertInsert()" class="ml-1">
-                  <mat-icon>add</mat-icon>
-                </button>
-              </p>
-
+                <p *ngIf="item.key != 'properties'">
+  
+                  <b>{{ item.key }}</b>: {{ item.value  }}
+                  <button mat-icon-button matTooltip="Ver comentarios" class="ml-2"
+                    (click)="showAlertComments()"> <!--matBadge="8" matBadgeColor="accent"-->
+                    <mat-icon>comment</mat-icon>
+                  </button>
+                  <button mat-icon-button matTooltip="Añadir" aria-label="Example icon button with a home icon"
+                    (click)="showAlertInsert()" class="ml-1">
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </p>
+  
+              </div>
             </div>
+            
 
           </mat-card-content>
           <mat-card-actions>
@@ -56,7 +59,7 @@
       </div>
 
       <div class="row">
-        <button mat-raised-button color="accent" (click)="backPath(esquema['path'])">Atrás</button>
+        <button mat-raised-button color="accent" (click)="backPath(esquema['path'])">Volver</button>
       </div>
 
       <div class="row mt-4 mb-5" *ngIf="esquema['properties']">
@@ -65,7 +68,7 @@
           <div mat-subheader>Propiedades</div>
           <mat-list-item *ngFor="let obj of esquema['properties'] | keyvalue">
             <mat-icon mat-list-icon>folder</mat-icon>
-            <div mat-line>{{obj.value['$ref']}} <button mat-raised-button color="primary"
+            <div mat-line>{{obj.value['$ref']}} {{literales[obj.key]}} <button mat-raised-button color="primary"
                 (click)="nextPath(esquema['path'], obj.value['$ref'])">{{obj.value['$ref']}}</button></div>
           </mat-list-item>
         </mat-list>
