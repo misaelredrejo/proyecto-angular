@@ -1,8 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+
 import { ApiService } from '../shared/api.service';
-import Swal from 'sweetalert2';
+
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { NestedTreeControl } from '@angular/cdk/tree';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { DialogCommentsComponent } from './dialog-comments/dialog-comments.component';
+
+export interface DialogData {
+  comments: any[];
+}
+
+interface EsquemaNode {
+  name: string;
+  literal: string;
+  children?: EsquemaNode[];
+  esquema?: any;
+}
 
 @Component({
   selector: 'app-content',
@@ -17,50 +35,45 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
   ]
 })
 export class ContentComponent implements OnInit {
-  migasDePan: any[] = [];
   link: string;
-  literales: any[] = [];
+  literaleses: any[] = [];
   todoEsquema: any[] = [];
   esquema: any[] = [];
   literal: string;
-  columnsToDisplay: string[] = ['name', 'value'];
-  dataSource = [
-  ];
-  newDataSource = [];
+
+  treeControl = new NestedTreeControl<EsquemaNode>(node => node.children);
+  dataSource = new MatTreeNestedDataSource<EsquemaNode>();
 
 
   constructor(
     private route: ActivatedRoute,
-    private apiService: ApiService
+    private apiService: ApiService,
+    public dialog: MatDialog
   ) {
   }
+  hasChild = (_: number, node: EsquemaNode) => !!node.children && node.children.length > 0;
 
   ngOnInit(): void {
     this.apiService
       .getJSON()
       .subscribe(
         data => {
-          this.literales = data["literales"];
+          this.literaleses = data["literaleses"];
           this.todoEsquema = data["esquema"];
-
 
           this.route.params.subscribe(params => {
             this.link = params['link'];
-            this.migasDePan = this.link.split("/");
-            this.literal = this.literales[this.link];
-            for (let key in this.todoEsquema) {
-              let value = this.todoEsquema[key];
-              if (value['path'] == "/" + this.link) {
-                this.esquema = value;
-              }
+            this.literal = (this.literaleses[this.link] ? this.literaleses[this.link] : this.literaleses[this.link.toLowerCase()]);
+            this.esquema = this.todoEsquema[this.link];
+            let dataInsert: EsquemaNode[] = []
+            if (this.esquema['properties']) {
+              dataInsert = this.getChildren(this.esquema['properties']);
+            } else {
+              dataInsert.push({ name: this.link, esquema: this.esquema, literal: this.literal});
             }
-            //this.esquema = this.todoEsquema[this.link];
-            this.newDataSource = [];
-            for (let [key, value] of Object.entries(this.esquema["properties"])) {
-              let ref: string = value['$ref'];
-              this.newDataSource.push({ name: key  + ' - ' + this.literales[key], value: ref, detail: this.todoEsquema[ref.substring(2)] });
-            }
-            this.dataSource = this.newDataSource;
+            
+
+            this.dataSource.data = dataInsert;
           });
 
         },
@@ -68,82 +81,31 @@ export class ContentComponent implements OnInit {
           console.log(err);
         }
       );
-
-
   }
 
-  async showAlertInsert(): Promise<void> {
-    const { value: text } = await Swal.fire({
-      input: 'textarea',
-      inputLabel: 'Agregar comentario',
-      inputPlaceholder: 'Mensaje...',
-      inputAttributes: {
-        'aria-label': 'Mensaje'
-      },
-      showCancelButton: true
-    })
-
-    if (text) {
-      //Swal.fire(text)
-      // Lo guardo
-    }
-  }
-
-
-  showAlertComments() {
-    Swal.fire({
-      title: 'Comentarios',
-      html: `
-      -Blabla1
-      <br/>
-      -Blabla2
-      `
-    }
-    );
-  }
-
-  updateTable(ref: string): void {
-    console.log(ref);
-    this.esquema = this.todoEsquema[ref.substring(2)];
-    console.log(this.esquema);
-    if (this.esquema["properties"]) {
-      this.newDataSource = [];
-      for (let [key, value] of Object.entries(this.esquema["properties"])) {
-        let ref: string = value['$ref'];
-        this.newDataSource.push({ name: key, value: ref, detail: this.todoEsquema[ref.substring(2)] });
-      }
-      this.dataSource = this.newDataSource;
-    }
-
-  }
-
-  nextPath(path: string, ref: string): void {
-    let fullPath = path + ref.substring(1);
-    this.migasDePan = fullPath.substring(1).split("/");
-    for (let key in this.todoEsquema) {
-      let value = this.todoEsquema[key];
-      if (value['path'] == fullPath) {
-        this.esquema = value;
+  getChildren(properties: any) {
+    let children: EsquemaNode[] = [];
+    for (let key in properties) {
+      let literal = (this.literaleses[key] ? this.literaleses[key] : this.literaleses[key.toLowerCase()]);
+      if (this.todoEsquema[key]['properties']) {
+        children.push({ name: key, children: this.getChildren(this.todoEsquema[key]['properties']), literal: literal });
+      } else {
+        children.push({ name: key, esquema: this.todoEsquema[key], literal: literal });
       }
     }
-    this.literal = this.literales[ref.substring(2)]
+
+    return children;
   }
 
-  backPath(path: string): void {
-    let pathArray = path.split("/");
-    let fullPath = "";
-    for (var i = 1; i < pathArray.length - 1; i++) {
-      fullPath += '/'+pathArray[i]
-    }
-    this.migasDePan = fullPath.substring(1).split("/");
-    for (let key in this.todoEsquema) {
-      let value = this.todoEsquema[key];
-      if (value['path'] == fullPath) {
-        this.esquema = value;
+  openDialog() {
+    this.dialog.open(DialogCommentsComponent, {
+      data: {
+        comments: [
+          'Esto es una prueba de comentario',
+          'Otro comentariocomentariocomentariocomentariocomentario'
+        ]
       }
-    }
-    this.literal = this.literales[pathArray[pathArray.length -2]]
-
+    });
   }
 
 }

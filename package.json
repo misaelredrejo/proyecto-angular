@@ -11,7 +11,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "~11.2.7",
+    "@angular/animations": "^11.2.9",
     "@angular/cdk": "^11.2.6",
     "@angular/common": "~11.2.7",
     "@angular/compiler": "~11.2.7",
@@ -26,6 +26,7 @@
     "@sweetalert2/theme-material-ui": "^4.0.3",
     "bootstrap": "^4.5.0",
     "ng-material-multilevel-menu": "^5.5.3",
+    "ngx-toastr": "^13.2.1",
     "rxjs": "~6.6.0",
     "sweetalert2": "^10.15.7",
     "tslib": "^2.0.0",

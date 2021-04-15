@@ -12,8 +12,14 @@ import { MenuItemComponent } from './menu/menu-item/menu-item.component';
 import { ContentComponent } from './content/content.component';
 import { AppRoutingModule } from './app-routing.module';
 import { FooterComponent } from './footer/footer.component';
+import { ToastrModule } from 'ngx-toastr';
 
 import { MaterialModule } from './shared/material/material.module';
+
+
+import { HomeComponent } from './home/home.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { DialogCommentsComponent } from './content/dialog-comments/dialog-comments.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +28,9 @@ import { MaterialModule } from './shared/material/material.module';
     MenuComponent,
     MenuItemComponent,
     ContentComponent,
-    FooterComponent
+    FooterComponent,
+    HomeComponent,
+    DialogCommentsComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +38,9 @@ import { MaterialModule } from './shared/material/material.module';
     BrowserAnimationsModule,
     NgbModule,
     AppRoutingModule,
-    MaterialModule
+    MaterialModule,
+    ToastrModule.forRoot(),
+    FormsModule, ReactiveFormsModule
 
   ],
   providers: [],

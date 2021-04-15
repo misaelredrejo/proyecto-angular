@@ -3,12 +3,10 @@
     <div class="my-container">
       <div class="content">
         <h4>{{ literal }}</h4>
-        <button mat-icon-button matTooltip="Ver comentarios" matBadge="8" matBadgeColor="accent" class="ml-2"
-          (click)="showAlertComments()">
+        <button mat-icon-button matTooltip="Ver comentarios" matBadge="8" matBadgeColor="accent" class="ml-2">
           <mat-icon>comment</mat-icon>
         </button>
-        <button mat-icon-button matTooltip="Añadir" aria-label="Example icon button with a home icon"
-          (click)="showAlertInsert()" class="ml-1">
+        <button mat-icon-button matTooltip="Añadir" aria-label="Example icon button with a home icon" class="ml-1">
           <mat-icon>add</mat-icon>
         </button>
       </div>
@@ -21,110 +19,55 @@
 
 
     <div class="container w-75 m-auto">
-      <div class="row mt-4">
-        <div *ngFor="let item of migasDePan;let i=index;"><span *ngIf="i > 0">></span><button mat-button>{{item}}</button></div>
-        <mat-card class="example-card">
-          <mat-card-header>
-            <mat-card-title>{{literal}}</mat-card-title>
-          </mat-card-header>
 
-          <mat-card-content>
+      
+      <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
+        <!-- This is the tree node template for leaf nodes -->
+        <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+          <li class="mat-tree-node">
+            <!-- use a disabled button to provide padding for tree leaf -->
+            <button mat-icon-button disabled></button>
 
-            <div *ngIf="esquema">
-              <div *ngFor="let item of esquema | keyvalue">
-
-                <p *ngIf="item.key != 'properties'">
-  
-                  <b>{{ item.key }}</b>: {{ item.value  }}
-                  <button mat-icon-button matTooltip="Ver comentarios" class="ml-2"
-                    (click)="showAlertComments()"> <!--matBadge="8" matBadgeColor="accent"-->
-                    <mat-icon>comment</mat-icon>
-                  </button>
-                  <button mat-icon-button matTooltip="Añadir" aria-label="Example icon button with a home icon"
-                    (click)="showAlertInsert()" class="ml-1">
-                    <mat-icon>add</mat-icon>
-                  </button>
-                </p>
-  
-              </div>
-            </div>
-            
-
-          </mat-card-content>
-          <mat-card-actions>
-            <!-- botones -->
-          </mat-card-actions>
-        </mat-card>
-
-      </div>
-
-      <div class="row">
-        <button mat-raised-button color="accent" (click)="backPath(esquema['path'])">Volver</button>
-      </div>
-
-      <div class="row mt-4 mb-5" *ngIf="esquema['properties']">
-
-        <mat-list>
-          <div mat-subheader>Propiedades</div>
-          <mat-list-item *ngFor="let obj of esquema['properties'] | keyvalue">
-            <mat-icon mat-list-icon>folder</mat-icon>
-            <div mat-line>{{obj.value['$ref']}} {{literales[obj.key]}} <button mat-raised-button color="primary"
-                (click)="nextPath(esquema['path'], obj.value['$ref'])">{{obj.value['$ref']}}</button></div>
-          </mat-list-item>
-        </mat-list>
-
-       
-        <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
-          <ng-container matColumnDef="header-row-title">
-            <th mat-header-cell *matHeaderCellDef [attr.colspan]="columnsToDisplay.length"> Propiedades </th>
-          </ng-container>
-
-          <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
-            <th mat-header-cell *matHeaderCellDef> {{column}} </th>
-            <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
-          </ng-container>
-
-          <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
-          <ng-container matColumnDef="expandedDetail">
-            <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
-              <div class="example-element-detail"
-                [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-                <div class="example-element-description">
-                  <div *ngIf="element.detail['properties']; else elseBlock">
-                    <div *ngFor="let obj of element.detail['properties'] | keyvalue">
-                      <button mat-raised-button color="primary">{{ obj.value['$ref'] }}</button>
-                      <!--(click)="updateTable(obj.value['$ref'])"-->
-                    </div>
-                  </div>
-                  <ng-template #elseBlock>
-                    <span *ngFor="let obj of element.detail | keyvalue">
-                      <b>{{obj.key}}</b>: {{obj.value}}
-                      <button mat-icon-button matTooltip="Ver comentarios" matBadge="8" matBadgeColor="accent"
-                        class="ml-2" (click)="showAlertComments()">
-                        <mat-icon>comment</mat-icon>
+            <!-- Añadir tabla -->
+            <table class="table">
+                <thead >
+                  <tr>
+                    <th colspan="100">
+                      <button mat-raised-button matBadge="8" matBadgePosition="before" matBadgeColor="accent" matTooltip="Ver comentarios" (click)="openDialog()">
+                        {{node.name}} - {{node.literal}}
                       </button>
-                      <button mat-icon-button matTooltip="Añadir" aria-label="Example icon button with a home icon"
-                        (click)="showAlertInsert()" class="ml-1">
-                        <mat-icon>add</mat-icon>
-                      </button></span>
-                    <!--<p *ngFor="let obj of element.detail | keyvalue">{{obj.key}}: {{obj.value}}</p>-->
+                    </th>
+                  </tr>
+                  <tr>
+                      <th scope="col" *ngFor="let item of node.esquema | keyvalue">{{item.key}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                      <td *ngFor="let item of node.esquema | keyvalue">{{item.value}}</td>
+                  </tr>
+                </tbody>
+              </table>
 
-                  </ng-template>
-                </div>
-              </div>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="['header-row-title']"></tr>
-          <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-          <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row"
-            [class.example-expanded-row]="expandedElement === element"
-            (click)="expandedElement = expandedElement === element ? null : element">
-          </tr>
-          <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
-        </table>
-
-      </div>
+          </li>
+        </mat-tree-node>
+        <!-- This is the tree node template for expandable nodes -->
+        <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+          <li>
+            <div class="mat-tree-node">
+              <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+                <mat-icon class="mat-icon-rtl-mirror">
+                  {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                </mat-icon>
+              </button>
+              {{node.name}}
+            </div>
+            <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
+              <ng-container matTreeNodeOutlet></ng-container>
+            </ul>
+          </li>
+        </mat-nested-tree-node>
+      </mat-tree>
     </div>
 
 

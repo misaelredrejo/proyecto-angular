@@ -13,7 +13,9 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatExpansionModule} from '@angular/material/expansion';
-
+import {MatTreeModule} from '@angular/material/tree';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatInputModule} from '@angular/material/input';
 
 import {
   NgMaterialMultilevelMenuModule,
@@ -39,7 +41,10 @@ import {
     NgMaterialMultilevelMenuModule,
     MatTooltipModule,
     MatMenuModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatTreeModule,
+    MatDialogModule,
+    MatInputModule
   ],
   providers: [MultilevelMenuService],
 })
