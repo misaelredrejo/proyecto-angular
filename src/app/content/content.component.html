@@ -33,7 +33,7 @@
                 <thead >
                   <tr>
                     <th colspan="100">
-                      <button mat-raised-button matBadge="8" matBadgePosition="before" matBadgeColor="accent" matTooltip="Ver comentarios" (click)="openDialog()">
+                      <button mat-raised-button matBadge="8" matBadgePosition="before" matBadgeColor="accent" matTooltip="Ver comentarios" (click)="openDialog()" class="w-100 h-100">
                         {{node.name}} - {{node.literal}}
                       </button>
                     </th>
@@ -43,7 +43,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
+                  <tr class="hover-whitesmoke-background">
                       <td *ngFor="let item of node.esquema | keyvalue">{{item.value}}</td>
                   </tr>
                 </tbody>
@@ -60,7 +60,7 @@
                   {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
                 </mat-icon>
               </button>
-              {{node.name}}
+              {{node.name}} - {{node.literal}}
             </div>
             <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
               <ng-container matTreeNodeOutlet></ng-container>

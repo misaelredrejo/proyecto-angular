@@ -11,9 +11,6 @@ import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { DialogCommentsComponent } from './dialog-comments/dialog-comments.component';
 
-export interface DialogData {
-  comments: any[];
-}
 
 interface EsquemaNode {
   name: string;
@@ -107,5 +104,9 @@ export class ContentComponent implements OnInit {
       }
     });
   }
+
+  /*getComments(path: string) {
+    return this.comments;
+  }*/
 
 }
