@@ -5,6 +5,7 @@ import {
   HttpErrorResponse
 } from "@angular/common/http";
 import { catchError, map } from "rxjs/operators";
+import { Comentario } from './comentario.model';
 
 
 @Injectable({
@@ -51,4 +52,32 @@ export class ApiService {
       catchError(this.handleError)
     );
   }
+
+  public getComments(): Comentario[] {
+    return [
+      {
+        id: 1,
+        idComentario: 1,
+        usuario: "Misael",
+        ruta: "/path/123",
+        texto: "Comentario de prueba comentario de prueba 123 123",
+        fechaBaja: new Date('2020-12-17'),
+        fechaAlta: null
+      },
+      {
+        id: 2,
+        idComentario: 2,
+        usuario: "Pepe",
+        ruta: "/path/321",
+        texto: "Otro comentario",
+        fechaBaja: new Date('2020-12-17'),
+        fechaAlta: null
+      }
+    ]
+  }
+
+  public getUser(): string {
+    return "UsuarioPrueba";
+  }
+
 }

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ApiService } from './shared/api.service';
 
 @Component({
   selector: 'app-root',
@@ -8,24 +7,9 @@ import { ApiService } from './shared/api.service';
 })
 export class AppComponent {
   
-  jsonObject: any[] = [];
-  menu: any[] = [];
-
-  constructor(private apiService: ApiService) { }
+  constructor() { }
 
   ngOnInit() {
 
-    this.apiService
-      .getJSON()
-      .subscribe(
-        data => {
-          this.jsonObject = data;
-          this.menu = this.jsonObject['menu'];
-          console.log(data);
-        },
-        err => {
-          console.log(err);
-        }
-      );
   }
 }

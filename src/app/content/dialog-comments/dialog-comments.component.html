@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>Comentarios</h2>
 <mat-dialog-content>
 
-    <mat-accordion>
+    <mat-accordion class="m-5" [@.disabled]="disableAnimation">
         <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header (click)="canEditComment=false">
                 <mat-panel-title>
@@ -14,16 +14,14 @@
             <!-- CONTENT -->
 
             <mat-list role="list">
-                <mat-list-item role="listitem" *ngFor="let comment of data.comments; let i = index">
-                    {{i+1}}.- {{comment}}
+                <mat-list-item role="listitem" *ngFor="let comentario of data.listaComentarios; let i = index">
+                    {{i+1}}.- {{comentario['texto']}}
                     <button mat-icon-button color="primary" aria-label="Edit" (click)=editComment(i)>
                         <mat-icon>edit</mat-icon>
                     </button>
                     <button mat-icon-button color="accent" aria-label="Delete" (click)="deleteComment(i)">
                         <mat-icon>delete</mat-icon>
                     </button>
-
-                    <!--<input *ngIf="canEditComment" [(ngModel)]="data.comments[i]" type="text" class="form-control" />-->
                 </mat-list-item>
             </mat-list>
             <div *ngIf="canEditComment">
@@ -60,7 +58,6 @@
             <!-- END CONTENT -->
         </mat-expansion-panel>
     </mat-accordion>
-
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cerrar</button>

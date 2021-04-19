@@ -7,3 +7,7 @@
   .example-full-width {
     width: 100%;
   }
+
+  mat-list-item:hover {
+    background-color: whitesmoke;
+  }

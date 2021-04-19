@@ -7,14 +7,12 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NavComponent } from './nav/nav.component';
-import { MenuComponent } from './menu/menu.component';
-import { MenuItemComponent } from './menu/menu-item/menu-item.component';
 import { ContentComponent } from './content/content.component';
 import { AppRoutingModule } from './app-routing.module';
 import { FooterComponent } from './footer/footer.component';
 import { ToastrModule } from 'ngx-toastr';
 
-import { MaterialModule } from './shared/material/material.module';
+import { MaterialModule } from './shared/material.module';
 
 
 import { HomeComponent } from './home/home.component';
@@ -25,8 +23,6 @@ import { DialogCommentsComponent } from './content/dialog-comments/dialog-commen
   declarations: [
     AppComponent,
     NavComponent,
-    MenuComponent,
-    MenuItemComponent,
     ContentComponent,
     FooterComponent,
     HomeComponent,

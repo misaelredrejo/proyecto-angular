@@ -1,15 +1,14 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 
 import { ApiService } from '../shared/api.service';
 
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { DialogCommentsComponent } from './dialog-comments/dialog-comments.component';
+import { Comentario } from '../shared/comentario.model';
 
 
 interface EsquemaNode {
@@ -17,6 +16,7 @@ interface EsquemaNode {
   literal: string;
   children?: EsquemaNode[];
   esquema?: any;
+  comentarios?: Comentario[];
 }
 
 @Component({
@@ -65,11 +65,11 @@ export class ContentComponent implements OnInit {
             let dataInsert: EsquemaNode[] = []
             if (this.esquema['properties']) {
               dataInsert = this.getChildren(this.esquema['properties']);
+            } else if (this.esquema['allOf']){
+              dataInsert = this.getChildren(this.esquema['allOf'], true);
             } else {
-              dataInsert.push({ name: this.link, esquema: this.esquema, literal: this.literal});
+              dataInsert.push({ name: this.link, esquema: this.esquema, literal: this.literal, comentarios: this.apiService.getComments()});
             }
-            
-
             this.dataSource.data = dataInsert;
           });
 
@@ -80,33 +80,43 @@ export class ContentComponent implements OnInit {
       );
   }
 
-  getChildren(properties: any) {
+  getChildren(properties: any, containsAllOf = false) {
     let children: EsquemaNode[] = [];
-    for (let key in properties) {
-      let literal = (this.literaleses[key] ? this.literaleses[key] : this.literaleses[key.toLowerCase()]);
-      if (this.todoEsquema[key]['properties']) {
-        children.push({ name: key, children: this.getChildren(this.todoEsquema[key]['properties']), literal: literal });
-      } else {
-        children.push({ name: key, esquema: this.todoEsquema[key], literal: literal });
+    if (containsAllOf) {
+      for (let key in properties) {
+        let value = properties[key];
+        let key1 = value['$ref'].substring(2);
+        let literal = (this.literaleses[key1] ? this.literaleses[key1] : this.literaleses[key1.toLowerCase()]);
+        if (this.todoEsquema[key1]['properties']) {
+          children.push({ name: key1, children: this.getChildren(this.todoEsquema[key1]['properties']), literal: literal });
+        } else if (this.todoEsquema[key1]['allOf']) {
+          children.push({ name: key1, children: this.getChildren(this.todoEsquema[key1]['allOf'], true), literal: literal });
+        } else {
+          children.push({ name: key1, esquema: this.todoEsquema[key1], literal: literal, comentarios: this.apiService.getComments()});
+        }
+      }
+    } else {
+      for (let key in properties) {
+        let literal = (this.literaleses[key] ? this.literaleses[key] : this.literaleses[key.toLowerCase()]);
+        if (this.todoEsquema[key]['properties']) {
+          children.push({ name: key, children: this.getChildren(this.todoEsquema[key]['properties']), literal: literal });
+        } else if (this.todoEsquema[key]['allOf']) {
+          children.push({ name: key, children: this.getChildren(this.todoEsquema[key]['allOf'], true), literal: literal });
+        } else {
+          children.push({ name: key, esquema: this.todoEsquema[key], literal: literal, comentarios: this.apiService.getComments()});
+        }
       }
     }
 
     return children;
   }
 
-  openDialog() {
+  openDialog(listaComentarios: Comentario[]) {
     this.dialog.open(DialogCommentsComponent, {
       data: {
-        comments: [
-          'Esto es una prueba de comentario',
-          'Otro comentariocomentariocomentariocomentariocomentario'
-        ]
+        listaComentarios: listaComentarios
       }
     });
   }
-
-  /*getComments(path: string) {
-    return this.comments;
-  }*/
 
 }

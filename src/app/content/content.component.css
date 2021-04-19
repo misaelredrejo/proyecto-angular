@@ -1,10 +1,3 @@
-.my-container {
-  margin-left: 5%;
-  margin-right: 5%;
-  margin-top: 2%;
-  margin-bottom: 2%;
-}
-
 .content {
   max-width: 80%;
   width: fit-content;
@@ -22,7 +15,6 @@
   list-style-type: none;
 }
 
-.hover-whitesmoke-background:hover {
-  background-color: whitesmoke;
+.mat-tree-node-hover:hover {
+  background-color: whitesmoke !important;
 }
-  
