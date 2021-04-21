@@ -1,3 +1,18 @@
 <div class="container mt-5">
     <h2>Bienvenido {{user}}</h2>
+
+    <h3>Actividad reciente: </h3>
+    <mat-list>
+        <mat-list-item *ngFor="let comentario of ultimosComentarios">
+            El comentario '{{comentario.texto}}' ha sido
+            &nbsp;
+            <span *ngIf="comentarioAniadido(comentario); else elseBlock">añadido</span>
+            <ng-template #elseBlock>
+            <span *ngIf="comentarioBorrado(comentario); else elseBlock2">borrado</span>
+            </ng-template>
+            <ng-template #elseBlock2>modificado</ng-template>
+            &nbsp;
+            por el usuario {{comentario.usuario}} - {{comentario.fechaAlta | date: 'dd/MM/yyyy'}}
+        </mat-list-item>
+    </mat-list>
 </div>

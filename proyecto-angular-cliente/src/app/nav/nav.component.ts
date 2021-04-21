@@ -40,13 +40,13 @@ export class NavComponent implements OnDestroy {
   }
 
   ngOnInit() {
-    /*
+    
     this.apiService.getUser().subscribe(data => {
       this.user = data;
     }, error => {
       console.log(error);
     })
-*/
+
     this.apiService
       .getJSON()
       .subscribe(

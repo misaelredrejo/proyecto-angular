@@ -3,7 +3,7 @@
     <button mat-icon-button (click)="snav.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
-    <button mat-icon-button [routerLink]="['/home']">
+    <button mat-icon-button [routerLink]="['/home']" (click)="titulo='Configuración NPR'">
         <mat-icon>home</mat-icon>
       </button>
     <h1 class="example-app-name">{{titulo}}</h1>

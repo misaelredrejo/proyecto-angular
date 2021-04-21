@@ -68,6 +68,14 @@ export class ApiService {
     return this.http.get(this.myAppUrl + this.myApiUserUrl, { responseType: 'text', });
   }
 
+  public getComments(): Observable<Comentario[]> {
+    return this.http.get<Comentario[]>(this.myAppUrl + this.myApiComentariosUrl);
+  }
+
+  public getLast10Comments(): Observable<Comentario[]> {
+    return this.http.get<Comentario[]>(this.myAppUrl + this.myApiComentariosUrl + 'last10');
+  }
+
   public getCommentsByPath(path: string): Observable<Comentario[]> {
     return this.http.get<Comentario[]>(this.myAppUrl + this.myApiComentariosUrl + path);
   }
@@ -89,9 +97,9 @@ export class ApiService {
     return this.http.put(this.myAppUrl + this.myApiComentariosUrl + id, comentario);
   }
 
-  public deleteComment(id: number): Observable<any> {
+  public deleteComment(id: number, comentario: Comentario): Observable<any> {
 
-    return this.http.delete(this.myAppUrl + this.myApiComentariosUrl + id);
+    return this.http.post(this.myAppUrl + this.myApiComentariosUrl + id, comentario);
   }
 
 

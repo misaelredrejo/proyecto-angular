@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../shared/api.service';
+import { Comentario } from '../shared/comentario.model';
 
 @Component({
   selector: 'app-home',
@@ -9,6 +10,8 @@ import { ApiService } from '../shared/api.service';
 export class HomeComponent implements OnInit {
 
   user: string;
+  todosComentarios: Comentario[] = [];
+  ultimosComentarios: Comentario[] = [];
 
   constructor(private apiService: ApiService) { }
 
@@ -19,6 +22,40 @@ export class HomeComponent implements OnInit {
     }, error => {
       console.log(error);
     });
+
+    this.apiService.getComments().subscribe(data => {
+      this.todosComentarios = data;
+    }, error => {
+      console.log(error);
+    });
+    
+    this.apiService.getLast10Comments().subscribe(data => {
+      this.ultimosComentarios = data;
+    }), error => {
+      console.log(error);
+    };
+
+  }
+
+  comentarioBorrado(comentario: Comentario): boolean {
+    let borrado = true;
+    for (let i = 0; i < this.todosComentarios.length; i++) {
+      if (this.todosComentarios[i].idComentario == comentario.idComentario && comentario.fechaBaja == null) {
+        borrado = false;
+      }
+    }
+    console.log(borrado);
+    return borrado;
+  }
+
+  comentarioAniadido(comentario: Comentario): boolean {
+    let aniadido = true;
+    for (let i = 0; i < this.todosComentarios.length; i++) {
+      if (this.todosComentarios[i].idComentario == comentario.idComentario && this.todosComentarios[i].id < comentario.id) {
+        aniadido = false;
+      }
+    }
+    return aniadido;
   }
 
 }

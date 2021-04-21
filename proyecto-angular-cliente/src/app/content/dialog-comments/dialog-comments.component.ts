@@ -58,14 +58,19 @@ export class DialogCommentsComponent implements OnInit {
         let comentario: Comentario = {
           id: 0,
           idComentario: data,
-          usuario: "Pepe",
+          usuario: "",
           ruta: this.data.ruta,
           texto: this.formAdd.get('comment').value,
           fechaAlta: new Date(),
           fechaBaja: null
         }
 
-        this.addComment(comentario);
+        this.apiService.getUser().subscribe(data => {
+          comentario.usuario = data;
+          this.addComment(comentario);
+        }, error => {
+          console.log(error);
+        });
 
       });
 
@@ -73,7 +78,7 @@ export class DialogCommentsComponent implements OnInit {
       // Editar comentario
       let comentario: Comentario = this.data.listaComentarios[this.indexComment];
       comentario.texto = this.formEdit.get('comment').value;
-      
+
       this.editComment(comentario);
 
     }
@@ -114,14 +119,26 @@ export class DialogCommentsComponent implements OnInit {
 
   deleteComment(index: number) {
     let id = this.data.listaComentarios[index].id;
-    this.apiService.deleteComment(id).subscribe(data => {
-      this.data.listaComentarios.splice(index, 1);
-      this.toastr.success(data['message'], 'Eliminar comentario');
-    },
-      error => {
-        console.log(error);
-        this.toastr.error('Error al eliminar comentario.', 'ERROR');
-      })
+    let comentario: Comentario = this.data.listaComentarios[index];
+    comentario.id = 0;
+    comentario.fechaBaja = new Date();
+    this.apiService.getUser().subscribe(data => {
+      comentario.usuario = data;
+
+      this.apiService.deleteComment(id, comentario).subscribe(data => {
+        this.data.listaComentarios.splice(index, 1);
+        this.toastr.success(data['message'], 'Eliminar comentario');
+      },
+        error => {
+          console.log(error);
+          this.toastr.error('Error al eliminar comentario.', 'ERROR');
+        });
+    }, error => {
+      console.log(error);
+    });
+
+
+
   }
 
 }

@@ -37,6 +37,22 @@ namespace FBProyecto.Controllers
             }
         }
 
+        // GET: api/<ComentariosController>/last10
+        [HttpGet("last10")]
+        public async Task<IActionResult> Last10()
+        {
+
+            try
+            {
+                var listaComentarios = await _context.Comentario.OrderByDescending(c => c.Id).Take(10).ToListAsync();
+                return Ok(listaComentarios);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         // GET api/<ComentariosController>/5
         [HttpGet("{*path}", Name = "Get")]
         public async Task<IActionResult> Get(string path)
@@ -100,21 +116,17 @@ namespace FBProyecto.Controllers
         }
 
         // DELETE api/<ComentariosController>/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpPost("{id}")]
+        public async Task<IActionResult> Delete(int id, [FromBody] Comentario comentario)
         {
             try
             {
-                Comentario comentario = await _context.Comentario.FindAsync(id);
-                if (comentario == null)
-                {
-                    return NotFound();
-                }
                 var listaComentarios = await _context.Comentario.Where(c => c.IdComentario == comentario.IdComentario).ToListAsync();
                 for (int i = 0; i < listaComentarios.Count; i++)
                 {
                     listaComentarios[i].FechaBaja = DateTime.Now;
                 }
+                _context.Add(comentario);
                 await _context.SaveChangesAsync();
                 return Ok(new { message = "El comentario se eliminó correctamente." });
             }

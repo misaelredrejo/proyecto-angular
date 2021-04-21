@@ -39,14 +39,15 @@ namespace FBProyecto
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
             services.AddCors(
                 options => options.AddPolicy("AllowWebApp",
-                builder => builder.AllowAnyOrigin()
+                builder => builder.SetIsOriginAllowed(o => true)
+                                    .AllowCredentials()
                                     .AllowAnyHeader()
                                     .AllowAnyMethod()
 
                 ));
 
             //add windows authentication for http options request
-            services.AddAuthentication(IISDefaults.AuthenticationScheme);
+           services.AddAuthentication(IISDefaults.AuthenticationScheme);
             services.AddMvc(config =>
             {
                 var policy = new AuthorizationPolicyBuilder()
