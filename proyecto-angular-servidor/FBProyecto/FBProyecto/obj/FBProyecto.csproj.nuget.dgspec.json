@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mredrejo-ext\\Desktop\\workspace_angular\\FBProyecto\\FBProyecto\\FBProyecto.csproj": {}
+    "C:\\Users\\mredrejo-ext\\Desktop\\workspace_angular\\proyecto-angular\\proyecto-angular-servidor\\FBProyecto\\FBProyecto\\FBProyecto.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mredrejo-ext\\Desktop\\workspace_angular\\FBProyecto\\FBProyecto\\FBProyecto.csproj": {
+    "C:\\Users\\mredrejo-ext\\Desktop\\workspace_angular\\proyecto-angular\\proyecto-angular-servidor\\FBProyecto\\FBProyecto\\FBProyecto.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mredrejo-ext\\Desktop\\workspace_angular\\FBProyecto\\FBProyecto\\FBProyecto.csproj",
+        "projectUniqueName": "C:\\Users\\mredrejo-ext\\Desktop\\workspace_angular\\proyecto-angular\\proyecto-angular-servidor\\FBProyecto\\FBProyecto\\FBProyecto.csproj",
         "projectName": "FBProyecto",
-        "projectPath": "C:\\Users\\mredrejo-ext\\Desktop\\workspace_angular\\FBProyecto\\FBProyecto\\FBProyecto.csproj",
+        "projectPath": "C:\\Users\\mredrejo-ext\\Desktop\\workspace_angular\\proyecto-angular\\proyecto-angular-servidor\\FBProyecto\\FBProyecto\\FBProyecto.csproj",
         "packagesPath": "C:\\Users\\mredrejo-ext\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mredrejo-ext\\Desktop\\workspace_angular\\FBProyecto\\FBProyecto\\obj\\",
+        "outputPath": "C:\\Users\\mredrejo-ext\\Desktop\\workspace_angular\\proyecto-angular\\proyecto-angular-servidor\\FBProyecto\\FBProyecto\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

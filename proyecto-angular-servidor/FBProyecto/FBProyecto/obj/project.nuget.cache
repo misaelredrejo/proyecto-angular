@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "6NA4Zwn/d3lKsnQi1nKdC/uEeRpMAVyCwaEddas0jnnVLgtUQ+qk99D20a69+wgoTQPk4KTkWxaamNXDTSa9rQ==",
+  "dgSpecHash": "Y6clmqQygZ0B5HJnc+dzcJBP0/woaeS/ZuGPwaWId7/VG+a1+g5ITfFpD5wCi8los3dvSU3GF4eEc3+pQ4TNwg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\mredrejo-ext\\Desktop\\workspace_angular\\FBProyecto\\FBProyecto\\FBProyecto.csproj",
+  "projectFilePath": "C:\\Users\\mredrejo-ext\\Desktop\\workspace_angular\\proyecto-angular\\proyecto-angular-servidor\\FBProyecto\\FBProyecto\\FBProyecto.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mredrejo-ext\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\mredrejo-ext\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
