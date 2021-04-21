@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 
 import { AppComponent } from './app.component';
@@ -18,6 +18,7 @@ import { MaterialModule } from './shared/material.module';
 import { HomeComponent } from './home/home.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { DialogCommentsComponent } from './content/dialog-comments/dialog-comments.component';
+import { WinAuthInterceptor } from './shared/winauth-interceptor';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,11 @@ import { DialogCommentsComponent } from './content/dialog-comments/dialog-commen
     FormsModule, ReactiveFormsModule
 
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: WinAuthInterceptor,
+    multi: true
+}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

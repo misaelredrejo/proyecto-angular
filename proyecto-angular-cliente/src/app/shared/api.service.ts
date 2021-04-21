@@ -2,7 +2,8 @@ import { Injectable } from "@angular/core";
 import { Observable, throwError } from "rxjs";
 import {
   HttpClient,
-  HttpErrorResponse
+  HttpErrorResponse,
+  HttpHeaders
 } from "@angular/common/http";
 import { catchError, map } from "rxjs/operators";
 import { Comentario } from './comentario.model';
@@ -13,11 +14,16 @@ import { Comentario } from './comentario.model';
 })
 export class ApiService {
 
+  private httpHeaders: HttpHeaders;
   private myAppUrl: string = 'https://localhost:44361/';
   private myApiComentariosUrl: string = 'api/comentarios/';
   private myApiUserUrl: string = 'api/user/';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { 
+    this.httpHeaders = new HttpHeaders({
+      'Access-Control-Allow-Origin': '*' 
+  });
+  }
 
   /**
    * Function to handle error when the server return an error
@@ -58,8 +64,8 @@ export class ApiService {
   }
 
 
-  public getUser(): Observable<any> {
-    return this.http.get(this.myAppUrl + this.myApiUserUrl, { responseType: 'text', withCredentials: true });
+  public getUser(): Observable<string> {
+    return this.http.get(this.myAppUrl + this.myApiUserUrl, { responseType: 'text', });
   }
 
   public getCommentsByPath(path: string): Observable<Comentario[]> {

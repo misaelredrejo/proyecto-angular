@@ -44,6 +44,7 @@ namespace FBProyecto
                                     .AllowAnyMethod()
 
                 ));
+
             //add windows authentication for http options request
             services.AddAuthentication(IISDefaults.AuthenticationScheme);
             services.AddMvc(config =>

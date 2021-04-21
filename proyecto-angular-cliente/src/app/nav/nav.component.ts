@@ -69,7 +69,7 @@ export class NavComponent implements OnDestroy {
         let value = item[key];
         let labelText = key + ' - ' + this.literaleses[key];
         let title = labelText;
-        labelText = (labelText.length > 30 ? labelText.substring(0, 30) + '...' : labelText);
+        //labelText = (labelText.length > 30 ? labelText.substring(0, 30) + '...' : labelText);
 
         if (value && value.length > 0) { // Si tiene subniveles
           this.appitemsInsert.push({ label: labelText, items: this.itemsSubMenu(value), titulo: title });
@@ -86,7 +86,7 @@ export class NavComponent implements OnDestroy {
     items.forEach((element) => {
       let labelText = element + ' - ' + (this.literaleses[element] ? this.literaleses[element] : this.literaleses[element.toLowerCase()]);
       let title1 = labelText;
-      labelText = (labelText.length > 30 ? labelText.substring(0, 30) + '...' : labelText);
+      //labelText = (labelText.length > 30 ? labelText.substring(0, 30) + '...' : labelText);
       itemsSubMenu.push({ label: labelText, link: "/content/" + element, titulo: title1 })
     });
     return itemsSubMenu
