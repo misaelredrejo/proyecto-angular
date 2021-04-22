@@ -16,7 +16,7 @@ namespace FBProyecto.Migrations
                     IdComentario = table.Column<int>(type: "int", nullable: false),
                     Usuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Ruta = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Texto = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Texto = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FechaAlta = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FechaBaja = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },

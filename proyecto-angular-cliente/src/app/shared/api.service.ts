@@ -7,6 +7,7 @@ import {
 } from "@angular/common/http";
 import { catchError, map } from "rxjs/operators";
 import { Comentario } from './comentario.model';
+import { ComentarioDTO } from './comentariodto-model';
 
 
 @Injectable({
@@ -72,8 +73,8 @@ export class ApiService {
     return this.http.get<Comentario[]>(this.myAppUrl + this.myApiComentariosUrl);
   }
 
-  public getLast10Comments(): Observable<Comentario[]> {
-    return this.http.get<Comentario[]>(this.myAppUrl + this.myApiComentariosUrl + 'last10');
+  public getLast10Comments(): Observable<ComentarioDTO[]> {
+    return this.http.get<ComentarioDTO[]>(this.myAppUrl + this.myApiComentariosUrl + 'last10');
   }
 
   public getCommentsByPath(path: string): Observable<Comentario[]> {
@@ -83,7 +84,7 @@ export class ApiService {
   public getNextIdComentario(): Observable<number> {
     return this.http.get<Comentario[]>(this.myAppUrl + this.myApiComentariosUrl).pipe(
       // Get max value from an array
-      map(data => Math.max.apply(Math, data.map(function (o) { return o.idComentario+1; }))),
+      map(data => Math.max(1,Math.max.apply(Math, data.map(function (o) { return o.idComentario+1; })))),
       catchError(this.handleError)
     );
   }

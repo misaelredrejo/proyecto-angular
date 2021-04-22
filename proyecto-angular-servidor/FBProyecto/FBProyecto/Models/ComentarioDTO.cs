@@ -6,19 +6,14 @@ using System.Threading.Tasks;
 
 namespace FBProyecto.Models
 {
-    public class Comentario
+    public class ComentarioDTO
     {
         [Key]
         public int Id { get; set; }
-        [Required]
-        public int IdComentario { get; set; }
-        [Required]
         public string Usuario { get; set; }
-        [Required]
         public string Ruta { get; set; }
         public string Texto { get; set; }
-        [Required]
-        public DateTime FechaAlta { get; set; }
-        public DateTime? FechaBaja { get; set; }
+        public DateTime? FechaAlta { get; set; }
+        public string Accion { get; set; }
     }
 }

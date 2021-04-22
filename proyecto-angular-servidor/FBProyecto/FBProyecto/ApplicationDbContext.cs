@@ -10,6 +10,7 @@ namespace FBProyecto
     public class ApplicationDbContext: DbContext
     {
         public DbSet<Comentario> Comentario { get; set; }
+        public DbSet<ComentarioDTO> ComentarioDTO { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 

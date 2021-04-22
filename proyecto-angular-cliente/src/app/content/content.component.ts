@@ -16,7 +16,7 @@ interface EsquemaNode {
   literal: string;
   children?: EsquemaNode[];
   esquema?: any;
-  comentarios?: Comentario[];
+  comentarios: Comentario[];
 }
 
 @Component({
@@ -34,9 +34,11 @@ interface EsquemaNode {
 export class ContentComponent implements OnInit {
   link: string;
   literaleses: any[] = [];
+  literaleseu: any[] = [];
   todoEsquema: any[] = [];
   esquema: any[] = [];
   literal: string;
+  literaleu: string;
 
   treeControl = new NestedTreeControl<EsquemaNode>(node => node.children);
   dataSource = new MatTreeNestedDataSource<EsquemaNode>();
@@ -57,13 +59,16 @@ export class ContentComponent implements OnInit {
       .subscribe(
         data => {
           this.literaleses = data["literaleses"];
+          this.literaleseu = data["literaleseu"];
           this.todoEsquema = data["esquema"];
 
           this.route.params.subscribe(params => {
             this.link = params['link'];
             this.literal = (this.literaleses[this.link] ? this.literaleses[this.link] : this.literaleses[this.link.toLowerCase()]);
+            this.literaleu = (this.literaleseu[this.link] ? this.literaleseu[this.link] : this.literaleseu[this.link.toLowerCase()]);
             this.esquema = this.todoEsquema[this.link];
             let dataInsert: EsquemaNode[] = []
+            
             if (this.esquema['properties']) {
               dataInsert = this.getChildren(this.esquema['properties']);
             } else if (this.esquema['allOf']){
@@ -94,34 +99,51 @@ export class ContentComponent implements OnInit {
         let value = properties[key];
         let key1 = value['$ref'].substring(2);
         let literal = (this.literaleses[key1] ? this.literaleses[key1] : this.literaleses[key1.toLowerCase()]);
+
+        let obj: any = {};
+        obj.name = key1;
+        obj.literal = literal;
+        obj.comentarios = [];
+        this.apiService.getCommentsByPath(this.todoEsquema[key1]['path']).subscribe(data => {
+          obj.comentarios = data;
+        }, error => {
+          console.log(error);
+        });
+
         if (this.todoEsquema[key1]['properties']) {
-          children.push({ name: key1, children: this.getChildren(this.todoEsquema[key1]['properties']), literal: literal });
+          obj.children = this.getChildren(this.todoEsquema[key1]['properties']);
+          children.push(obj);
         } else if (this.todoEsquema[key1]['allOf']) {
-          children.push({ name: key1, children: this.getChildren(this.todoEsquema[key1]['allOf'], true), literal: literal });
+          obj.children = this.getChildren(this.todoEsquema[key1]['allOf'], true);
+          children.push(obj);
         } else {
-          let obj = { name: key1, esquema: this.todoEsquema[key1], literal: literal, comentarios: []};
-          this.apiService.getCommentsByPath(this.todoEsquema[key1]['path']).subscribe(data => {
-            obj.comentarios = data;
-          }, error => {
-            console.log(error);
-          });
+          obj.esquema = this.todoEsquema[key1];
+          
           children.push(obj);
         }
       }
     } else {
       for (let key in properties) {
         let literal = (this.literaleses[key] ? this.literaleses[key] : this.literaleses[key.toLowerCase()]);
+
+        let obj: any = {};
+        obj.name = key;
+        obj.literal = literal;
+        obj.comentarios = [];
+        this.apiService.getCommentsByPath(this.todoEsquema[key]['path']).subscribe(data => {
+          obj.comentarios = data;
+        }, error => {
+          console.log(error);
+        });
+
         if (this.todoEsquema[key]['properties']) {
-          children.push({ name: key, children: this.getChildren(this.todoEsquema[key]['properties']), literal: literal });
+          obj.children = this.getChildren(this.todoEsquema[key]['properties']);
+          children.push(obj);
         } else if (this.todoEsquema[key]['allOf']) {
-          children.push({ name: key, children: this.getChildren(this.todoEsquema[key]['allOf'], true), literal: literal });
+          obj.children = this.getChildren(this.todoEsquema[key]['allOf'], true);
+          children.push(obj);
         } else {
-          let obj = { name: key, esquema: this.todoEsquema[key], literal: literal, comentarios: []}
-          this.apiService.getCommentsByPath(this.todoEsquema[key]['path']).subscribe(data => {
-            obj.comentarios = data;
-          }, error => {
-            console.log(error);
-          });
+          obj.esquema = this.todoEsquema[key];
           children.push(obj);
         }
       }
@@ -138,5 +160,6 @@ export class ContentComponent implements OnInit {
       }
     });
   }
+
 
 }

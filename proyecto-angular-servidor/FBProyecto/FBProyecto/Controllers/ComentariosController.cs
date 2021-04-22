@@ -44,7 +44,7 @@ namespace FBProyecto.Controllers
 
             try
             {
-                var listaComentarios = await _context.Comentario.OrderByDescending(c => c.Id).Take(10).ToListAsync();
+                var listaComentarios = await _context.ComentarioDTO.FromSqlRaw("EXEC[dbo].[AccionUltimos10Com]").ToListAsync();
                 return Ok(listaComentarios);
             }
             catch (Exception ex)
@@ -55,7 +55,7 @@ namespace FBProyecto.Controllers
 
         // GET api/<ComentariosController>/5
         [HttpGet("{*path}", Name = "Get")]
-        public async Task<IActionResult> Get(string path)
+        public async Task<IActionResult> GetByPath(string path)
         {
             try
             {
@@ -69,8 +69,26 @@ namespace FBProyecto.Controllers
             }
 
         }
-
         
+        /***/
+        // GET api/<ComentariosController>/5
+        /*[HttpGet("subpath/{*path}", Name = "Get")]
+        public async Task<IActionResult> GetSubPath(string path)
+        {
+            try
+            {
+                path = path.Replace("%2F", "/");
+                var listComments = await _context.Comentario.Where(c => c.Ruta == path && c.FechaBaja == null).ToListAsync();
+                return Ok(listComments);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }*/
+
+
         // POST api/<ComentariosController>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Comentario comentario)
@@ -94,20 +112,18 @@ namespace FBProyecto.Controllers
         {
             try
             {
-                if (id != comentario.Id)
+                
+                var comentarioAnterior = await _context.Comentario.FindAsync(id);
+                if (comentarioAnterior == null)
                 {
                     return NotFound();
                 }
-                var listaComentarios = await _context.Comentario.Where(c => c.IdComentario == comentario.IdComentario).ToListAsync();
-                for (int i = 0; i < listaComentarios.Count; i++)
-                {
-                    listaComentarios[i].FechaBaja = DateTime.Now;
-                }
+                comentarioAnterior.FechaBaja = DateTime.Now;
+                _context.Update(comentarioAnterior);
                 comentario.Id = 0;
                 _context.Add(comentario);
-
                 await _context.SaveChangesAsync();
-                return Ok(new { message = "El comentario se actualizó correctamente." });
+                return Ok(comentario);
             }
             catch (Exception ex)
             {
@@ -121,11 +137,10 @@ namespace FBProyecto.Controllers
         {
             try
             {
-                var listaComentarios = await _context.Comentario.Where(c => c.IdComentario == comentario.IdComentario).ToListAsync();
-                for (int i = 0; i < listaComentarios.Count; i++)
-                {
-                    listaComentarios[i].FechaBaja = DateTime.Now;
-                }
+                var comentarioAnterior = await _context.Comentario.FindAsync(id);
+                comentarioAnterior.FechaBaja = DateTime.Now;
+
+                comentario.Texto = null;
                 _context.Add(comentario);
                 await _context.SaveChangesAsync();
                 return Ok(new { message = "El comentario se eliminó correctamente." });
