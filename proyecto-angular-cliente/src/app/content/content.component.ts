@@ -16,7 +16,8 @@ interface EsquemaNode {
   literal: string;
   children?: EsquemaNode[];
   esquema?: any;
-  comentarios: Comentario[];
+  comentarios?: Comentario[];
+  cntComentarios?: number;
 }
 
 @Component({
@@ -68,13 +69,16 @@ export class ContentComponent implements OnInit {
             this.literaleu = (this.literaleseu[this.link] ? this.literaleseu[this.link] : this.literaleseu[this.link.toLowerCase()]);
             this.esquema = this.todoEsquema[this.link];
             let dataInsert: EsquemaNode[] = []
+
+            let obj: EsquemaNode = { name: this.link, esquema: this.esquema, literal: this.literal};
+
             
             if (this.esquema['properties']) {
               dataInsert = this.getChildren(this.esquema['properties']);
             } else if (this.esquema['allOf']){
               dataInsert = this.getChildren(this.esquema['allOf'], true);
             } else {
-              let obj = { name: this.link, esquema: this.esquema, literal: this.literal, comentarios: []};
+              
               this.apiService.getCommentsByPath(this.esquema['path']).subscribe(data => {
                 obj.comentarios = data;
               }, error => {
@@ -109,6 +113,11 @@ export class ContentComponent implements OnInit {
         }, error => {
           console.log(error);
         });
+        this.apiService.getCntCommentsSubPath(this.todoEsquema[key1]['path']).subscribe(data => {
+          obj.cntComentarios = data;
+        }, error => {
+          console.log(error);
+        });
 
         if (this.todoEsquema[key1]['properties']) {
           obj.children = this.getChildren(this.todoEsquema[key1]['properties']);
@@ -132,6 +141,11 @@ export class ContentComponent implements OnInit {
         obj.comentarios = [];
         this.apiService.getCommentsByPath(this.todoEsquema[key]['path']).subscribe(data => {
           obj.comentarios = data;
+        }, error => {
+          console.log(error);
+        });
+        this.apiService.getCntCommentsSubPath(this.todoEsquema[key]['path']).subscribe(data => {
+          obj.cntComentarios = data;
         }, error => {
           console.log(error);
         });

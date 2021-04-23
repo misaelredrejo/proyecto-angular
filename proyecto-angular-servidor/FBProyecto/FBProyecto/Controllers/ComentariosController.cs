@@ -70,23 +70,23 @@ namespace FBProyecto.Controllers
 
         }
         
-        /***/
+        
         // GET api/<ComentariosController>/5
-        /*[HttpGet("subpath/{*path}", Name = "Get")]
-        public async Task<IActionResult> GetSubPath(string path)
+        [HttpGet("subpath/{*path}", Name = "CommentsSubPath")]
+        public async Task<IActionResult> CommentsSubPath(string path)
         {
             try
             {
                 path = path.Replace("%2F", "/");
-                var listComments = await _context.Comentario.Where(c => c.Ruta == path && c.FechaBaja == null).ToListAsync();
-                return Ok(listComments);
+                int cantCommentsSubPath = await _context.Comentario.Where(c => c.Ruta.Contains(path) && c.FechaBaja == null).CountAsync();
+                return Ok(cantCommentsSubPath);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
 
-        }*/
+        }
 
 
         // POST api/<ComentariosController>

@@ -52,7 +52,7 @@
                   {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
                 </mat-icon>
               </button>
-              {{node.name}} - {{node.literal}}
+              <span matBadge="{{node.cntComentarios}}" matBadgeOverlap="false" matBadgeColor="accent">{{node.name}} - {{node.literal}}</span>
             </div>
             <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
               <ng-container matTreeNodeOutlet></ng-container>

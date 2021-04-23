@@ -73,6 +73,10 @@ export class ApiService {
     return this.http.get<Comentario[]>(this.myAppUrl + this.myApiComentariosUrl);
   }
 
+  public getCntCommentsSubPath(path: string) {
+    return this.http.get<number>(this.myAppUrl + this.myApiComentariosUrl + "subpath/" + path);
+  }
+
   public getLast10Comments(): Observable<ComentarioDTO[]> {
     return this.http.get<ComentarioDTO[]>(this.myAppUrl + this.myApiComentariosUrl + 'last10');
   }
