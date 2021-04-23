@@ -22,6 +22,9 @@
                     <button mat-icon-button matTooltipClass="tooltip-red" color="accent" aria-label="Delete" (click)="deleteComment(i)" matTooltip="Borrar comentario">
                         <mat-icon>delete</mat-icon>
                     </button>
+                    <button mat-icon-button matTooltipClass="tooltip-green" color="primary" aria-label="Activate" matTooltip="Activar comentario">
+                    <mat-icon>restore_from_trash</mat-icon>
+                    </button>
                 </mat-list-item>
             </mat-list>
             <div *ngIf="canEditComment">

@@ -146,7 +146,7 @@ export class DialogCommentsComponent implements OnInit {
     }, error => {
       console.log(error);
     });
-
+    this.canEditComment = false;
 
 
   }

@@ -40,7 +40,7 @@ export class ContentComponent implements OnInit {
   esquema: any[] = [];
   literal: string;
   literaleu: string;
-
+  TABLE_COLS = ['type', 'format', 'minimum', 'maximum', 'minLength', 'maxLength', 'enum', 'expandible', 'readOnly', 'multipleOf', 'required', 'path'];
   treeControl = new NestedTreeControl<EsquemaNode>(node => node.children);
   dataSource = new MatTreeNestedDataSource<EsquemaNode>();
 
@@ -69,6 +69,7 @@ export class ContentComponent implements OnInit {
             this.literaleu = (this.literaleseu[this.link] ? this.literaleseu[this.link] : this.literaleseu[this.link.toLowerCase()]);
             this.esquema = this.todoEsquema[this.link];
             let dataInsert: EsquemaNode[] = []
+            
 
             let obj: EsquemaNode = { name: this.link, esquema: this.esquema, literal: this.literal};
 
@@ -174,6 +175,13 @@ export class ContentComponent implements OnInit {
       }
     });
   }
+
+  tiene(esquema: any, column: string): boolean {
+    console.log(esquema);
+    console.log(column);
+    return true;
+  }
+
 
 
 }

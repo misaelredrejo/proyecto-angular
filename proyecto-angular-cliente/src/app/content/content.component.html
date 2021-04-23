@@ -1,58 +1,76 @@
-<mat-tab-group>
-  <mat-tab label="Literal">
+
+
+
     <div class="container mt-5">
-      <div class="content">
-        <h4>{{ literal }}</h4>
-        <h4>{{ literaleu }}</h4>
-      </div>
-
-    </div>
-  </mat-tab>
-
-  <mat-tab label="Contenido">
-
-
-    <div class="container mt-2">
-
+      <h4>{{ literal }}</h4>
+      <h4>{{ literaleu }}</h4>
       <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
         <!-- This is the tree node template for leaf nodes -->
-        <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle >
+        <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
           <li class="mat-tree-node" class="table-responsive  mr-5 cursor-default">
             <!-- use a disabled button to provide padding for tree leaf -->
             <button mat-icon-button disabled></button>
             <!-- Añadir tabla -->
-              <table class="table table-bordered table-hover">
-                <thead>
-                  <tr>
-                    <th colspan="100">
-                      <button mat-raised-button matBadge="{{node.comentarios.length}}" matBadgeColor="accent"
-                        matTooltip="Ver comentarios" (click)="openDialog(node.comentarios, node.esquema['path'])" class="table-button">
-                        {{node.name}} - {{node.literal}}
-                      </button>
-                    </th>
-                  </tr>
-                  <tr>
-                    <th scope="col" *ngFor="let item of node.esquema | keyvalue">{{item.key}}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td *ngFor="let item of node.esquema | keyvalue">{{item.value}}</td>
-                  </tr>
-                </tbody>
-              </table>
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th colspan="100">
+                    <button *ngIf="node.comentarios && node.comentarios.length > 0" mat-raised-button
+                      matBadge="{{node.comentarios.length}}" matBadgeColor="accent" matTooltip="Ver comentarios"
+                      (click)="openDialog(node.comentarios, node.esquema['path'])" class="table-button">
+                      {{node.name}} - {{node.literal}}
+                    </button>
+                    <button *ngIf="!node.comentarios?.length > 0" mat-raised-button matTooltip="Ver comentarios"
+                      (click)="openDialog(node.comentarios, node.esquema['path'])" class="table-button">
+                      {{node.name}} - {{node.literal}}
+                    </button>
+
+                  </th>
+                </tr>
+                <tr>
+                  <th scope="col" *ngFor="let item of node.esquema | keyvalue">{{item.key}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td *ngFor="let item of node.esquema | keyvalue">{{item.value}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <!--TERMINAR AÑADIR TABLA-->
+            <!--NUEVA TABLA-->
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Código-Literal</th>
+                  <th scope="col" *ngFor="let column of TABLE_COLS">{{column}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{node.name}} - {{node.literal}}</td>
+                  <td *ngFor="let column of TABLE_COLS">
+                    {{node.esquema[column]}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!--TERMINAR NUEVA TABLA-->
           </li>
         </mat-tree-node>
         <!-- This is the tree node template for expandable nodes -->
         <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
           <li matTreeNodeToggle class="cursor-pointer">
             <div class="mat-tree-node mat-tree-node-hover">
-              <button mat-icon-button  [attr.aria-label]="'Toggle ' + node.name">
+              <button mat-icon-button [attr.aria-label]="'Toggle ' + node.name">
                 <mat-icon class="mat-icon-rtl-mirror">
                   {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
                 </mat-icon>
               </button>
-              <span matBadge="{{node.cntComentarios}}" matBadgeOverlap="false" matBadgeColor="accent">{{node.name}} - {{node.literal}}</span>
+              <span *ngIf="node.cntComentarios && node.cntComentarios > 0" matBadge="{{node.cntComentarios}}"
+                matBadgeOverlap="false" matBadgeColor="accent">{{node.name}} - {{node.literal}}</span>
+              <span *ngIf="!node.cntComentarios">{{node.name}} - {{node.literal}}</span>
             </div>
             <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
               <ng-container matTreeNodeOutlet></ng-container>
@@ -62,7 +80,3 @@
       </mat-tree>
     </div>
 
-
-
-  </mat-tab>
-</mat-tab-group>
