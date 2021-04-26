@@ -120,3 +120,6 @@ C:\Users\mredrejo-ext\Desktop\workspace_angular\proyecto-angular\proyecto-angula
 C:\Users\mredrejo-ext\Desktop\workspace_angular\proyecto-angular\proyecto-angular-servidor\FBProyecto\FBProyecto\obj\Debug\net5.0\ref\FBProyecto.dll
 C:\Users\mredrejo-ext\Desktop\workspace_angular\proyecto-angular\proyecto-angular-servidor\FBProyecto\FBProyecto\obj\Debug\net5.0\FBProyecto.pdb
 C:\Users\mredrejo-ext\Desktop\workspace_angular\proyecto-angular\proyecto-angular-servidor\FBProyecto\FBProyecto\obj\Debug\net5.0\FBProyecto.genruntimeconfig.cache
+C:\Users\mredrejo-ext\Desktop\workspace_angular\proyecto-angular\proyecto-angular-servidor\FBProyecto\FBProyecto\bin\Debug\net5.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\mredrejo-ext\Desktop\workspace_angular\proyecto-angular\proyecto-angular-servidor\FBProyecto\FBProyecto\bin\Debug\net5.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\mredrejo-ext\Desktop\workspace_angular\proyecto-angular\proyecto-angular-servidor\FBProyecto\FBProyecto\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll

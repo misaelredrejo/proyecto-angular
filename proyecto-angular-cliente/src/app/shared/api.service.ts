@@ -3,11 +3,10 @@ import { Observable, throwError } from "rxjs";
 import {
   HttpClient,
   HttpErrorResponse,
-  HttpHeaders
 } from "@angular/common/http";
 import { catchError, map } from "rxjs/operators";
-import { Comentario } from './comentario.model';
-import { ComentarioDTO } from './comentariodto-model';
+import { Log } from './log.model';
+import {Comment} from 'src/app/shared/comment.model';
 
 
 @Injectable({
@@ -15,15 +14,12 @@ import { ComentarioDTO } from './comentariodto-model';
 })
 export class ApiService {
 
-  private httpHeaders: HttpHeaders;
   private myAppUrl: string = 'https://localhost:44361/';
-  private myApiComentariosUrl: string = 'api/comentarios/';
+  private myApiCommentsUrl: string = 'api/comments/';
+  private myApiLogsUrl: string = 'api/logs/';
   private myApiUserUrl: string = 'api/user/';
 
   constructor(private http: HttpClient) { 
-    this.httpHeaders = new HttpHeaders({
-      'Access-Control-Allow-Origin': '*' 
-  });
   }
 
   /**
@@ -69,42 +65,34 @@ export class ApiService {
     return this.http.get(this.myAppUrl + this.myApiUserUrl, { responseType: 'text', });
   }
 
-  public getComments(): Observable<Comentario[]> {
-    return this.http.get<Comentario[]>(this.myAppUrl + this.myApiComentariosUrl);
+  public getComments(): Observable<Comment[]> {
+    return this.http.get<Comment[]>(this.myAppUrl + this.myApiCommentsUrl);
   }
 
-  public getCntCommentsSubPath(path: string) {
-    return this.http.get<number>(this.myAppUrl + this.myApiComentariosUrl + "subpath/" + path);
+  public getCntCommentsSubPath(path: string): Observable<number> {
+    return this.http.get<number>(this.myAppUrl + this.myApiCommentsUrl + "subpath/" + path);
   }
 
-  public getLast10Comments(): Observable<ComentarioDTO[]> {
-    return this.http.get<ComentarioDTO[]>(this.myAppUrl + this.myApiComentariosUrl + 'last10');
+  public getLast10Logs(): Observable<Log[]> {
+    return this.http.get<Log[]>(this.myAppUrl + this.myApiLogsUrl + 'last10');
   }
 
-  public getCommentsByPath(path: string): Observable<Comentario[]> {
-    return this.http.get<Comentario[]>(this.myAppUrl + this.myApiComentariosUrl + path);
+  public getCommentsByPath(path: string): Observable<Comment[]> {
+    return this.http.get<Comment[]>(this.myAppUrl + this.myApiCommentsUrl + path);
   }
 
-  public getNextIdComentario(): Observable<number> {
-    return this.http.get<Comentario[]>(this.myAppUrl + this.myApiComentariosUrl).pipe(
-      // Get max value from an array
-      map(data => Math.max(1,Math.max.apply(Math, data.map(function (o) { return o.idComentario+1; })))),
-      catchError(this.handleError)
-    );
+  public addComment(comment: Comment): Observable<Comment> {
+
+    return this.http.post<Comment>(this.myAppUrl + this.myApiCommentsUrl, comment);
   }
 
-  public addComment(comentario: Comentario): Observable<Comentario> {
-
-    return this.http.post<Comentario>(this.myAppUrl + this.myApiComentariosUrl, comentario);
+  public updateComment(id: number, comment: Comment): Observable<any> {
+    return this.http.put(this.myAppUrl + this.myApiCommentsUrl + id, comment);
   }
 
-  public updateComment(id: number, comentario: Comentario): Observable<any> {
-    return this.http.put(this.myAppUrl + this.myApiComentariosUrl + id, comentario);
-  }
+  public deleteComment(id: number, comment: Comment): Observable<any> {
 
-  public deleteComment(id: number, comentario: Comentario): Observable<any> {
-
-    return this.http.post(this.myAppUrl + this.myApiComentariosUrl + id, comentario);
+    return this.http.delete(this.myAppUrl + this.myApiCommentsUrl + id);
   }
 
 

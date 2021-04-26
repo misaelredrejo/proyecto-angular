@@ -2,13 +2,15 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Comentario } from 'src/app/shared/comentario.model';
 import { ApiService } from 'src/app/shared/api.service';
+import {Comment} from 'src/app/shared/comment.model'
+import { Action, Rol } from 'src/app/shared/enums.model';
+import { User } from 'src/app/shared/user.model';
 
 
 export interface DialogData {
-  listaComentarios: Comentario[];
-  ruta: string;
+  commentList: Comment[];
+  path: string;
 }
 
 
@@ -54,42 +56,23 @@ export class DialogCommentsComponent implements OnInit {
 
     if (this.indexComment == undefined) {
       // Agregar nuevo comentario
-      let texto: string = this.formAdd.get('comment').value;
-      if (texto == null || texto.length == 0) {
+      let text: string = this.formAdd.get('comment').value;
+      if (text == null || text.length == 0) {
         this.toastr.error('El comentario no puede estar vacío.', 'ERROR');
         return;
       }
-      this.apiService.getNextIdComentario().subscribe(data => {
-        let comentario: Comentario = {
-          id: 0,
-          idComentario: data,
-          usuario: "",
-          ruta: this.data.ruta,
-          texto: texto,
-          fechaAlta: new Date(),
-          fechaBaja: null
-        }
-
-        this.apiService.getUser().subscribe(data => {
-          comentario.usuario = data;
-          this.addComment(comentario);
-        }, error => {
-          console.log(error);
-        });
-
-      });
 
     } else {
       // Editar comentario
-      let comentario: Comentario = this.data.listaComentarios[this.indexComment];
+      let comentario: Comment = this.data.commentList[this.indexComment];
       let texto: string = this.formEdit.get('comment').value;
       if (texto.length == 0) {
         this.toastr.error('El comentario no puede estar vacío.', 'ERROR');
         return;
       }
-      comentario.texto = this.formEdit.get('comment').value;
+      //comentario.texto = this.formEdit.get('comment').value;
 
-      this.editComment(comentario);
+
 
     }
 
@@ -98,15 +81,45 @@ export class DialogCommentsComponent implements OnInit {
 
   allowEditComment(index: number) {
     this.formEdit.patchValue({
-      comment: this.data.listaComentarios[index]['texto']
+      comment: this.data.commentList[index]['texto']
     });
     this.indexComment = index;
     this.canEditComment = true;
   }
 
-  addComment(comentario: Comentario) {
-    this.apiService.addComment(comentario).subscribe(data => {
-      this.data.listaComentarios.push(data);
+  addComment() {
+    let text: string = this.formAdd.get('comment').value;
+    if (text == null || text.length == 0) {
+      this.toastr.error('El comentario no puede estar vacío.', 'ERROR');
+      return;
+    }
+let user: User = {
+  userId: 1,
+  username: "Misael",
+  rol: Rol.Desarrollador
+}
+    let comment: Comment = {
+      commentId: 0,
+      path: this.data.path,
+      text: text,
+      logs: [{
+        logId: 0,
+        user: user,
+        date: new Date(),
+        action: Action.Añadir
+      }
+      ],
+      isActive: true
+    }; /*
+    {
+      id: 0,
+      user: {id: 1, username: "Misael", rol: 0},
+      date: new Date(),
+      action: Action.Añadir
+    }*/
+
+    this.apiService.addComment(comment).subscribe(data => {
+      this.data.commentList.push(data);
       this.formAdd.reset();
       this.toastr.success('Comentario añadido correctamente.', 'Añadir comentario');
     }, error => {
@@ -115,10 +128,10 @@ export class DialogCommentsComponent implements OnInit {
     });
   }
 
-  editComment(comentario: Comentario) {
-    this.apiService.updateComment(comentario.id, comentario).subscribe(data => {
+  editComment(comment: Comment) {
+    this.apiService.updateComment(1, comment).subscribe(data => {
       this.toastr.success('Comentario editado correctamente', 'Editar comentario');
-      this.data.listaComentarios[this.indexComment] = data;
+      this.data.commentList[this.indexComment] = data;
       this.canEditComment = false;
       this.indexComment = undefined;
     }, error => {
@@ -128,10 +141,9 @@ export class DialogCommentsComponent implements OnInit {
   }
 
   deleteComment(index: number) {
+    /*
     let id = this.data.listaComentarios[index].id;
-    let comentario: Comentario = this.data.listaComentarios[index];
-    comentario.id = 0;
-    comentario.fechaBaja = new Date();
+    let comentario: Comment = this.data.listaComentarios[index];
     this.apiService.getUser().subscribe(data => {
       comentario.usuario = data;
 
@@ -146,7 +158,7 @@ export class DialogCommentsComponent implements OnInit {
     }, error => {
       console.log(error);
     });
-    this.canEditComment = false;
+    this.canEditComment = false;*/
 
 
   }

@@ -14,8 +14,8 @@
             <!-- CONTENT -->
 
             <mat-list role="list">
-                <mat-list-item role="listitem" *ngFor="let comentario of data.listaComentarios; let i = index">
-                    {{i+1}}.- {{comentario['texto']}}
+                <mat-list-item role="listitem" *ngFor="let comment of data.commentList; let i = index">
+                    {{i+1}}.- {{comment['text']}}
                     <button mat-icon-button color="primary" aria-label="Edit" (click)=allowEditComment(i) matTooltip="Editar comentario">
                         <mat-icon>edit</mat-icon>
                     </button>
@@ -50,7 +50,7 @@
             </mat-expansion-panel-header>
             <!-- CONTENT -->
 
-            <form class="example-form" [formGroup]="formAdd" (ngSubmit)="saveComment()">
+            <form class="example-form" [formGroup]="formAdd" (ngSubmit)="addComment()">
                 <mat-form-field class="example-full-width">
                     <mat-label>Comentario</mat-label>
                     <textarea matInput placeholder="Mensaje..." formControlName="comment"></textarea>

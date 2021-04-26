@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../shared/api.service';
-import { Comentario } from '../shared/comentario.model';
-import { ComentarioDTO } from '../shared/comentariodto-model';
+import { Log } from '../shared/log.model';
+import { Action } from '../shared/enums.model';
 
 @Component({
   selector: 'app-home',
@@ -10,14 +10,15 @@ import { ComentarioDTO } from '../shared/comentariodto-model';
 })
 export class HomeComponent implements OnInit {
   
-  comentariosAccion: ComentarioDTO[] = [];
+  logList: Log[] = [];
 
   constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
-    
-    this.apiService.getLast10Comments().subscribe(data => {
-      this.comentariosAccion = data;
+    console.log(Action[0])
+    this.apiService.getLast10Logs().subscribe(data => {
+      this.logList = data;
+      console.log(data);
     }), error => {
       console.log(error);
     };

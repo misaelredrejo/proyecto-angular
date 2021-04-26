@@ -8,7 +8,7 @@ import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCommentsComponent } from './dialog-comments/dialog-comments.component';
-import { Comentario } from '../shared/comentario.model';
+import { Comment } from 'src/app/shared/comment.model';
 
 
 interface EsquemaNode {
@@ -16,7 +16,7 @@ interface EsquemaNode {
   literal: string;
   children?: EsquemaNode[];
   esquema?: any;
-  comentarios?: Comentario[];
+  comentarios?: Comment[];
   cntComentarios?: number;
 }
 
@@ -68,8 +68,7 @@ export class ContentComponent implements OnInit {
             this.literal = (this.literaleses[this.link] ? this.literaleses[this.link] : this.literaleses[this.link.toLowerCase()]);
             this.literaleu = (this.literaleseu[this.link] ? this.literaleseu[this.link] : this.literaleseu[this.link.toLowerCase()]);
             this.esquema = this.todoEsquema[this.link];
-            let dataInsert: EsquemaNode[] = []
-            
+            let dataInsert: EsquemaNode[] = [];
 
             let obj: EsquemaNode = { name: this.link, esquema: this.esquema, literal: this.literal};
 
@@ -167,20 +166,15 @@ export class ContentComponent implements OnInit {
     return children;
   }
 
-  openDialog(listaComentarios: Comentario[], ruta: string) {
+  openDialog(commentList: Comment[], path: string) {
     this.dialog.open(DialogCommentsComponent, {
       data: {
-        listaComentarios: listaComentarios,
-        ruta: ruta
+        commentList: commentList,
+        path: path
       }
     });
   }
 
-  tiene(esquema: any, column: string): boolean {
-    console.log(esquema);
-    console.log(column);
-    return true;
-  }
 
 
 

@@ -9,11 +9,14 @@ namespace FBProyecto
 {
     public class ApplicationDbContext: DbContext
     {
-        public DbSet<Comentario> Comentario { get; set; }
-        public DbSet<ComentarioDTO> ComentarioDTO { get; set; }
+        public DbSet<Comment> Comment { get; set; }
+        public DbSet<Log> Log { get; set; }
+        public DbSet<User> User { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 
         }
+
     }
 }

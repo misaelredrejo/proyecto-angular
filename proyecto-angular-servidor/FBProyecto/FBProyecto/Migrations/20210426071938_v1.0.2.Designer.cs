@@ -4,14 +4,16 @@ using FBProyecto;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FBProyecto.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210426071938_v1.0.2")]
+    partial class v102
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,7 +23,7 @@ namespace FBProyecto.Migrations
 
             modelBuilder.Entity("FBProyecto.Models.Comment", b =>
                 {
-                    b.Property<int>("CommentId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -37,14 +39,14 @@ namespace FBProyecto.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CommentId");
+                    b.HasKey("Id");
 
                     b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("FBProyecto.Models.Log", b =>
                 {
-                    b.Property<int>("LogId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -61,7 +63,7 @@ namespace FBProyecto.Migrations
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("LogId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CommentId");
 
@@ -72,7 +74,7 @@ namespace FBProyecto.Migrations
 
             modelBuilder.Entity("FBProyecto.Models.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -84,7 +86,7 @@ namespace FBProyecto.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
                     b.ToTable("User");
                 });

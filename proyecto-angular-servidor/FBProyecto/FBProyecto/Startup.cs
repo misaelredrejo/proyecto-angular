@@ -36,6 +36,9 @@ namespace FBProyecto
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FBProyecto", Version = "v1" });
             });
+            services.AddControllersWithViews().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
             services.AddCors(
                 options => options.AddPolicy("AllowWebApp",

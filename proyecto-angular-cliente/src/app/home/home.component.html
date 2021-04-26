@@ -1,6 +1,11 @@
 <div class="container mt-5">
     <h3>Actividad reciente: </h3>
-    <mat-card class="card" *ngFor="let comentario of comentariosAccion">
-        El usuario {{comentario.usuario}} ha {{comentario.accion}} un comentario en la ruta {{comentario.ruta}} - {{comentario.fechaAlta | date: 'dd/MM/yyyy'}}
+    <mat-card class="card" *ngFor="let log of logList">
+        El usuario x ha
+        <span *ngIf="log.action == 0">añadido</span>
+        <span *ngIf="log.action == 1">editado</span>
+        <span *ngIf="log.action == 2">borrado</span>
+        <span *ngIf="log.action == 3">activado</span>
+        un comentario en la ruta x - {{log['date'] | date: 'dd/MM/yyyy'}}
     </mat-card>
 </div>

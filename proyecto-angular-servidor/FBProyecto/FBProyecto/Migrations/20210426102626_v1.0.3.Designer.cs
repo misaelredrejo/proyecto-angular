@@ -4,14 +4,16 @@ using FBProyecto;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FBProyecto.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210426102626_v1.0.3")]
+    partial class v103
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,13 +54,13 @@ namespace FBProyecto.Migrations
                     b.Property<int>("Action")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CommentId")
+                    b.Property<int>("CommentId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("LogId");
@@ -91,13 +93,19 @@ namespace FBProyecto.Migrations
 
             modelBuilder.Entity("FBProyecto.Models.Log", b =>
                 {
-                    b.HasOne("FBProyecto.Models.Comment", null)
+                    b.HasOne("FBProyecto.Models.Comment", "Comment")
                         .WithMany("Logs")
-                        .HasForeignKey("CommentId");
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("FBProyecto.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Comment");
 
                     b.Navigation("User");
                 });
