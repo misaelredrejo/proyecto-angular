@@ -15,12 +15,12 @@
               <thead>
                 <tr>
                   <th colspan="100">
-                    <button *ngIf="node.comentarios && node.comentarios.length > 0" mat-raised-button
-                      matBadge="{{node.comentarios.length}}" matBadgeColor="accent" matTooltip="Ver comentarios"
+                    <button *ngIf="node.cntComentarios && node.cntComentarios > 0" mat-raised-button
+                      matBadge="{{node.cntComentarios}}" matBadgeColor="accent" matTooltip="Ver comentarios"
                       (click)="openDialog(node.comentarios, node.esquema['path'])" class="table-button">
                       {{node.name}} - {{node.literal}}
                     </button>
-                    <button *ngIf="!node.comentarios?.length > 0" mat-raised-button matTooltip="Ver comentarios"
+                    <button *ngIf="!node.cntComentarios || (node.cntComentarios && node.cntComentarios == 0)" mat-raised-button matTooltip="Ver comentarios"
                       (click)="openDialog(node.comentarios, node.esquema['path'])" class="table-button">
                       {{node.name}} - {{node.literal}}
                     </button>

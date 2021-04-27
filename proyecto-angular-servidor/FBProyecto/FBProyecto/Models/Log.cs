@@ -19,6 +19,8 @@ namespace FBProyecto.Models
         [Key]
         public int LogId { get; set; }
         [Required]
+        public int UserId { get; set; }
+        [Required]
         public User User { get; set; }
         public DateTime Date { get; set; }
         [Required]

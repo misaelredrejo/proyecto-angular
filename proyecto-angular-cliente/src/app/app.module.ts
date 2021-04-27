@@ -19,6 +19,7 @@ import { HomeComponent } from './home/home.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { DialogCommentsComponent } from './content/dialog-comments/dialog-comments.component';
 import { WinAuthInterceptor } from './shared/winauth-interceptor';
+import { DialogRolComponent } from './home/dialog-rol/dialog-rol.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { WinAuthInterceptor } from './shared/winauth-interceptor';
     ContentComponent,
     FooterComponent,
     HomeComponent,
-    DialogCommentsComponent
+    DialogCommentsComponent,
+    DialogRolComponent
   ],
   imports: [
     BrowserModule,

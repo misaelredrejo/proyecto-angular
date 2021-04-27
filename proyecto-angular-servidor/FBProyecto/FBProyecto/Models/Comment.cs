@@ -15,7 +15,7 @@ namespace FBProyecto.Models
         [Required]
         public string Text { get; set; }
         [Required]
-        public ICollection<Log> Logs { get; set; }
+        public IList<Log> Logs { get; set; }
         [Required]
         public bool IsActive { get; set; }
     }

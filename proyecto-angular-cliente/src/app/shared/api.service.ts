@@ -7,6 +7,8 @@ import {
 import { catchError, map } from "rxjs/operators";
 import { Log } from './log.model';
 import {Comment} from 'src/app/shared/comment.model';
+import { CommentDTO } from './commentdto.model';
+import { User } from './user.model';
 
 
 @Injectable({
@@ -16,7 +18,6 @@ export class ApiService {
 
   private myAppUrl: string = 'https://localhost:44361/';
   private myApiCommentsUrl: string = 'api/comments/';
-  private myApiLogsUrl: string = 'api/logs/';
   private myApiUserUrl: string = 'api/user/';
 
   constructor(private http: HttpClient) { 
@@ -65,6 +66,14 @@ export class ApiService {
     return this.http.get(this.myAppUrl + this.myApiUserUrl, { responseType: 'text', });
   }
 
+  public userExistsInDb(username: string): Observable<boolean> {
+    return this.http.get<boolean>(this.myAppUrl + this.myApiUserUrl + "exists/" + username);
+  }
+
+  public addUser(user: User):Observable<User> {
+    return this.http.post<User>(this.myAppUrl + this.myApiUserUrl, user);
+  }
+
   public getComments(): Observable<Comment[]> {
     return this.http.get<Comment[]>(this.myAppUrl + this.myApiCommentsUrl);
   }
@@ -73,8 +82,8 @@ export class ApiService {
     return this.http.get<number>(this.myAppUrl + this.myApiCommentsUrl + "subpath/" + path);
   }
 
-  public getLast10Logs(): Observable<Log[]> {
-    return this.http.get<Log[]>(this.myAppUrl + this.myApiLogsUrl + 'last10');
+  public getLast10Logs(): Observable<CommentDTO[]> {
+    return this.http.get<CommentDTO[]>(this.myAppUrl + this.myApiCommentsUrl + 'last10');
   }
 
   public getCommentsByPath(path: string): Observable<Comment[]> {
@@ -91,9 +100,13 @@ export class ApiService {
   }
 
   public deleteComment(id: number, comment: Comment): Observable<any> {
-
-    return this.http.delete(this.myAppUrl + this.myApiCommentsUrl + id);
+    return this.http.put(this.myAppUrl + this.myApiCommentsUrl + "delete/" + id, comment);
   }
+
+  public activateComment(id: number, comment: Comment): Observable<any> {
+    return this.http.put(this.myAppUrl + this.myApiCommentsUrl + "activate/" + id, comment);
+  }
+
 
 
 }

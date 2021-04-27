@@ -18,3 +18,15 @@
   ::ng-deep .tooltip-green {
     background: green;
   }
+
+  .strikethrough {
+    text-decoration: line-through;
+  }
+
+  .color-green {
+    color: green;
+  }
+
+  .close-dialog-button {
+    float: right;
+  }

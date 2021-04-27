@@ -10,6 +10,7 @@ namespace FBProyecto
     public class ApplicationDbContext: DbContext
     {
         public DbSet<Comment> Comment { get; set; }
+        public DbSet<CommentDTO> CommentDTO { get; set; }
         public DbSet<Log> Log { get; set; }
         public DbSet<User> User { get; set; }
 

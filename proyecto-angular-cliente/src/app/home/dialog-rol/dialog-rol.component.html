@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>Rol</h1>
+<div mat-dialog-content>
+  <p>Seleccionar rol</p>
+  <mat-form-field appearance="fill">
+        <mat-label>Eliga una opción</mat-label>
+        <mat-select [(value)]="data.rol">
+          <mat-option value="Desarrollador">Desarrollador</mat-option>
+          <mat-option value="Otro">Otro</mat-option>
+        </mat-select>
+      </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="data.rol" cdkFocusInitial>Ok</button>
+</div>

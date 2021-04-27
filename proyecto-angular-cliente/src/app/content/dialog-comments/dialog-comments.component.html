@@ -15,26 +15,27 @@
 
             <mat-list role="list">
                 <mat-list-item role="listitem" *ngFor="let comment of data.commentList; let i = index">
-                    {{i+1}}.- {{comment['text']}}
-                    <button mat-icon-button color="primary" aria-label="Edit" (click)=allowEditComment(i) matTooltip="Editar comentario">
+                    {{i+1}}.-&nbsp;
+                    <span [className]="!comment.isActive ? 'strikethrough' : ''">{{comment['text']}}</span>
+                    <button *ngIf="comment.isActive" mat-icon-button color="primary" aria-label="Edit" (click)=allowEditComment(i) matTooltip="Editar comentario">
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <button mat-icon-button matTooltipClass="tooltip-red" color="accent" aria-label="Delete" (click)="deleteComment(i)" matTooltip="Borrar comentario">
+                    <button *ngIf="comment.isActive" mat-icon-button matTooltipClass="tooltip-red" color="warn" aria-label="Delete" (click)="deleteComment(i)" matTooltip="Borrar comentario">
                         <mat-icon>delete</mat-icon>
                     </button>
-                    <button mat-icon-button matTooltipClass="tooltip-green" color="primary" aria-label="Activate" matTooltip="Activar comentario">
-                    <mat-icon>restore_from_trash</mat-icon>
+                    <button *ngIf="!comment.isActive" mat-icon-button matTooltipClass="tooltip-green" aria-label="Activate" (click)="activateComment(i)" matTooltip="Activar comentario">
+                    <mat-icon class="color-green">restore_from_trash</mat-icon>
                     </button>
                 </mat-list-item>
             </mat-list>
             <div *ngIf="canEditComment">
-                <form class="example-form" [formGroup]="formEdit" (ngSubmit)="saveComment()">
+                <form class="example-form" [formGroup]="formEdit" (ngSubmit)="editComment()">
                     <mat-form-field class="example-full-width">
                         <mat-label>Editar comentario</mat-label>
                         <textarea matInput placeholder="Mensaje..." formControlName="comment"></textarea>
                     </mat-form-field>
-                    <button mat-raised-button color="primary" type="submit" matTooltip="Editar comentario">Editar</button>
-                    <button mat-raised-button color="accent" (click)="canEditComment=false" class="ml-1" matTooltip="Cancelar">Cancelar</button>
+                    <button mat-raised-button color="primary" type="submit" matTooltip="Editar comentario">Guardar</button>
+                    <button mat-raised-button color="warn" (click)="canEditComment=false" class="ml-1" matTooltip="Cancelar">Cancelar</button>
                 </form>
             </div>
             <!-- END CONTENT -->
