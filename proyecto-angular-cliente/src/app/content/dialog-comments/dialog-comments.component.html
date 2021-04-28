@@ -15,6 +15,7 @@
 
             <mat-list role="list">
                 <mat-list-item role="listitem" *ngFor="let comment of data.commentList; let i = index">
+                        
                     {{i+1}}.-&nbsp;
                     <span [className]="!comment.isActive ? 'strikethrough' : ''">{{comment['text']}}</span>
                     <button *ngIf="comment.isActive" mat-icon-button color="primary" aria-label="Edit" (click)=allowEditComment(i) matTooltip="Editar comentario">

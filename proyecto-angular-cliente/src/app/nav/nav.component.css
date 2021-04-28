@@ -33,3 +33,9 @@
   .mat-drawer {
     width: 20%;
   }
+  
+  ::ng-deep .my-custom-class .label {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }

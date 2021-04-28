@@ -1,0 +1,7 @@
+<h2 mat-dialog-title>Enum</h2>
+<mat-dialog-content>
+<p><span *ngFor="let enum of data.enumList; index as i"><span *ngIf="i != 0">, </span>{{enum}}</span></p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

@@ -20,6 +20,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { DialogCommentsComponent } from './content/dialog-comments/dialog-comments.component';
 import { WinAuthInterceptor } from './shared/winauth-interceptor';
 import { DialogRolComponent } from './home/dialog-rol/dialog-rol.component';
+import { DialogEnumComponent } from './content/dialog-enum/dialog-enum.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { DialogRolComponent } from './home/dialog-rol/dialog-rol.component';
     FooterComponent,
     HomeComponent,
     DialogCommentsComponent,
-    DialogRolComponent
+    DialogRolComponent,
+    DialogEnumComponent
   ],
   imports: [
     BrowserModule,

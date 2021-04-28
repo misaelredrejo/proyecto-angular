@@ -9,15 +9,18 @@ import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCommentsComponent } from './dialog-comments/dialog-comments.component';
 import { Comment } from 'src/app/shared/comment.model';
+import { DialogEnumComponent } from './dialog-enum/dialog-enum.component';
 
 
 interface EsquemaNode {
-  name: string;
-  literal: string;
+  name?: string;
+  literal?: string;
+  literaleu?:string;
   children?: EsquemaNode[];
   esquema?: any;
   comentarios?: Comment[];
   cntComentarios?: number;
+  tableItems?: any[];
 }
 
 @Component({
@@ -98,16 +101,20 @@ export class ContentComponent implements OnInit {
 
   getChildren(properties: any, containsAllOf = false) {
     let children: EsquemaNode[] = [];
+    let tableItems: any[] = [];
     if (containsAllOf) {
       for (let key in properties) {
         let value = properties[key];
         let key1 = value['$ref'].substring(2);
         let literal = (this.literaleses[key1] ? this.literaleses[key1] : this.literaleses[key1.toLowerCase()]);
-
+        let literaleu = (this.literaleseu[key1] ? this.literaleseu[key1] : this.literaleseu[key1.toLowerCase()]);
+        let esquema = this.todoEsquema[key1];
         let obj: any = {};
         obj.name = key1;
         obj.literal = literal;
+        obj.literaleu = literaleu;
         obj.comentarios = [];
+        obj.esquema = esquema;
         this.apiService.getCommentsByPath(this.todoEsquema[key1]['path']).subscribe(data => {
           obj.comentarios = data;
         }, error => {
@@ -127,17 +134,21 @@ export class ContentComponent implements OnInit {
           children.push(obj);
         } else {
           obj.esquema = this.todoEsquema[key1];
-          
-          children.push(obj);
+          tableItems.push(obj); //
+          //children.push(obj);
         }
       }
     } else {
       for (let key in properties) {
         let literal = (this.literaleses[key] ? this.literaleses[key] : this.literaleses[key.toLowerCase()]);
+        let literaleu = (this.literaleseu[key] ? this.literaleseu[key] : this.literaleseu[key.toLowerCase()]);
 
         let obj: any = {};
+        let esquema = this.todoEsquema[key];
         obj.name = key;
         obj.literal = literal;
+        obj.literaleu = literaleu;
+        obj.esquema = esquema;
         obj.comentarios = [];
         this.apiService.getCommentsByPath(this.todoEsquema[key]['path']).subscribe(data => {
           obj.comentarios = data;
@@ -158,11 +169,12 @@ export class ContentComponent implements OnInit {
           children.push(obj);
         } else {
           obj.esquema = this.todoEsquema[key];
-          children.push(obj);
+          tableItems.push(obj); //
+          //children.push(obj);
         }
       }
     }
-
+    if (tableItems.length > 0) children.push({tableItems: tableItems});
     return children;
   }
 
@@ -175,7 +187,13 @@ export class ContentComponent implements OnInit {
     });
   }
 
-
+  openDialogEnumList(enumList: any[]) {
+    this.dialog.open(DialogEnumComponent, {
+      data: {
+        enumList: enumList
+      }
+    });
+  }
 
 
 }
