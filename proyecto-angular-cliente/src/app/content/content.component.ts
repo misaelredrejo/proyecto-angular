@@ -8,8 +8,10 @@ import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCommentsComponent } from './dialog-comments/dialog-comments.component';
-import { Comment } from 'src/app/shared/comment.model';
+import { Comment } from 'src/app/shared/models/comment.model';
 import { DialogEnumComponent } from './dialog-enum/dialog-enum.component';
+import { Rol } from '../shared/models/enums.model';
+import { TitleService } from '../shared/title.service';
 
 
 interface EsquemaNode {
@@ -21,6 +23,8 @@ interface EsquemaNode {
   comentarios?: Comment[];
   cntComentarios?: number;
   tableItems?: any[];
+  tableNumber?: any[];
+  tableString?: any[];
 }
 
 @Component({
@@ -44,6 +48,8 @@ export class ContentComponent implements OnInit {
   literal: string;
   literaleu: string;
   TABLE_COLS = ['type', 'format', 'minimum', 'maximum', 'minLength', 'maxLength', 'enum', 'expandible', 'readOnly', 'multipleOf', 'required', 'path'];
+  TABLE_NUM_COLS = ['type',"minimum", "maximum",  "path", "readOnly", "format","expandible"];
+  TABLE_STR_COLS = ['type',"minLength","maxLength", "enum", "path", "format", "readOnly", "required", "multipleOf", "expandible"];
   treeControl = new NestedTreeControl<EsquemaNode>(node => node.children);
   dataSource = new MatTreeNestedDataSource<EsquemaNode>();
 
@@ -51,12 +57,28 @@ export class ContentComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private apiService: ApiService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private titleService: TitleService
   ) {
+
   }
   hasChild = (_: number, node: EsquemaNode) => !!node.children && node.children.length > 0;
 
   ngOnInit(): void {
+
+    this.apiService.getUsername().subscribe(data => {
+      this.apiService.getUser(data).subscribe(data => {
+        if (data.rol == Rol.Desarrollador) {
+          this.TABLE_COLS.splice(6, 1);
+          this.TABLE_NUM_COLS.splice(6, 1);
+          this.TABLE_STR_COLS.splice(9, 1);
+        }
+      }, error => {
+        console.log(error);
+      });
+    }, error => {
+      console.log(error);
+    });
 
     this.apiService
       .getJSON()
@@ -70,9 +92,11 @@ export class ContentComponent implements OnInit {
             this.link = params['link'];
             this.literal = (this.literaleses[this.link] ? this.literaleses[this.link] : this.literaleses[this.link.toLowerCase()]);
             this.literaleu = (this.literaleseu[this.link] ? this.literaleseu[this.link] : this.literaleseu[this.link.toLowerCase()]);
+            
+            this.titleService.changeTitle(this.link + ' - ' + this.literal);
             this.esquema = this.todoEsquema[this.link];
             let dataInsert: EsquemaNode[] = [];
-
+            
             let obj: EsquemaNode = { name: this.link, esquema: this.esquema, literal: this.literal};
 
             
@@ -102,6 +126,8 @@ export class ContentComponent implements OnInit {
   getChildren(properties: any, containsAllOf = false) {
     let children: EsquemaNode[] = [];
     let tableItems: any[] = [];
+    let tableNumberItems: any[] = [];
+    let tableStringItems: any[] = [];
     if (containsAllOf) {
       for (let key in properties) {
         let value = properties[key];
@@ -134,7 +160,13 @@ export class ContentComponent implements OnInit {
           children.push(obj);
         } else {
           obj.esquema = this.todoEsquema[key1];
-          tableItems.push(obj); //
+          tableItems.push(obj);
+          if (obj.esquema['type'] == 'number') {
+            tableNumberItems.push(obj);
+          }else if (obj.esquema['type'] == 'string') {
+            tableStringItems.push(obj);
+          }
+           //
           //children.push(obj);
         }
       }
@@ -169,12 +201,20 @@ export class ContentComponent implements OnInit {
           children.push(obj);
         } else {
           obj.esquema = this.todoEsquema[key];
-          tableItems.push(obj); //
+          tableItems.push(obj);
+          if (obj.esquema['type'] == 'number') {
+            tableNumberItems.push(obj);
+          }else if (obj.esquema['type'] == 'string') {
+            tableStringItems.push(obj);
+          }
+          //
           //children.push(obj);
         }
       }
     }
-    if (tableItems.length > 0) children.push({tableItems: tableItems});
+    if (tableItems.length > 0) children.push({tableItems: tableItems, tableString: tableStringItems, tableNumber: tableNumberItems});
+   // if (tableStringItems.length > 0) children.push({tableString: tableStringItems});
+    //if (tableNumberItems.length > 0) children.push({tableNumber: tableNumberItems});
     return children;
   }
 

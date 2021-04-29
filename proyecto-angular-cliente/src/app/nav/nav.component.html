@@ -3,10 +3,10 @@
     <button mat-icon-button (click)="snav.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
-    <button mat-icon-button [routerLink]="['/home']" (click)="titulo='Configuración NPR'">
+    <button mat-icon-button [routerLink]="['/home']" (click)="title='Configuración NPR'">
         <mat-icon>home</mat-icon>
       </button>
-    <h1 class="example-app-name">{{titulo}}</h1>
+    <h1 class="example-app-name">{{title}}</h1>
     <h1 class="ml-auto">{{user}}</h1>
   </mat-toolbar>
 
@@ -14,7 +14,7 @@
     <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
       fixedTopGap="56">
 
-      <ng-material-multilevel-menu [configuration]='config' [items]='appitems' (selectedItem)="selectedItem($event)" >
+      <ng-material-multilevel-menu [configuration]='config' [items]='appitems' >
         </ng-material-multilevel-menu>
       
     </mat-sidenav>

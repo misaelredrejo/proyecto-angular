@@ -22,8 +22,25 @@ namespace FBProyecto.Controllers
             _context = context;
         }
 
-        // GET: api/<UserController>
-        [HttpGet]
+        // GET: api/<UserController>/username
+        [HttpGet("{*username}")]
+        public async Task<IActionResult> GetUserByUsername(string username)
+        {
+            try
+            {
+                username = username.Replace('/', '\\');
+                var user = await _context.User.Where(u => u.Username == username).SingleOrDefaultAsync();
+                if (user == null) return NotFound();
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET: api/<UserController>/username
+        [HttpGet("username")]
         public string Get()
         {
             return AccountHelper.GetWinAuthAccount(HttpContext);

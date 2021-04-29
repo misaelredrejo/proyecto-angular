@@ -1,101 +1,134 @@
-    <div class="m-5">
-      <h4>{{ literal }}</h4>
-      <h4>{{ literaleu }}</h4>
-      <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
-        <!-- This is the tree node template for leaf nodes -->
-        <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
-          <li class="mat-tree-node" class="table-responsive  mr-5 cursor-default">
-            <!-- use a disabled button to provide padding for tree leaf -->
-            <button mat-icon-button disabled></button>
-            <!-- Añadir tabla -->
-            <!--
-            <table class="table table-bordered table-hover">
-              <thead>
-                <tr>
-                  <th colspan="100">
-                    <button *ngIf="node.cntComentarios && node.cntComentarios > 0" mat-raised-button
-                      matBadge="{{node.cntComentarios}}" matBadgeColor="accent" matTooltip="Ver comentarios"
-                      (click)="openDialog(node.comentarios, node.esquema['path'])" class="table-button">
-                      {{node.name}} - {{node.literal}}
-                    </button>
-                    <button *ngIf="!node.cntComentarios || (node.cntComentarios && node.cntComentarios == 0)" mat-raised-button matTooltip="Ver comentarios"
-                      (click)="openDialog(node.comentarios, node.esquema['path'])" class="table-button">
-                      {{node.name}} - {{node.literal}}
-                    </button>
-
-                  </th>
-                </tr>
-                <tr>
-                  <th scope="col" *ngFor="let item of node.esquema | keyvalue">{{item.key}}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td *ngFor="let item of node.esquema | keyvalue">{{item.value}}</td>
-                </tr>
-              </tbody>
-            </table>              
-            -->
-
-            <!--TERMINAR AÑADIR TABLA-->
-            <!--NUEVA TABLA-->
-            <table class="table table-bordered table-hover">
-              <thead>
-                <tr>
-                  <th scope="col">Código-Literal</th>
-                  <th scope="col" *ngFor="let column of TABLE_COLS">{{column}}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let row of node.tableItems">
-                  <td>
-                    <div mat-raised-button
-                      matBadge="{{row.cntComentarios}}" matBadgeColor="accent" matTooltip="Ver comentarios"
-                      (click)="openDialog(row.comentarios, row.esquema['path'])" class="table-button" [matBadgeHidden]="row.cntComentarios == 0">
-                      {{row.name}} - {{row.literal}} - {{row.literaleu}}
-                  </div>
-                </td>
-                  <td *ngFor="let column of TABLE_COLS">
-                    <span *ngIf="column == 'enum'" >
-                      <span *ngIf="row.esquema[column]?.length > 4" (click)="openDialogEnumList(row.esquema[column])">
-                        {{row.esquema[column] | slice:0:4}}...
-                      </span>
-                      <span *ngIf="row.esquema[column]?.length <= 4">
-                        {{row.esquema[column]}}
-                      </span>
-                    </span>
-                    
-                    <span *ngIf="column != 'enum'">{{ row.esquema[column] }}</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-            <!--TERMINAR NUEVA TABLA-->
-          </li>
-        </mat-tree-node>
-        <!-- This is the tree node template for expandable nodes -->
-        <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
-          <li matTreeNodeToggle class="cursor-pointer">
-            <div class="mat-tree-node mat-tree-node-hover">
-              <button mat-icon-button [attr.aria-label]="'Toggle ' + node.name">
-                <mat-icon class="mat-icon-rtl-mirror">
-                  {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-                </mat-icon>
-              </button>
-              <span  matBadge="{{node.cntComentarios}}"
-                matBadgeOverlap="false" matBadgeColor="accent" [matBadgeHidden]="node.cntComentarios == 0">
-                {{node.name}} - {{node.literal}} - {{node.literaleu}}
-                <span *ngIf="node.esquema['type'] == 'array'">
-                    -> Type: array, minItems: {{node.esquema['minItems']}}, maxItems: {{node.esquema['maxItems']}}
+<div class="m-5">
+  <h4>{{ literal }}</h4>
+  <h4>{{ literaleu }}</h4>
+  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
+    <!-- This is the tree node template for leaf nodes -->
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+      <li class="mat-tree-node" class="table-responsive  mr-5 cursor-default">
+        <!-- use a disabled button to provide padding for tree leaf -->
+        <button mat-icon-button disabled></button>
+        <!-- Añadir tabla -->
+        <!--
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Código-Literal</th>
+              <th scope="col" *ngFor="let column of TABLE_COLS">{{column}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of node.tableItems">
+              <td>
+                <button mat-button matBadge="{{row.cntComentarios}}" matBadgeColor="accent" matTooltip="Ver comentarios"
+                  (click)="openDialog(row.comentarios, row.esquema['path'])" class="table-button"
+                  [matBadgeHidden]="row.cntComentarios == 0">
+                  {{row.name}}<br>{{row.literal}}<br>{{row.literaleu}}
+                </button>
+              </td>
+              <td *ngFor="let column of TABLE_COLS">
+                <span *ngIf="column == 'enum'">
+                  <span *ngIf="row.esquema[column]?.length > 4" (click)="openDialogEnumList(row.esquema[column])">
+                    {{row.esquema[column] | slice:0:4}}...
+                  </span>
+                  <span *ngIf="row.esquema[column]?.length <= 4">
+                    {{row.esquema[column]}}
+                  </span>
                 </span>
-              </span>
-            </div>
-            <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
-              <ng-container matTreeNodeOutlet></ng-container>
-            </ul>
-          </li>
-        </mat-nested-tree-node>
-      </mat-tree>
-    </div>
 
+                <span *ngIf="column != 'enum'">{{ row.esquema[column] }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        -->
+        <!--TERMINARTABLA-->
+        <!--Number tabla-->
+        <table *ngIf="node.tableNumber.length > 0" class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Código-Literal</th>
+              <th scope="col" *ngFor="let column of TABLE_NUM_COLS">{{column}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of node.tableNumber">
+              <td>
+                <button mat-button matBadge="{{row.cntComentarios}}" matBadgeColor="accent" matTooltip="Ver comentarios"
+                  (click)="openDialog(row.comentarios, row.esquema['path'])" class="table-button"
+                  [matBadgeHidden]="row.cntComentarios == 0">
+                  {{row.name}}<br>{{row.literal}}<br>{{row.literaleu}}
+                </button>
+              </td>
+              <td *ngFor="let column of TABLE_NUM_COLS">
+                <span *ngIf="column == 'enum'">
+                  <span *ngIf="row.esquema[column]?.length > 4" (click)="openDialogEnumList(row.esquema[column])">
+                    {{row.esquema[column] | slice:0:4}}...
+                  </span>
+                  <span *ngIf="row.esquema[column]?.length <= 4">
+                    {{row.esquema[column]}}
+                  </span>
+                </span>
+
+                <span *ngIf="column != 'enum'">{{ row.esquema[column] }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!--String tabla-->
+        <table *ngIf="node.tableString.length > 0" class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Código-Literal</th>
+              <th scope="col" *ngFor="let column of TABLE_STR_COLS">{{column}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of node.tableString">
+              <td>
+                <button mat-button matBadge="{{row.cntComentarios}}" matBadgeColor="accent" matTooltip="Ver comentarios"
+                  (click)="openDialog(row.comentarios, row.esquema['path'])" class="table-button"
+                  [matBadgeHidden]="row.cntComentarios == 0">
+                  {{row.name}}<br>{{row.literal}}<br>{{row.literaleu}}
+                </button>
+              </td>
+              <td *ngFor="let column of TABLE_STR_COLS">
+                <span *ngIf="column == 'enum'">
+                  <span *ngIf="row.esquema[column]?.length > 4" (click)="openDialogEnumList(row.esquema[column])">
+                    {{row.esquema[column] | slice:0:4}}...
+                  </span>
+                  <span *ngIf="row.esquema[column]?.length <= 4">
+                    {{row.esquema[column]}}
+                  </span>
+                </span>
+
+                <span *ngIf="column != 'enum'">{{ row.esquema[column] }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+    </mat-tree-node>
+    <!-- This is the tree node template for expandable nodes -->
+    <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+      <li matTreeNodeToggle class="cursor-pointer">
+        <div class="mat-tree-node mat-tree-node-hover">
+          <button mat-icon-button [attr.aria-label]="'Toggle ' + node.name">
+            <mat-icon class="mat-icon-rtl-mirror">
+              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+            </mat-icon>
+          </button>
+          <span matBadge="{{node.cntComentarios}}" matBadgeOverlap="false" matBadgeColor="accent"
+            [matBadgeHidden]="node.cntComentarios == 0">
+            {{node.name}} - {{node.literal}} - {{node.literaleu}}
+            <span *ngIf="node.esquema['type'] == 'array'">
+              -> Type: array, minItems: {{node.esquema['minItems']}}, maxItems: {{node.esquema['maxItems']}}
+            </span>
+          </span>
+        </div>
+        <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
+          <ng-container matTreeNodeOutlet></ng-container>
+        </ul>
+      </li>
+    </mat-nested-tree-node>
+  </mat-tree>
+</div>

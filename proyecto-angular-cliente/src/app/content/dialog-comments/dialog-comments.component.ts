@@ -3,10 +3,10 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiService } from 'src/app/shared/api.service';
-import { Comment } from 'src/app/shared/comment.model'
-import { Action, Rol } from 'src/app/shared/enums.model';
-import { User } from 'src/app/shared/user.model';
-import { Log } from 'src/app/shared/log.model';
+import { Comment } from 'src/app/shared/models/comment.model'
+import { Action, Rol } from 'src/app/shared/models/enums.model';
+import { User } from 'src/app/shared/models/user.model';
+import { Log } from 'src/app/shared/models/log.model';
 
 
 export interface DialogData {
@@ -22,17 +22,12 @@ export interface DialogData {
 })
 export class DialogCommentsComponent implements OnInit {
 
-
   canEditComment = false;
   formAdd: FormGroup;
   formEdit: FormGroup;
   indexComment: number | undefined;
 
-  user: User = {
-    userId: 1,
-    username: "Misael",
-    rol: Rol.Desarrollador
-  }
+  user: User;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -49,6 +44,15 @@ export class DialogCommentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.apiService.getUsername().subscribe(data => {
+      this.apiService.getUser(data).subscribe(data1 => {
+        this.user = data1;
+      }, error => {
+        console.log(error);
+      });
+    }, error => {
+      console.log(error);
+    });
   }
 
   // Workaround for angular component issue #13870

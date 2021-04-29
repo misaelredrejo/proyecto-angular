@@ -5,10 +5,10 @@ import {
   HttpErrorResponse,
 } from "@angular/common/http";
 import { catchError, map } from "rxjs/operators";
-import { Log } from './log.model';
-import {Comment} from 'src/app/shared/comment.model';
-import { CommentDTO } from './commentdto.model';
-import { User } from './user.model';
+import { Log } from './models/log.model';
+import {Comment} from 'src/app/shared/models/comment.model';
+import { CommentDTO } from './models/commentdto.model';
+import { User } from './models/user.model';
 
 
 @Injectable({
@@ -61,9 +61,12 @@ export class ApiService {
     );
   }
 
+  public getUser(username: string): Observable<User> {
+    return this.http.get<User>(this.myAppUrl + this.myApiUserUrl + username);
+  }
 
-  public getUser(): Observable<string> {
-    return this.http.get(this.myAppUrl + this.myApiUserUrl, { responseType: 'text', });
+  public getUsername(): Observable<string> {
+    return this.http.get(this.myAppUrl + this.myApiUserUrl+'username', { responseType: 'text', });
   }
 
   public userExistsInDb(username: string): Observable<boolean> {

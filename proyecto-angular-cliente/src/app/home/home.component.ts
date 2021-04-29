@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, } from '@angular/core';
 import { ApiService } from '../shared/api.service';
-import { Log } from '../shared/log.model';
-import { Action, Rol } from '../shared/enums.model';
-import { CommentDTO } from '../shared/commentdto.model';
+import { Log } from '../shared/models/log.model';
+import { Action, Rol } from '../shared/models/enums.model';
+import { CommentDTO } from '../shared/models/commentdto.model';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogRolComponent } from './dialog-rol/dialog-rol.component';
-import { User } from '../shared/user.model';
+import { User } from '../shared/models/user.model';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +14,7 @@ import { User } from '../shared/user.model';
 })
 export class HomeComponent implements OnInit {
   
+  user: User;
   commentLogList: CommentDTO[] = [];
   username: string;
   rol: string;
@@ -28,7 +29,7 @@ export class HomeComponent implements OnInit {
     };
 
 
-    this.apiService.getUser().subscribe(data => {
+    this.apiService.getUsername().subscribe(data => {
       this.username = data;
 
       this.apiService.userExistsInDb(this.username).subscribe(data => {
@@ -66,7 +67,7 @@ export class HomeComponent implements OnInit {
         user.rol = Rol.Desarrollador;
       }
       this.apiService.addUser(user).subscribe(data => {
-        console.log(data);
+        this.user = data;
       }, error => {
         console.log(error);
       })

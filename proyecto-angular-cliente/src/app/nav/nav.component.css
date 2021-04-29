@@ -39,3 +39,7 @@
     overflow: hidden !important;
     text-overflow: ellipsis !important;
   }
+
+  ::ng-deep .anml-data{
+    width: 90% !important;
+  }

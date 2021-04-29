@@ -1,17 +1,21 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { ApiService } from '../shared/api.service';
+import { User } from '../shared/models/user.model';
+import { TitleService } from '../shared/title.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.css']
+  styleUrls: ['./nav.component.css'],
+  providers: [TitleService]
 })
 export class NavComponent implements OnDestroy {
   menuProfesional: any[] = [];
   literaleses: any = [];
-  titulo: string = "Configuración NPR";
   user: string = "";
+  title: string = "Configuración NPR";
 
   appitemsInsert = [];
   appitems = [
@@ -26,13 +30,19 @@ export class NavComponent implements OnDestroy {
 
   mobileQuery: MediaQueryList;
 
+  
+  subscription: Subscription;
+
   private _mobileQueryListener: () => void;
 
-  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private apiService: ApiService) {
+  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private apiService: ApiService, private titleService: TitleService) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
-
+    this.subscription = titleService.title$.subscribe(
+      title => {
+        this.title = title;
+    });
   }
 
   ngOnDestroy(): void {
@@ -41,7 +51,7 @@ export class NavComponent implements OnDestroy {
 
   ngOnInit() {
     
-    this.apiService.getUser().subscribe(data => {
+    this.apiService.getUsername().subscribe(data => {
       this.user = data;
     }, error => {
       console.log(error);
@@ -68,13 +78,11 @@ export class NavComponent implements OnDestroy {
       for (let key in item) {
         let value = item[key];
         let labelText = key + ' - ' + this.literaleses[key];
-        let title = labelText;
-        //labelText = (labelText.length > 30 ? labelText.substring(0, 30) + '...' : labelText);
 
         if (value && value.length > 0) { // Si tiene subniveles
-          this.appitemsInsert.push({ label: labelText, items: this.itemsSubMenu(value), titulo: title });
+          this.appitemsInsert.push({ label: labelText, items: this.itemsSubMenu(value)});
         } else {
-          this.appitemsInsert.push({ label: labelText, link: "/content/" + key, titulo: title });
+          this.appitemsInsert.push({ label: labelText, link: "/content/" + key});
         }
       }
     });
@@ -85,17 +93,12 @@ export class NavComponent implements OnDestroy {
     let itemsSubMenu = [];
     items.forEach((element) => {
       let labelText = element + ' - ' + (this.literaleses[element] ? this.literaleses[element] : this.literaleses[element.toLowerCase()]);
-      let title1 = labelText;
-      //labelText = (labelText.length > 30 ? labelText.substring(0, 30) + '...' : labelText);
-      itemsSubMenu.push({ label: labelText, link: "/content/" + element, titulo: title1 })
+      itemsSubMenu.push({ label: labelText, link: "/content/" + element})
     });
     return itemsSubMenu
   }
 
-  selectedItem(item: any): void {
-    this.titulo = item['titulo'];
 
-  }
 
 }
 
