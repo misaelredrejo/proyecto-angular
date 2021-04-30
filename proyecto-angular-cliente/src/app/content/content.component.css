@@ -20,6 +20,7 @@
 .table-button {
   background-color: ghostwhite;
   width: 100%;
+  font-size: 12px;
 }
 
 .cursor-pointer {
@@ -28,3 +29,15 @@
 
 .cursor-default {cursor: default;}
 
+.table-text {
+  font-size: 12px;
+}
+
+.row-number {
+  background-color: aliceblue;
+}
+
+.table-header {
+    background-color: #95A5A6;
+    text-transform: uppercase;
+}

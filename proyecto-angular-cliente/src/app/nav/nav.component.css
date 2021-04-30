@@ -16,6 +16,9 @@
   
   h1.example-app-name {
     margin-left: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   .example-sidenav-container {
@@ -42,4 +45,9 @@
 
   ::ng-deep .anml-data{
     width: 90% !important;
+  }
+
+  .form-search {
+    width: 200px;
+    font-size: 70%;
   }

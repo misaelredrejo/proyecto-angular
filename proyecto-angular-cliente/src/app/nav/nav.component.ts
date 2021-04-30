@@ -16,6 +16,7 @@ export class NavComponent implements OnDestroy {
   literaleses: any = [];
   user: string = "";
   title: string = "Configuración NPR";
+  value: string;
 
   appitemsInsert = [];
   appitems = [

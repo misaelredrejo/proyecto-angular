@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { ApiService } from '../shared/api.service';
 
@@ -56,6 +56,7 @@ export class ContentComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private apiService: ApiService,
     public dialog: MatDialog,
     private titleService: TitleService
@@ -69,7 +70,7 @@ export class ContentComponent implements OnInit {
     this.apiService.getUsername().subscribe(data => {
       this.apiService.getUser(data).subscribe(data => {
         if (data.rol == Rol.Desarrollador) {
-          this.TABLE_COLS.splice(6, 1);
+          this.TABLE_COLS.splice(7, 1);
           this.TABLE_NUM_COLS.splice(6, 1);
           this.TABLE_STR_COLS.splice(9, 1);
         }
@@ -90,11 +91,15 @@ export class ContentComponent implements OnInit {
 
           this.route.params.subscribe(params => {
             this.link = params['link'];
+            this.esquema = this.todoEsquema[this.link];
+            if (this.esquema == null) {
+              this.router.navigate(['/404']);
+              return;
+            }
             this.literal = (this.literaleses[this.link] ? this.literaleses[this.link] : this.literaleses[this.link.toLowerCase()]);
             this.literaleu = (this.literaleseu[this.link] ? this.literaleseu[this.link] : this.literaleseu[this.link.toLowerCase()]);
             
-            this.titleService.changeTitle(this.link + ' - ' + this.literal);
-            this.esquema = this.todoEsquema[this.link];
+            this.titleService.changeTitle(this.link + ' - ' + this.literal + ' - ' + this.literaleu);
             let dataInsert: EsquemaNode[] = [];
             
             let obj: EsquemaNode = { name: this.link, esquema: this.esquema, literal: this.literal};

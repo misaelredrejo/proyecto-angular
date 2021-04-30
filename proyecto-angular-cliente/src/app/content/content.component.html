@@ -8,16 +8,16 @@
         <!-- use a disabled button to provide padding for tree leaf -->
         <button mat-icon-button disabled></button>
         <!-- Añadir tabla -->
-        <!--
-        <table class="table table-bordered table-hover">
+        
+        <table class="table table-bordered table-hover table-text">
           <thead>
-            <tr>
+            <tr class="table-header">
               <th scope="col">Código-Literal</th>
               <th scope="col" *ngFor="let column of TABLE_COLS">{{column}}</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let row of node.tableItems">
+            <tr *ngFor="let row of node.tableItems" [ngClass]="{'row-number': row.esquema['type'] == 'number'}">
               <td>
                 <button mat-button matBadge="{{row.cntComentarios}}" matBadgeColor="accent" matTooltip="Ver comentarios"
                   (click)="openDialog(row.comentarios, row.esquema['path'])" class="table-button"
@@ -40,12 +40,12 @@
             </tr>
           </tbody>
         </table>
-        -->
+        
         <!--TERMINARTABLA-->
         <!--Number tabla-->
-        <table *ngIf="node.tableNumber.length > 0" class="table table-bordered table-hover">
+        <table *ngIf="node.tableNumber.length > 0" class="table table-bordered table-hover table-text">
           <thead>
-            <tr>
+            <tr class="table-header">
               <th scope="col">Código-Literal</th>
               <th scope="col" *ngFor="let column of TABLE_NUM_COLS">{{column}}</th>
             </tr>
@@ -75,9 +75,9 @@
           </tbody>
         </table>
         <!--String tabla-->
-        <table *ngIf="node.tableString.length > 0" class="table table-bordered table-hover">
+        <table *ngIf="node.tableString.length > 0" class="table table-bordered table-hover table-text">
           <thead>
-            <tr>
+            <tr class="table-header">
               <th scope="col">Código-Literal</th>
               <th scope="col" *ngFor="let column of TABLE_STR_COLS">{{column}}</th>
             </tr>

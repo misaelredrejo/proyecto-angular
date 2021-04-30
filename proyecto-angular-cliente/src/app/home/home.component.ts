@@ -6,6 +6,7 @@ import { CommentDTO } from '../shared/models/commentdto.model';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogRolComponent } from './dialog-rol/dialog-rol.component';
 import { User } from '../shared/models/user.model';
+import { AuthenticationService } from '../core/authentication/authentication.service';
 
 @Component({
   selector: 'app-home',
@@ -19,7 +20,7 @@ export class HomeComponent implements OnInit {
   username: string;
   rol: string;
 
-  constructor(private apiService: ApiService, public dialog: MatDialog) { }
+  constructor(private apiService: ApiService, public dialog: MatDialog, private authenticationService: AuthenticationService) { }
 
   ngOnInit(): void {
     this.apiService.getLast10Logs().subscribe(data => {
@@ -31,9 +32,9 @@ export class HomeComponent implements OnInit {
 
     this.apiService.getUsername().subscribe(data => {
       this.username = data;
+      this.authenticationService.authenticate(this.username);
 
       this.apiService.userExistsInDb(this.username).subscribe(data => {
-        console.log(data);
         if (data == false) {
           this.openDialogChooseUserRol();
         }
