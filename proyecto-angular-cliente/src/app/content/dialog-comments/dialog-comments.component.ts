@@ -3,11 +3,11 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiService } from 'src/app/shared/api.service';
-import { Comment } from 'src/app/shared/models/comment.model'
-import { Action, Rol } from 'src/app/shared/models/enums.model';
-import { User } from 'src/app/shared/models/user.model';
-import { Log } from 'src/app/shared/models/log.model';
-import { DialogDataComments } from 'src/app/shared/models/dialog-data-comments.model';
+import { Comment } from 'src/app/models/comment.model'
+import { Action} from 'src/app/models/enums.model';
+import { User } from 'src/app/models/user.model';
+import { Log } from 'src/app/models/log.model';
+import { DialogDataComments } from 'src/app/models/dialog-data-comments.model';
 
 
 @Component({

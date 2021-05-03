@@ -3,12 +3,11 @@
   <p>Seleccionar rol</p>
   <mat-form-field appearance="fill">
         <mat-label>Elija una opción</mat-label>
-        <mat-select [(value)]="data.rol">
-          <mat-option value="Desarrollador">Desarrollador</mat-option>
-          <mat-option value="Otro">Otro</mat-option>
+        <mat-select [(value)]="data.rolValue">
+          <mat-option *ngFor="let rolValue of rolTypes" value="{{rolValue}}">{{rol[rolValue]}}</mat-option>
         </mat-select>
       </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="data.rol" cdkFocusInitial>Ok</button>
+  <button mat-button [mat-dialog-close]="data.rolValue" cdkFocusInitial>Ok</button>
 </div>

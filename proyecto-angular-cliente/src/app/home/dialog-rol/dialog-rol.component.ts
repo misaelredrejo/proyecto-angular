@@ -1,10 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { Rol } from 'src/app/shared/models/enums.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DialogDataRol } from 'src/app/models/dialog-data-rol.model';
+import { Rol } from 'src/app/models/enums.model';
 
-export interface DialogData {
-  rol: string;
-}
+
 
 @Component({
   selector: 'app-dialog-rol',
@@ -13,9 +12,12 @@ export interface DialogData {
 })
 export class DialogRolComponent implements OnInit {
 
+  public rolTypes = Object.values(Rol).filter(x => !isNaN(+x));;
+  rol = Rol;
+
   constructor(
     public dialogRef: MatDialogRef<DialogRolComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) {} 
+    @Inject(MAT_DIALOG_DATA) public data: DialogDataRol) {} 
 
   ngOnInit(): void {
   }

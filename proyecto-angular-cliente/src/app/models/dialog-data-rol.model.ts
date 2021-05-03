@@ -1,3 +1,3 @@
 export interface DialogDataRol {
-    rol: string;
+    rolValue: number;
 }

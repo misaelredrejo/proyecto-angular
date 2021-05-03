@@ -8,11 +8,11 @@ import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCommentsComponent } from './dialog-comments/dialog-comments.component';
-import { Comment } from 'src/app/shared/models/comment.model';
+import { Comment } from 'src/app/models/comment.model';
 import { DialogEnumComponent } from './dialog-enum/dialog-enum.component';
-import { Rol } from '../shared/models/enums.model';
+import { Rol } from '../models/enums.model';
 import { TitleService } from '../shared/title.service';
-import { EsquemaNode } from '../shared/models/esquema-node.model';
+import { EsquemaNode } from '../models/esquema-node.model';
 
 
 

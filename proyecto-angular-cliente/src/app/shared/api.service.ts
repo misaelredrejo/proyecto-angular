@@ -5,10 +5,9 @@ import {
   HttpErrorResponse,
 } from "@angular/common/http";
 import { catchError, map } from "rxjs/operators";
-import { Log } from './models/log.model';
-import {Comment} from 'src/app/shared/models/comment.model';
-import { CommentDTO } from './models/commentdto.model';
-import { User } from './models/user.model';
+import {Comment} from '../models/comment.model';
+import { CommentDTO } from '../models/commentdto.model';
+import { User } from '../models/user.model';
 
 
 @Injectable({

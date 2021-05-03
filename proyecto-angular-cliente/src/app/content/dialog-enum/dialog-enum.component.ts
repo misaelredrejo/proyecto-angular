@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DialogDataEnum } from 'src/app/shared/models/dialog-data-enum.model';
+import { DialogDataEnum } from 'src/app/models/dialog-data-enum.model';
 
 
 
