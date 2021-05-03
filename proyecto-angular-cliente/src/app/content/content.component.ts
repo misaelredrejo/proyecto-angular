@@ -12,20 +12,10 @@ import { Comment } from 'src/app/shared/models/comment.model';
 import { DialogEnumComponent } from './dialog-enum/dialog-enum.component';
 import { Rol } from '../shared/models/enums.model';
 import { TitleService } from '../shared/title.service';
+import { EsquemaNode } from '../shared/models/esquema-node.model';
 
 
-interface EsquemaNode {
-  name?: string;
-  literal?: string;
-  literaleu?:string;
-  children?: EsquemaNode[];
-  esquema?: any;
-  comentarios?: Comment[];
-  cntComentarios?: number;
-  tableItems?: any[];
-  tableNumber?: any[];
-  tableString?: any[];
-}
+
 
 @Component({
   selector: 'app-content',

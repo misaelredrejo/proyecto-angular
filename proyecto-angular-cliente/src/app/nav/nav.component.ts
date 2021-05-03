@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 })
 export class NavComponent implements OnDestroy {
   menuProfesional: any[] = [];
-  literaleses: any = [];
+  literaleses: any[] = [];
   user: string = "";
   title: string = "Configuración NPR";
   value: string;

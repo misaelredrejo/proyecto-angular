@@ -1,9 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DialogDataEnum } from 'src/app/shared/models/dialog-data-enum.model';
 
-export interface DialogData {
-  enumList: any[];
-}
+
 
 @Component({
   selector: 'app-dialog-enum',
@@ -13,7 +12,7 @@ export interface DialogData {
 export class DialogEnumComponent implements OnInit {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: DialogData
+    @Inject(MAT_DIALOG_DATA) public data: DialogDataEnum
   ) {
   }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiService } from 'src/app/shared/api.service';
@@ -7,12 +7,7 @@ import { Comment } from 'src/app/shared/models/comment.model'
 import { Action, Rol } from 'src/app/shared/models/enums.model';
 import { User } from 'src/app/shared/models/user.model';
 import { Log } from 'src/app/shared/models/log.model';
-
-
-export interface DialogData {
-  commentList: Comment[];
-  path: string;
-}
+import { DialogDataComments } from 'src/app/shared/models/dialog-data-comments.model';
 
 
 @Component({
@@ -30,16 +25,16 @@ export class DialogCommentsComponent implements OnInit {
   user: User;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    @Inject(MAT_DIALOG_DATA) public data: DialogDataComments,
     private toastr: ToastrService,
     private fb: FormBuilder,
     private apiService: ApiService
   ) {
     this.formAdd = this.fb.group({
-      comment: ['']
+      comment: ['', Validators.required]
     });
     this.formEdit = this.fb.group({
-      comment: ['']
+      comment: ['', Validators.required]
     });
   }
 
@@ -72,42 +67,41 @@ export class DialogCommentsComponent implements OnInit {
   }
 
   addComment() {
-    let text: string = this.formAdd.get('comment').value;
-    if (text == null || text.length == 0) {
-      this.toastr.error('El comentario no puede estar vacío.', 'ERROR');
-      return;
-    }
-    let comment: Comment = {
-      commentId: 0,
-      path: this.data.path,
-      text: text,
-      logs: [{
-        logId: 0,
-        user: this.user,
-        date: new Date(),
-        action: Action.Añadir
-      }
-      ],
-      isActive: true
-    };
+    if (this.formAdd.valid) {
+      let text: string = this.formAdd.get('comment').value;
+      let comment: Comment = {
+        commentId: 0,
+        path: this.data.path,
+        text: text,
+        logs: [{
+          logId: 0,
+          user: this.user,
+          date: new Date(),
+          action: Action.Añadir
+        }
+        ],
+        isActive: true
+      };
 
-    this.apiService.addComment(comment).subscribe(data => {
-      this.data.commentList.push(data);
-      this.formAdd.reset();
-      this.toastr.success('Comentario añadido correctamente.', 'Añadir comentario');
-    }, error => {
-      console.log(error);
-      this.toastr.error('Error al añadir comentario.', 'ERROR');
-    });
+      this.apiService.addComment(comment).subscribe(data => {
+        this.data.commentList.push(data);
+        this.formAdd.reset();
+        this.toastr.success('Comentario añadido correctamente.', 'Añadir comentario');
+      }, error => {
+        console.log(error);
+        this.toastr.error('Error al añadir comentario.', 'ERROR');
+      });
+    } else {
+      this.toastr.error('El comentario no puede estar vacío.', 'ERROR');
+    }
+
   }
 
   editComment() {
-    let comment: Comment = Object.assign({}, this.data.commentList[this.indexComment]);
+
+    if (this.formEdit.valid) {
+      let comment: Comment = Object.assign({}, this.data.commentList[this.indexComment]);
       let text: string = this.formEdit.get('comment').value;
-      if (text.length == 0) {
-        this.toastr.error('El comentario no puede estar vacío.', 'ERROR');
-        return;
-      }
       let log: Log = {
         logId: 0,
         user: this.user,
@@ -116,19 +110,23 @@ export class DialogCommentsComponent implements OnInit {
       }
       comment.logs.push(log);
       comment.text = text;
-    this.apiService.updateComment(comment.commentId, comment).subscribe(data => {
-      this.toastr.success('Comentario editado correctamente', 'Editar comentario');
-      this.data.commentList[this.indexComment] = comment;
-      this.canEditComment = false;
-      this.indexComment = undefined;
-    }, error => {
-      console.log(error);
-      this.toastr.error('Error al editar comentario.', 'ERROR');
-    });
+      this.apiService.updateComment(comment.commentId, comment).subscribe(data => {
+        this.toastr.success('Comentario editado correctamente', 'Editar comentario');
+        this.data.commentList[this.indexComment] = comment;
+        this.canEditComment = false;
+        this.indexComment = undefined;
+      }, error => {
+        console.log(error);
+        this.toastr.error('Error al editar comentario.', 'ERROR');
+      });
+    } else {
+      this.toastr.error('El comentario no puede estar vacío.', 'ERROR');
+    }
+
   }
 
   deleteComment(index: number) {
-    
+
     let comment: Comment = Object.assign({}, this.data.commentList[index]);
     let log: Log = {
       logId: 0,
@@ -138,19 +136,19 @@ export class DialogCommentsComponent implements OnInit {
     };
     comment.logs.push(log);
     comment.isActive = false;
-      this.apiService.deleteComment(comment.commentId, comment).subscribe(data => {
-        this.data.commentList[index] = comment;
-        this.toastr.success('Comentario eliminado correctamente', 'Eliminar comentario');
-      },
-        error => {
-          console.log(error);
-          this.toastr.error('Error al eliminar comentario.', 'ERROR');
-        });
+    this.apiService.deleteComment(comment.commentId, comment).subscribe(data => {
+      this.data.commentList[index] = comment;
+      this.toastr.success('Comentario eliminado correctamente', 'Eliminar comentario');
+    },
+      error => {
+        console.log(error);
+        this.toastr.error('Error al eliminar comentario.', 'ERROR');
+      });
     this.canEditComment = false;
   }
 
   activateComment(index: number) {
-    
+
     let comment: Comment = Object.assign({}, this.data.commentList[index]);
     let log: Log = {
       logId: 0,
@@ -160,14 +158,14 @@ export class DialogCommentsComponent implements OnInit {
     };
     comment.logs.push(log);
     comment.isActive = true;
-      this.apiService.activateComment(comment.commentId, comment).subscribe(data => {
-        this.data.commentList[index] = comment;
-        this.toastr.success('Comentario activado correctamente', 'Activar comentario');
-      },
-        error => {
-          console.log(error);
-          this.toastr.error('Error al activar comentario.', 'ERROR');
-        });
+    this.apiService.activateComment(comment.commentId, comment).subscribe(data => {
+      this.data.commentList[index] = comment;
+      this.toastr.success('Comentario activado correctamente', 'Activar comentario');
+    },
+      error => {
+        console.log(error);
+        this.toastr.error('Error al activar comentario.', 'ERROR');
+      });
     this.canEditComment = false;
   }
 

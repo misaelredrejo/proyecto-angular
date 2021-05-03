@@ -18,9 +18,10 @@
 }
 
 .table-button {
-  background-color: ghostwhite;
+  background-color: rgb(232, 232, 252);
   width: 100%;
   font-size: 12px;
+  font-weight:800;
 }
 
 .cursor-pointer {
