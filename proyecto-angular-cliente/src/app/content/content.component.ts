@@ -37,9 +37,11 @@ export class ContentComponent implements OnInit {
   esquema: any[] = [];
   literal: string;
   literaleu: string;
+
   TABLE_COLS = ['type', 'format', 'minimum', 'maximum', 'minLength', 'maxLength', 'enum', 'expandible', 'readOnly', 'multipleOf', 'required', 'path'];
   TABLE_NUM_COLS = ['type',"minimum", "maximum",  "path", "readOnly", "format","expandible"];
   TABLE_STR_COLS = ['type',"minLength","maxLength", "enum", "path", "format", "readOnly", "required", "multipleOf", "expandible"];
+
   treeControl = new NestedTreeControl<EsquemaNode>(node => node.children);
   dataSource = new MatTreeNestedDataSource<EsquemaNode>();
 
@@ -57,6 +59,14 @@ export class ContentComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.checkUser();
+
+    this.loadJSON();
+
+    
+  }
+
+  checkUser(): void {
     this.apiService.getUsername().subscribe(data => {
       this.apiService.getUser(data).subscribe(data => {
         if (data.rol == Rol.Desarrollador) {
@@ -70,53 +80,56 @@ export class ContentComponent implements OnInit {
     }, error => {
       console.log(error);
     });
-
-    this.apiService
-      .getJSON()
-      .subscribe(
-        data => {
-          this.literaleses = data["literaleses"];
-          this.literaleseu = data["literaleseu"];
-          this.todoEsquema = data["esquema"];
-
-          this.route.params.subscribe(params => {
-            this.link = params['link'];
-            this.esquema = this.todoEsquema[this.link];
-            if (this.esquema == null) {
-              this.router.navigate(['/404']);
-              return;
-            }
-            this.literal = (this.literaleses[this.link] ? this.literaleses[this.link] : this.literaleses[this.link.toLowerCase()]);
-            this.literaleu = (this.literaleseu[this.link] ? this.literaleseu[this.link] : this.literaleseu[this.link.toLowerCase()]);
-            
-            this.titleService.changeTitle(this.link + ' - ' + this.literal + ' - ' + this.literaleu);
-            let dataInsert: EsquemaNode[] = [];
-            
-            let obj: EsquemaNode = { name: this.link, esquema: this.esquema, literal: this.literal};
-
-            
-            if (this.esquema['properties']) {
-              dataInsert = this.getChildren(this.esquema['properties']);
-            } else if (this.esquema['allOf']){
-              dataInsert = this.getChildren(this.esquema['allOf'], true);
-            } else {
-              
-              this.apiService.getCommentsByPath(this.esquema['path']).subscribe(data => {
-                obj.comentarios = data;
-              }, error => {
-                console.log(error);
-              });
-              dataInsert.push(obj);
-            }
-            this.dataSource.data = dataInsert;
-          });
-
-        },
-        err => {
-          console.log(err);
-        }
-      );
   }
+
+  loadJSON(): void {
+    this.apiService
+    .getJSON()
+    .subscribe(
+      data => {
+        this.literaleses = data["literaleses"];
+        this.literaleseu = data["literaleseu"];
+        this.todoEsquema = data["esquema"];
+
+        this.route.params.subscribe(params => {
+          this.link = params['link'];
+          this.esquema = this.todoEsquema[this.link];
+          if (this.esquema == null) {
+            this.router.navigate(['/404']);
+            return;
+          }
+          this.literal = (this.literaleses[this.link] ? this.literaleses[this.link] : this.literaleses[this.link.toLowerCase()]);
+          this.literaleu = (this.literaleseu[this.link] ? this.literaleseu[this.link] : this.literaleseu[this.link.toLowerCase()]);
+          
+          this.titleService.changeTitle(this.link + ' - ' + this.literal + ' - ' + this.literaleu);
+          let dataInsert: EsquemaNode[] = [];
+          
+          let obj: EsquemaNode = { name: this.link, esquema: this.esquema, literal: this.literal};
+
+          
+          if (this.esquema['properties']) {
+            dataInsert = this.getChildren(this.esquema['properties']);
+          } else if (this.esquema['allOf']){
+            dataInsert = this.getChildren(this.esquema['allOf'], true);
+          } else {
+            
+            this.apiService.getCommentsByPath(this.esquema['path']).subscribe(data => {
+              obj.comentarios = data;
+            }, error => {
+              console.log(error);
+            });
+            dataInsert.push(obj);
+          }
+          this.dataSource.data = dataInsert;
+        });
+
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
 
   getChildren(properties: any, containsAllOf = false) {
     let children: EsquemaNode[] = [];
@@ -161,8 +174,6 @@ export class ContentComponent implements OnInit {
           }else if (obj.esquema['type'] == 'string') {
             tableStringItems.push(obj);
           }
-           //
-          //children.push(obj);
         }
       }
     } else {
@@ -202,14 +213,10 @@ export class ContentComponent implements OnInit {
           }else if (obj.esquema['type'] == 'string') {
             tableStringItems.push(obj);
           }
-          //
-          //children.push(obj);
         }
       }
     }
     if (tableItems.length > 0) children.push({tableItems: tableItems, tableString: tableStringItems, tableNumber: tableNumberItems});
-   // if (tableStringItems.length > 0) children.push({tableString: tableStringItems});
-    //if (tableNumberItems.length > 0) children.push({tableNumber: tableNumberItems});
     return children;
   }
 

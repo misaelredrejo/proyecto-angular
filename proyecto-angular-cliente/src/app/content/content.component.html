@@ -8,7 +8,7 @@
         <!-- use a disabled button to provide padding for tree leaf -->
         <button mat-icon-button disabled></button>
         <!-- Añadir tabla -->
-        
+
         <table class="table table-bordered table-hover table-text">
           <thead>
             <tr class="table-header">
@@ -40,10 +40,11 @@
             </tr>
           </tbody>
         </table>
-        
+
         <!--TERMINARTABLA-->
         <!--Number tabla-->
-        <table *ngIf="node.tableNumber.length > 0" class="table table-bordered table-hover table-text">
+        <!--
+<table *ngIf="node.tableNumber.length > 0" class="table table-bordered table-hover table-text">
           <thead>
             <tr class="table-header">
               <th scope="col">Código-Literal</th>
@@ -74,8 +75,11 @@
             </tr>
           </tbody>
         </table>
+        -->
+
         <!--String tabla-->
-        <table *ngIf="node.tableString.length > 0" class="table table-bordered table-hover table-text">
+        <!--
+<table *ngIf="node.tableString.length > 0" class="table table-bordered table-hover table-text">
           <thead>
             <tr class="table-header">
               <th scope="col">Código-Literal</th>
@@ -106,6 +110,8 @@
             </tr>
           </tbody>
         </table>
+        -->
+        
       </li>
     </mat-tree-node>
     <!-- This is the tree node template for expandable nodes -->
