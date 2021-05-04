@@ -1,7 +1,7 @@
 <div class="container mt-5">
     <h3>Actividad reciente: </h3>
     
-    <mat-spinner *ngIf="spinnerService.visibility| async"></mat-spinner>
+    <mat-spinner *ngIf="spinnerService.visibility| async" class="loading"></mat-spinner>
     <mat-card class="card" *ngFor="let log of commentLogList">
         El usuario {{log.username}} ha
         <span *ngIf="log.action == 0">añadido</span>

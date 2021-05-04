@@ -22,7 +22,6 @@ export class DialogCommentsComponent implements OnInit {
   formAdd: FormGroup;
   formEdit: FormGroup;
   indexComment: number | undefined;
-  showSpinner: boolean;
 
   user: User;
 
@@ -31,7 +30,7 @@ export class DialogCommentsComponent implements OnInit {
     private toastr: ToastrService,
     private fb: FormBuilder,
     private apiService: ApiService,
-    private spinnerService: SpinnerService
+    public spinnerService: SpinnerService
   ) {
     this.formAdd = this.fb.group({
       comment: ['', Validators.required]
@@ -42,11 +41,6 @@ export class DialogCommentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    this.spinnerService.visibility.subscribe(data => {
-      this.showSpinner = data;
-      console.log(this.showSpinner);
-    })
 
     this.apiService.getUsername().subscribe(data => {
       this.apiService.getUser(data).subscribe(data1 => {

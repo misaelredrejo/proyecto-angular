@@ -4,7 +4,7 @@
 
 <h2 mat-dialog-title class="mt-2" cdkFocusRegionstart>Comentarios</h2>
 
-<mat-spinner *ngIf="showSpinner"></mat-spinner>
+<mat-spinner *ngIf="spinnerService.visibility| async"></mat-spinner>
 <mat-dialog-content>
 
     <mat-accordion class="m-5" [@.disabled]="disableAnimation">
@@ -18,82 +18,68 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <!-- CONTENT -->
-            
-                <div *ngFor="let comment of data.commentList; let i = index">
-                   
-                        <form *ngIf="indexComment == i" class="example-full-width" [formGroup]="formEdit"
-                        (ngSubmit)="editComment()">
-                        <mat-form-field class="example-full-width">
-                                <mat-label>Editar comentario...</mat-label>
-                            <textarea matInput formControlName="comment"></textarea>
-                        </mat-form-field>
-                        <button class="ml-1" mat-raised-button color="primary" type="submit"
-                            matTooltip="Editar comentario">Guardar</button>
-                        <button mat-raised-button color="warn" (click)="[canEditComment=false, indexComment=undefined]"
-                            class="ml-1" matTooltip="Cancelar">Cancelar</button>
-                    </form>
-                    
-                    <span *ngIf="indexComment != i">
-                        <span [className]="!comment.isActive ? 'strikethrough' : ''">{{i+1}}.-
-                            {{comment['text']}}</span>
-                        <button *ngIf="comment.isActive" mat-icon-button color="primary" aria-label="Edit"
-                            (click)=allowEditComment(i) matTooltip="Editar comentario"
-                            [disabled]="indexComment != undefined && indexComment != i">
-                            <mat-icon>edit</mat-icon>
-                        </button>
-                        <button *ngIf="comment.isActive" mat-icon-button matTooltipClass="tooltip-red" color="warn"
-                            aria-label="Delete" (click)="deleteComment(i)" matTooltip="Borrar comentario"
-                            [disabled]="indexComment != undefined && indexComment != i">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                        <button *ngIf="!comment.isActive" mat-icon-button matTooltipClass="tooltip-green"
-                            aria-label="Activate" (click)="activateComment(i)" matTooltip="Activar comentario"
-                            [disabled]="indexComment != undefined && indexComment != i" class="color-green">
-                            <mat-icon>restore_from_trash</mat-icon>
-                        </button>
-                    </span>
-                    
-                </div>
-
-
-            <!--
-            <mat-list role="list">
-                <mat-list-item role="listitem" *ngFor="let comment of data.commentList; let i = index">
-                   
-                        <form *ngIf="indexComment == i" class="example-full-width" [formGroup]="formEdit"
-                        (ngSubmit)="editComment()">
-                        <mat-form-field class="">
-                            <textarea matInput formControlName="comment"></textarea>
-                        </mat-form-field>
-                        <button class="ml-1" mat-raised-button color="primary" type="submit"
-                            matTooltip="Editar comentario">Guardar</button>
-                        <button mat-raised-button color="warn" (click)="[canEditComment=false, indexComment=undefined]"
-                            class="ml-1" matTooltip="Cancelar">Cancelar</button>
-                    </form>
-                    
-                    <span *ngIf="indexComment != i">
-                        <span [className]="!comment.isActive ? 'strikethrough' : ''">{{i+1}}.-
-                            {{comment['text']}}</span>
-                        <button *ngIf="comment.isActive" mat-icon-button color="primary" aria-label="Edit"
-                            (click)=allowEditComment(i) matTooltip="Editar comentario"
-                            [disabled]="indexComment != undefined && indexComment != i">
-                            <mat-icon>edit</mat-icon>
-                        </button>
-                        <button *ngIf="comment.isActive" mat-icon-button matTooltipClass="tooltip-red" color="warn"
-                            aria-label="Delete" (click)="deleteComment(i)" matTooltip="Borrar comentario"
-                            [disabled]="indexComment != undefined && indexComment != i">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                        <button *ngIf="!comment.isActive" mat-icon-button matTooltipClass="tooltip-green"
-                            aria-label="Activate" (click)="activateComment(i)" matTooltip="Activar comentario"
-                            [disabled]="indexComment != undefined && indexComment != i" class="color-green">
-                            <mat-icon>restore_from_trash</mat-icon>
-                        </button>
-                    </span>
-                    
-                </mat-list-item>
-            </mat-list>-->
-
+            <div class="container">
+                <table class="w-100">
+                    <tr class="row" *ngFor="let comment of data.commentList; let i = index">
+                        <td class="w-100">
+                            <form *ngIf="indexComment == i" [formGroup]="formEdit" (ngSubmit)="editComment()">
+                                <table class="w-100">
+                                    <tr>
+                                        <td class="w-100">
+                                            <mat-form-field class="w-100">
+                                                <mat-label>Editar comentario...</mat-label>
+                                                <textarea matInput formControlName="comment"></textarea>
+                                            </mat-form-field>
+                                        </td>
+                                        <td>
+                                            <button mat-icon-button type="submit" matTooltip="Guardar">
+                                                <mat-icon class="color-green">check</mat-icon>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button mat-icon-button
+                                                (click)="[canEditComment=false, indexComment=undefined]"
+                                                matTooltip="Cancelar">
+                                                <mat-icon color="warn">close</mat-icon>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                            <table *ngIf="indexComment != i">
+                                <tr>
+                                    <td>
+                                        <span [className]="!comment.isActive ? 'strikethrough' : ''">{{i+1}}.-
+                                            {{comment['text']}}</span>
+                                    </td>
+                                    <td>
+                                        <button *ngIf="comment.isActive" mat-icon-button color="primary"
+                                            aria-label="Edit" (click)=allowEditComment(i) matTooltip="Editar comentario"
+                                            [disabled]="indexComment != undefined && indexComment != i">
+                                            <mat-icon>edit</mat-icon>
+                                        </button>
+                                        <button *ngIf="!comment.isActive" mat-icon-button
+                                            matTooltipClass="tooltip-green" aria-label="Activate"
+                                            (click)="activateComment(i)" matTooltip="Activar comentario"
+                                            [disabled]="indexComment != undefined && indexComment != i"
+                                            class="color-green">
+                                            <mat-icon>restore_from_trash</mat-icon>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button *ngIf="comment.isActive" mat-icon-button matTooltipClass="tooltip-red"
+                                            color="warn" aria-label="Delete" (click)="deleteComment(i)"
+                                            matTooltip="Borrar comentario"
+                                            [disabled]="indexComment != undefined && indexComment != i">
+                                            <mat-icon>delete</mat-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
             <!-- END CONTENT -->
         </mat-expansion-panel>
         <mat-expansion-panel hideToggle>

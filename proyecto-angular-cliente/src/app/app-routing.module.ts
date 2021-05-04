@@ -4,6 +4,7 @@ import { ContentComponent } from './content/content.component';
 import { HomeComponent } from './home/home.component';
 import { AuthenticationGuard } from './core/guards/authentication.guard';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { ErrorComponent } from './error/error.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,10 @@ const routes: Routes = [
   {
     path: '404',
     component: NotFoundComponent
+  },
+  {
+    path: 'error',
+    component: ErrorComponent
   },
   {
     path: '**',
