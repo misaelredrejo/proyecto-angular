@@ -8,6 +8,7 @@ import { Action} from 'src/app/models/enums.model';
 import { User } from 'src/app/models/user.model';
 import { Log } from 'src/app/models/log.model';
 import { DialogDataComments } from 'src/app/models/dialog-data-comments.model';
+import { SpinnerService } from 'src/app/shared/spinner.service';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class DialogCommentsComponent implements OnInit {
   formAdd: FormGroup;
   formEdit: FormGroup;
   indexComment: number | undefined;
+  showSpinner: boolean;
 
   user: User;
 
@@ -28,7 +30,8 @@ export class DialogCommentsComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: DialogDataComments,
     private toastr: ToastrService,
     private fb: FormBuilder,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private spinnerService: SpinnerService
   ) {
     this.formAdd = this.fb.group({
       comment: ['', Validators.required]
@@ -39,6 +42,12 @@ export class DialogCommentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.spinnerService.visibility.subscribe(data => {
+      this.showSpinner = data;
+      console.log(this.showSpinner);
+    })
+
     this.apiService.getUsername().subscribe(data => {
       this.apiService.getUser(data).subscribe(data1 => {
         this.user = data1;

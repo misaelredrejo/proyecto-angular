@@ -3,6 +3,8 @@
 </button>
 
 <h2 mat-dialog-title class="mt-2" cdkFocusRegionstart>Comentarios</h2>
+
+<mat-spinner *ngIf="showSpinner"></mat-spinner>
 <mat-dialog-content>
 
     <mat-accordion class="m-5" [@.disabled]="disableAnimation">
@@ -16,6 +18,7 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <!-- CONTENT -->
+            
                 <div *ngFor="let comment of data.commentList; let i = index">
                    
                         <form *ngIf="indexComment == i" class="example-full-width" [formGroup]="formEdit"
@@ -103,7 +106,6 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <!-- CONTENT -->
-
             <form class="example-form" [formGroup]="formAdd" (ngSubmit)="addComment()">
                 <mat-form-field class="example-full-width">
                     <mat-label>Comentario</mat-label>

@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogRolComponent } from './dialog-rol/dialog-rol.component';
 import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
+import { SpinnerService } from '../shared/spinner.service';
 
 @Component({
   selector: 'app-home',
@@ -18,10 +19,16 @@ export class HomeComponent implements OnInit {
   username: string;
   rolValue: number;
 
-  constructor(private apiService: ApiService, public dialog: MatDialog, private authenticationService: AuthenticationService) { }
+  constructor(
+    private apiService: ApiService,
+    public dialog: MatDialog,
+    private authenticationService: AuthenticationService,
+    public spinnerService: SpinnerService
+    ) { }
 
   ngOnInit(): void {
     
+
     this.apiService.getLast10Logs().subscribe(data => {
       this.commentLogList = data;
     }), error => {

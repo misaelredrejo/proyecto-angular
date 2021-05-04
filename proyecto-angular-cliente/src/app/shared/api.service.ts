@@ -60,6 +60,7 @@ export class ApiService {
     );
   }
 
+  //#region Usuario
   public getUser(username: string): Observable<User> {
     return this.http.get<User>(this.myAppUrl + this.myApiUserUrl + username);
   }
@@ -75,7 +76,10 @@ export class ApiService {
   public addUser(user: User):Observable<User> {
     return this.http.post<User>(this.myAppUrl + this.myApiUserUrl, user);
   }
+  //#endregion
 
+
+  //#region Comentarios
   public getComments(): Observable<Comment[]> {
     return this.http.get<Comment[]>(this.myAppUrl + this.myApiCommentsUrl);
   }
@@ -108,6 +112,7 @@ export class ApiService {
   public activateComment(id: number, comment: Comment): Observable<any> {
     return this.http.put(this.myAppUrl + this.myApiCommentsUrl + "activate/" + id, comment);
   }
+  //#endregion
 
 
 
