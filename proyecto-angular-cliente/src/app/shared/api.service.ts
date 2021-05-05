@@ -61,16 +61,8 @@ export class ApiService {
   }
 
   //#region Usuario
-  public getUser(username: string): Observable<User> {
-    return this.http.get<User>(this.myAppUrl + this.myApiUserUrl + username);
-  }
-
-  public getUsername(): Observable<string> {
-    return this.http.get(this.myAppUrl + this.myApiUserUrl+'username', { responseType: 'text', });
-  }
-
-  public userExistsInDb(username: string): Observable<boolean> {
-    return this.http.get<boolean>(this.myAppUrl + this.myApiUserUrl + "exists/" + username);
+  public getUser(): Observable<User> {
+    return this.http.get<User>(this.myAppUrl + this.myApiUserUrl);
   }
 
   public addUser(user: User):Observable<User> {

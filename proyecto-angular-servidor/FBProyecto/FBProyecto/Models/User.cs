@@ -15,7 +15,6 @@ namespace FBProyecto.Models
     {
         [Key]
         public int UserId { get; set; }
-        [Required]
         public string Username { get; set; }
         [Required]
         public Rol Rol { get; set; }

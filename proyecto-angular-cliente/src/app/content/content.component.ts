@@ -13,6 +13,8 @@ import { DialogEnumComponent } from './dialog-enum/dialog-enum.component';
 import { Rol } from '../models/enums.model';
 import { TitleService } from '../shared/title.service';
 import { EsquemaNode } from '../models/esquema-node.model';
+import { User } from '../models/user.model';
+import { AuthenticationService } from '../core/authentication/authentication.service';
 
 
 
@@ -30,6 +32,8 @@ import { EsquemaNode } from '../models/esquema-node.model';
   ]
 })
 export class ContentComponent implements OnInit {
+  user:User;
+
   link: string;
   literaleses: string[] = [];
   literaleseu: string[] = [];
@@ -51,7 +55,8 @@ export class ContentComponent implements OnInit {
     private router: Router,
     private apiService: ApiService,
     public dialog: MatDialog,
-    private titleService: TitleService
+    private titleService: TitleService,
+    private authService: AuthenticationService
   ) {
 
   }
@@ -67,19 +72,12 @@ export class ContentComponent implements OnInit {
   }
 
   checkUser(): void {
-    this.apiService.getUsername().subscribe(data => {
-      this.apiService.getUser(data).subscribe(data => {
-        if (data.rol == Rol.Desarrollador) {
-          this.TABLE_COLS.splice(7, 1);
-          this.TABLE_NUM_COLS.splice(6, 1);
-          this.TABLE_STR_COLS.splice(9, 1);
-        }
-      }, error => {
-        console.log(error);
-      });
-    }, error => {
-      console.log(error);
-    });
+    this.user = this.authService.currentUserValue;
+    if (this.user.rol == Rol.Desarrollador) {
+      this.TABLE_COLS.splice(7, 1);
+      this.TABLE_NUM_COLS.splice(6, 1);
+      this.TABLE_STR_COLS.splice(9, 1);
+    }
   }
 
   loadJSON(): void {

@@ -2,6 +2,6 @@ import { Rol } from './enums.model';
 
 export interface User {
     userId: number;
-    username: string;
+    username?: string;
     rol: Rol;
 }

@@ -22,45 +22,27 @@ namespace FBProyecto.Controllers
             _context = context;
         }
 
-        // GET: api/<UserController>/username
-        [HttpGet("{*username}")]
-        public async Task<IActionResult> GetUserByUsername(string username)
+
+        // GET: api/<UserController>
+        [HttpGet]
+        public async Task<IActionResult> Get()
         {
             try
             {
-                username = username.Replace('/', '\\');
-                var user = await _context.User.Where(u => u.Username == username).SingleOrDefaultAsync();
-                if (user == null) return NotFound();
+                string username = AccountHelper.GetWinAuthAccount(HttpContext);
+                User user = await _context.User.Where(u => u.Username == username).SingleOrDefaultAsync();
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
                 return Ok(user);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex);
             }
-        }
-
-        // GET: api/<UserController>/username
-        [HttpGet("username")]
-        public string Get()
-        {
-            return AccountHelper.GetWinAuthAccount(HttpContext);
-        }
-
-        [HttpGet("exists/{*username}")]
-        public async Task<IActionResult> UserExists(string username)
-        {
-            try
-            {
-                username = username.Replace('/', '\\');
-                var user = await _context.User.Where(u => u.Username == username).SingleOrDefaultAsync();
-                if (user == null) return Ok(false);
-                return Ok(true);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
+            
         }
 
         [HttpPost]
@@ -68,7 +50,8 @@ namespace FBProyecto.Controllers
         {
             try
             {
-
+                string username = AccountHelper.GetWinAuthAccount(HttpContext);
+                user.Username = username;
                 _context.User.Add(user);
                 await _context.SaveChangesAsync();
                 return Ok(user);

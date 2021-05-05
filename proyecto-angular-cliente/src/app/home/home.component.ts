@@ -32,29 +32,17 @@ export class HomeComponent implements OnInit {
       console.log(error);
     };
 
-    this.apiService.getUsername().subscribe(data => {
-      this.username = data;
-
-      this.apiService.userExistsInDb(this.username).subscribe(data => {
-        if (data == false) {
-          this.openDialogChooseUserRol();
-        } else {
-          this.apiService.getUser(this.username).subscribe(data => {
-            this.user = data;
-
-            this.authenticationService.login(this.user);
-          }, error => {
-            console.log(error);
-          });
-        }
-      }, error => {
-        console.log(error);
-      });
-
+    this.apiService.getUser().subscribe(data => {
+      this.user = data;
+      this.authenticationService.login(this.user);
     }, error => {
-      console.log(error);
+      if (error.status == 404) { // si el usuario no está en la base de datos
+        this.openDialogChooseUserRol();
+      } else {
+        console.log(error);
+      }
     });
-
+    
   }
 
   openDialogChooseUserRol() {
@@ -68,7 +56,6 @@ export class HomeComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       let user: User = {
         userId: 0,
-        username: this.username,
         rol: result
       };
       this.apiService.addUser(user).subscribe(data => {

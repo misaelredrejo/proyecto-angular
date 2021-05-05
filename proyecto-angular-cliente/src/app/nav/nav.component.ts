@@ -3,6 +3,8 @@ import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { ApiService } from '../shared/api.service';
 import { TitleService } from '../shared/title.service';
 import { Subscription } from 'rxjs';
+import { User } from '../models/user.model';
+import { AuthenticationService } from '../core/authentication/authentication.service';
 
 @Component({
   selector: 'app-nav',
@@ -13,7 +15,7 @@ import { Subscription } from 'rxjs';
 export class NavComponent implements OnDestroy {
   menuProfesional: any[] = [];
   literaleses: any[] = [];
-  user: string = "";
+  user: User;
   title: string = "Configuración NPR";
   value: string;
 
@@ -35,7 +37,7 @@ export class NavComponent implements OnDestroy {
 
   private _mobileQueryListener: () => void;
 
-  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private apiService: ApiService, private titleService: TitleService) {
+  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private apiService: ApiService, private titleService: TitleService, private authService: AuthenticationService) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
@@ -50,12 +52,12 @@ export class NavComponent implements OnDestroy {
   }
 
   ngOnInit() {
-    
-    this.apiService.getUsername().subscribe(data => {
+    this.user = this.authService.currentUserValue;
+    /*this.apiService.getUsername().subscribe(data => {
       this.user = data;
     }, error => {
       console.log(error);
-    })
+    })*/
 
     this.apiService
       .getJSON()
