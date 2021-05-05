@@ -8,6 +8,7 @@ import { catchError, map } from "rxjs/operators";
 import {Comment} from '../models/comment.model';
 import { CommentDTO } from '../models/commentdto.model';
 import { User } from '../models/user.model';
+import { ApiResponse } from '../models/api-response.model';
 
 
 @Injectable({
@@ -61,8 +62,8 @@ export class ApiService {
   }
 
   //#region Usuario
-  public getUser(): Observable<User> {
-    return this.http.get<User>(this.myAppUrl + this.myApiUserUrl);
+  public getUser(): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(this.myAppUrl + this.myApiUserUrl);
   }
 
   public addUser(user: User):Observable<User> {

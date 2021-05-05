@@ -9,3 +9,10 @@ export enum Rol {
     Desarrollador = 0,
     Otro = 1
 }
+
+export enum Status
+{
+    Success = 0,
+    NotFound = 1,
+    Error = 2,
+}

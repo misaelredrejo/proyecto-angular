@@ -6,6 +6,7 @@ import { DialogRolComponent } from './dialog-rol/dialog-rol.component';
 import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
 import { SpinnerService } from '../shared/spinner.service';
+import { Status } from '../models/enums.model';
 
 @Component({
   selector: 'app-home',
@@ -33,16 +34,20 @@ export class HomeComponent implements OnInit {
     };
 
     this.apiService.getUser().subscribe(data => {
-      this.user = data;
-      this.authenticationService.login(this.user);
-    }, error => {
-      if (error.status == 404) { // si el usuario no está en la base de datos
-        this.openDialogChooseUserRol();
-      } else {
-        console.log(error);
+      switch (data.status) {
+        case Status.Success:
+          this.user = data.data;
+          this.authenticationService.login(this.user);
+          break;
+        case Status.NotFound:
+          this.openDialogChooseUserRol();
+          break;
+        case Status.Error:
+          console.log(data.message);
+          break;
       }
     });
-    
+
   }
 
   openDialogChooseUserRol() {

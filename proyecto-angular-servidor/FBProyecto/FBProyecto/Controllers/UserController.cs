@@ -25,8 +25,9 @@ namespace FBProyecto.Controllers
 
         // GET: api/<UserController>
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<ApiResponse> Get()
         {
+            ApiResponse myResponse = new ApiResponse();
             try
             {
                 string username = AccountHelper.GetWinAuthAccount(HttpContext);
@@ -34,13 +35,22 @@ namespace FBProyecto.Controllers
 
                 if (user == null)
                 {
-                    return NotFound();
+                    myResponse.Status = Status.NotFound;
+                    myResponse.Message = "El usuario " + username + " no existe";
+                    myResponse.Data = null;
+                    return myResponse;
                 }
-                return Ok(user);
+                myResponse.Status = Status.Success;
+                myResponse.Message = "";
+                myResponse.Data = user;
+                return myResponse;
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                myResponse.Status = Status.Error;
+                myResponse.Message = ex.Message;
+                myResponse.Data = null;
+                return myResponse;
             }
             
         }
