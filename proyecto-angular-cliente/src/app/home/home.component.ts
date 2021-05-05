@@ -27,14 +27,11 @@ export class HomeComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    
-
     this.apiService.getLast10Logs().subscribe(data => {
       this.commentLogList = data;
     }), error => {
       console.log(error);
     };
-
 
     this.apiService.getUsername().subscribe(data => {
       this.username = data;

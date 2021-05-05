@@ -27,7 +27,7 @@
               </td>
               <td *ngFor="let column of TABLE_COLS">
                 <span *ngIf="column == 'enum'">
-                  <span *ngIf="row.esquema[column]?.length > 4" (click)="openDialogEnumList(row.esquema[column])">
+                  <span *ngIf="row.esquema[column]?.length > 4" (click)="openDialogEnumList(row.name,row.esquema[column])">
                     {{row.esquema[column] | slice:0:4}}...
                   </span>
                   <span *ngIf="row.esquema[column]?.length <= 4">

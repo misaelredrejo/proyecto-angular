@@ -9,13 +9,12 @@ import {
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { SpinnerService } from './spinner.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import {  Router } from '@angular/router';
 @Injectable()
 export class WinAuthInterceptor implements HttpInterceptor{
     
   constructor(
     private spinnerService: SpinnerService,
-    private route: ActivatedRoute,
     private router: Router
     ) { }
     

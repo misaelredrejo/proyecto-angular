@@ -31,8 +31,8 @@ import { EsquemaNode } from '../models/esquema-node.model';
 })
 export class ContentComponent implements OnInit {
   link: string;
-  literaleses: any[] = [];
-  literaleseu: any[] = [];
+  literaleses: string[] = [];
+  literaleseu: string[] = [];
   todoEsquema: any[] = [];
   esquema: any[] = [];
   literal: string;
@@ -229,10 +229,13 @@ export class ContentComponent implements OnInit {
     });
   }
 
-  openDialogEnumList(enumList: any[]) {
+  openDialogEnumList(codigo:string, enumList: any[]) {
     this.dialog.open(DialogEnumComponent, {
       data: {
-        enumList: enumList
+        codigo: codigo,
+        enumList: enumList,
+        literaleses: this.literaleses,
+        literaleseu: this.literaleseu
       }
     });
   }
