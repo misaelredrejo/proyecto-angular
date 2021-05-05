@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
+import { SpinnerService } from './shared/spinner.service';
 
 @Component({
   selector: 'app-root',
@@ -7,9 +8,18 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   
-  constructor() { }
+  showSpinner: boolean;
+
+  constructor(public spinnerService: SpinnerService, private cdRef:ChangeDetectorRef) { }
 
   ngOnInit() {
 
+  }
+
+  ngAfterViewChecked(){
+    this.spinnerService.visibility.subscribe(data => {
+      this.showSpinner = data;
+    });
+    this.cdRef.detectChanges();
   }
 }

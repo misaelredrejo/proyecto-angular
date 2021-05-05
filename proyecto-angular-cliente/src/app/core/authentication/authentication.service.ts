@@ -1,19 +1,34 @@
 import { Injectable } from '@angular/core';
+import { User } from 'src/app/models/user.model';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
 
-  constructor() { }
+  private currentUserSubject: BehaviorSubject<User>;
+  public currentUser: Observable<User>;
 
-  authenticate(username: string): void {
-    localStorage.setItem('username', username);
+  constructor() {
+    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+    this.currentUser = this.currentUserSubject.asObservable();
   }
 
-  isAuthenticated(): boolean {
-    return localStorage.getItem('username') != null;
+  public get currentUserValue(): User {
+    return this.currentUserSubject.value;
   }
+
+  login(user: User) {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.currentUserSubject.next(user);
+  }
+
+  logout() {
+    localStorage.removeItem('currentUser');
+    this.currentUserSubject.next(null);
+}
+
 
 
 }

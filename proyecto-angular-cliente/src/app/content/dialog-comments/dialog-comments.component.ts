@@ -8,7 +8,7 @@ import { Action} from 'src/app/models/enums.model';
 import { User } from 'src/app/models/user.model';
 import { Log } from 'src/app/models/log.model';
 import { DialogDataComments } from 'src/app/models/dialog-data-comments.model';
-import { SpinnerService } from 'src/app/shared/spinner.service';
+import { AuthenticationService } from 'src/app/core/authentication/authentication.service';
 
 
 @Component({
@@ -30,7 +30,7 @@ export class DialogCommentsComponent implements OnInit {
     private toastr: ToastrService,
     private fb: FormBuilder,
     private apiService: ApiService,
-    public spinnerService: SpinnerService
+    private authService: AuthenticationService
   ) {
     this.formAdd = this.fb.group({
       comment: ['', Validators.required]
@@ -41,16 +41,7 @@ export class DialogCommentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    this.apiService.getUsername().subscribe(data => {
-      this.apiService.getUser(data).subscribe(data1 => {
-        this.user = data1;
-      }, error => {
-        console.log(error);
-      });
-    }, error => {
-      console.log(error);
-    });
+    this.user = this.authService.currentUserValue;
   }
 
   // Workaround for angular component issue #13870

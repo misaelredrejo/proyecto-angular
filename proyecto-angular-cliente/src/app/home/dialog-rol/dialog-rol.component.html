@@ -1,13 +1,16 @@
 <h1 mat-dialog-title>Rol</h1>
 <div mat-dialog-content>
-  <p>Seleccionar rol</p>
-  <mat-form-field appearance="fill">
-        <mat-label>Elija una opción</mat-label>
-        <mat-select [(value)]="data.rolValue">
-          <mat-option *ngFor="let rolValue of rolTypes" value="{{rolValue}}">{{rol[rolValue]}}</mat-option>
-        </mat-select>
-      </mat-form-field>
+  <div class="container">
+
+      <p>Seleccionar rol</p>
+      <mat-form-field appearance="fill">
+            <mat-label>Elija una opción</mat-label>
+            <mat-select [(value)]="data.rolValue">
+              <mat-option *ngFor="let rolValue of rolTypes" value="{{rolValue}}">{{rol[rolValue]}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+  </div>
 </div>
-<div mat-dialog-actions>
+<div mat-dialog-actions align="end">
   <button mat-button [mat-dialog-close]="data.rolValue" cdkFocusInitial>Ok</button>
 </div>

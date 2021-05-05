@@ -19,9 +19,10 @@
 
 .table-button {
   background-color: rgb(232, 232, 252);
-  width: 100%;
+  width: 200px;
   font-size: 12px;
   font-weight:800;
+  white-space: pre-wrap ;
 }
 
 .cursor-pointer {
