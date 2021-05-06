@@ -42,6 +42,8 @@ export class HomeComponent implements OnInit {
             reject();
             break;
         }
+      }, error => {
+        resolve();
       });
     });
     let p2 = new Promise<void>((resolve, reject) => {
@@ -61,6 +63,8 @@ export class HomeComponent implements OnInit {
             reject();
             break;
         }
+      }, error => {
+        resolve();
       });
     });
     Promise.all([p1, p2]).then(() => this.spinnerService.hide());
