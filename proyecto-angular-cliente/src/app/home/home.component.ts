@@ -6,6 +6,7 @@ import { DialogRolComponent } from './dialog-rol/dialog-rol.component';
 import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
 import { Status } from '../models/enums.model';
+import { SpinnerService } from '../shared/services/spinner.service';
 
 @Component({
   selector: 'app-home',
@@ -22,42 +23,49 @@ export class HomeComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     public dialog: MatDialog,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private spinnerService: SpinnerService
   ) { }
 
   ngOnInit(): void {
 
-    let promise = new Promise<void>(async (resolve, reject) => {
-      
-    this.apiService.getLast10LogsAsync().subscribe(data => {
-      console.log('log');
-      switch (data.status) {
-        case Status.Success:
-          this.commentLogList = data.data;
-          break;
-        case Status.Error:
-          console.log(data.message);
-          break;
-      }
+    this.spinnerService.show();
+    let p1 = new Promise<void>((resolve, reject) => {
+      this.apiService.getLast10LogsAsync().subscribe(data => {
+        switch (data.status) {
+          case Status.Success:
+            this.commentLogList = data.data;
+            resolve();
+            break;
+          case Status.Error:
+            console.log(data.message);
+            reject();
+            break;
+        }
+      });
     });
+    let p2 = new Promise<void>((resolve, reject) => {
+      this.apiService.getUserAsync().subscribe(data => {
+        switch (data.status) {
+          case Status.Success:
+            this.user = data.data;
+            this.authenticationService.login(this.user);
+            resolve();
+            break;
+          case Status.NotFound:
+            this.openDialogChooseUserRol();
+            reject();
+            break;
+          case Status.Error:
+            console.log(data.message);
+            reject();
+            break;
+        }
+      });
+    });
+    Promise.all([p1, p2]).then(() => this.spinnerService.hide());
 
-    await this.apiService.getUserAsync().subscribe(data => {
-      console.log('user')
-      switch (data.status) {
-        case Status.Success:
-          this.user = data.data;
-          this.authenticationService.login(this.user);
-          break;
-        case Status.NotFound:
-          this.openDialogChooseUserRol();
-          break;
-        case Status.Error:
-          console.log(data.message);
-          break;
-      }
-    });
-    resolve();
-    }).then(() => console.log("Task Completed!"));
+
   }
 
   openDialogChooseUserRol() {
