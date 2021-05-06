@@ -1,7 +1,7 @@
 import { Action } from './enums.model';
 
 
-export interface CommentDTO {
+export interface CommentLog {
     path: string;
     action: Action;
     date: Date;

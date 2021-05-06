@@ -6,7 +6,6 @@ import {
 } from "@angular/common/http";
 import { catchError, map } from "rxjs/operators";
 import {Comment} from '../../models/comment.model';
-import { CommentDTO } from '../../models/commentdto.model';
 import { User } from '../../models/user.model';
 import { ApiResponse } from '../../models/api-response.model';
 
@@ -52,7 +51,7 @@ export class ApiService {
     return body || {};
   }
 
-  public getJSON(): Observable<any> {
+  public getJSONAsync(): Observable<any> {
 
     // Call the http GET
     return this.http.get("./../../assets/configuracionNPR.json").pipe(
@@ -62,46 +61,43 @@ export class ApiService {
   }
 
   //#region Usuario
-  public getUser(): Observable<ApiResponse> {
+  public getUserAsync(): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(this.myAppUrl + this.myApiUserUrl);
   }
 
-  public addUser(user: User):Observable<ApiResponse> {
+  public addUserAsync(user: User):Observable<ApiResponse> {
     return this.http.post<ApiResponse>(this.myAppUrl + this.myApiUserUrl, user);
   }
   //#endregion
 
 
   //#region Comentarios
-  public getComments(): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl);
-  }
 
-  public getCntCommentsSubPath(path: string): Observable<ApiResponse> {
+  public getCntCommentsSubPathAsync(path: string): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + "subpath/" + path);
   }
 
-  public getLast10Logs(): Observable<ApiResponse> {
+  public getLast10LogsAsync(): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + 'last10');
   }
 
-  public getCommentsByPath(path: string): Observable<ApiResponse> {
+  public getCommentsByPathAsync(path: string): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + path);
   }
 
-  public addComment(comment: Comment): Observable<ApiResponse> {
+  public addCommentAsync(comment: Comment): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl, comment);
   }
 
-  public updateComment(id: number, comment: Comment): Observable<ApiResponse> {
+  public updateCommentAsync(id: number, comment: Comment): Observable<ApiResponse> {
     return this.http.put<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + id, comment);
   }
 
-  public deleteComment(id: number, comment: Comment): Observable<ApiResponse> {
+  public deleteCommentAsync(id: number, comment: Comment): Observable<ApiResponse> {
     return this.http.put<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + "delete/" + id, comment);
   }
 
-  public activateComment(id: number, comment: Comment): Observable<ApiResponse> {
+  public activateCommentAsync(id: number, comment: Comment): Observable<ApiResponse> {
     return this.http.put<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + "activate/" + id, comment);
   }
   //#endregion

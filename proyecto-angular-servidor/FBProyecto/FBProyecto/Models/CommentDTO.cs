@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace FBProyecto.Models
 {
     [Keyless]
-    public class CommentDTO
+    public class CommentLog
     {
         public DateTime Date { get; set; }
         public string Path { get; set; }

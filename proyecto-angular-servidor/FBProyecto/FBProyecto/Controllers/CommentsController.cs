@@ -22,28 +22,6 @@ namespace FBProyecto.Controllers
             _context = context;
         }
 
-        // GET: api/<CommentsController>
-        [HttpGet]
-        public async Task<ApiResponse> Get()
-        {
-            ApiResponse myResponse = new ApiResponse();
-            try
-            {
-
-                var commentList = await _context.Comment.Include(c => c.Logs).ThenInclude(l => l.User).ToListAsync();
-                myResponse.Status = Status.Success;
-                myResponse.Message = "";
-                myResponse.Data = commentList;
-                return myResponse;
-            }
-            catch (Exception ex)
-            {
-                myResponse.Status = Status.Error;
-                myResponse.Message = ex.Message;
-                myResponse.Data = null;
-                return myResponse;
-            }
-        }
 
         // GET api/<CommentsController>/path
         [HttpGet("{*path}")]
@@ -76,7 +54,7 @@ namespace FBProyecto.Controllers
             ApiResponse myResponse = new ApiResponse();
             try
             {
-                var listCommentDTO = await _context.CommentDTO.FromSqlRaw("exec dbo.Last10Logs").ToListAsync();
+                var listCommentDTO = await _context.CommentLog.FromSqlRaw("exec dbo.Last10Logs").ToListAsync();
                 myResponse.Status = Status.Success;
                 myResponse.Message = "";
                 myResponse.Data = listCommentDTO;

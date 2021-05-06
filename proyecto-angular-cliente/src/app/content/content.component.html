@@ -22,7 +22,8 @@
                 <button mat-button matBadge="{{row.cntComentarios}}" matBadgeColor="accent" matTooltip="Ver comentarios"
                   (click)="openDialog(row.comentarios, row.esquema['path'])" class="table-button"
                   [matBadgeHidden]="row.cntComentarios == 0">
-                  {{row.name}}<br>{{row.literal}}<br>{{row.literaleu}}
+                  <span *ngIf="user?.rol == 'Desarrollador'">{{row.name}}<br></span>
+                  {{row.literal}}<br>{{row.literaleu}}
                 </button>
               </td>
               <td *ngFor="let column of TABLE_COLS">
@@ -125,7 +126,8 @@
           </button>
           <span matBadge="{{node.cntComentarios}}" matBadgeOverlap="false" matBadgeColor="accent"
             [matBadgeHidden]="node.cntComentarios == 0">
-            {{node.name}} - {{node.literal}} - {{node.literaleu}}
+            <span *ngIf="user?.rol == 'Desarrollador'">{{node.name}} - </span>
+            {{node.literal}} - {{node.literaleu}}
             <span *ngIf="node.esquema['type'] == 'array'">
               -> Type: array, minItems: {{node.esquema['minItems']}}, maxItems: {{node.esquema['maxItems']}}
             </span>

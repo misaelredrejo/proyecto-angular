@@ -80,7 +80,7 @@ export class ContentComponent implements OnInit {
 
   loadJSON(): void {
     this.apiService
-      .getJSON()
+      .getJSONAsync()
       .subscribe(
         data => {
           this.literaleses = data["literaleses"];
@@ -96,8 +96,12 @@ export class ContentComponent implements OnInit {
             }
             this.literal = (this.literaleses[this.link] ? this.literaleses[this.link] : this.literaleses[this.link.toLowerCase()]);
             this.literaleu = (this.literaleseu[this.link] ? this.literaleseu[this.link] : this.literaleseu[this.link.toLowerCase()]);
-
-            this.titleService.changeTitle(this.link + ' - ' + this.literal + ' - ' + this.literaleu);
+            if (this.user && this.user.rol == Rol.Desarrollador) {
+              this.titleService.changeTitle(this.literal + ' - ' + this.literaleu);
+            } else {
+              this.titleService.changeTitle(this.link + ' - ' + this.literal + ' - ' + this.literaleu);
+            }
+            
             let dataInsert: EsquemaNode[] = [];
 
             let obj: EsquemaNode = { name: this.link, esquema: this.esquema, literal: this.literal };
@@ -109,7 +113,7 @@ export class ContentComponent implements OnInit {
               dataInsert = this.getChildren(this.esquema['allOf'], true);
             } else {
 
-              this.apiService.getCommentsByPath(this.esquema['path']).subscribe(data => {
+              this.apiService.getCommentsByPathAsync(this.esquema['path']).subscribe(data => {
                 switch (data.status) {
                   case Status.Success:
                     obj.comentarios = data.data;
@@ -150,7 +154,7 @@ export class ContentComponent implements OnInit {
         obj.literaleu = literaleu;
         obj.comentarios = [];
         obj.esquema = esquema;
-        this.apiService.getCommentsByPath(this.todoEsquema[key1]['path']).subscribe(data => {
+        this.apiService.getCommentsByPathAsync(this.todoEsquema[key1]['path']).subscribe(data => {
           switch (data.status) {
             case Status.Success:
               obj.comentarios = data.data;
@@ -160,7 +164,7 @@ export class ContentComponent implements OnInit {
               break;
           }
         });
-        this.apiService.getCntCommentsSubPath(this.todoEsquema[key1]['path']).subscribe(data => {
+        this.apiService.getCntCommentsSubPathAsync(this.todoEsquema[key1]['path']).subscribe(data => {
           switch (data.status) {
             case Status.Success:
           obj.cntComentarios = data.data;
@@ -199,7 +203,7 @@ export class ContentComponent implements OnInit {
         obj.literaleu = literaleu;
         obj.esquema = esquema;
         obj.comentarios = [];
-        this.apiService.getCommentsByPath(this.todoEsquema[key]['path']).subscribe(data => {
+        this.apiService.getCommentsByPathAsync(this.todoEsquema[key]['path']).subscribe(data => {
           switch (data.status) {
             case Status.Success:
               obj.comentarios = data.data;
@@ -209,7 +213,7 @@ export class ContentComponent implements OnInit {
               break;
           }
         });
-        this.apiService.getCntCommentsSubPath(this.todoEsquema[key]['path']).subscribe(data => {
+        this.apiService.getCntCommentsSubPathAsync(this.todoEsquema[key]['path']).subscribe(data => {
           switch (data.status) {
             case Status.Success:
           obj.cntComentarios = data.data;

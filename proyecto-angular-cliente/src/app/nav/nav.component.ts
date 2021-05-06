@@ -5,6 +5,7 @@ import { TitleService } from '../shared/services/title.service';
 import { Subscription } from 'rxjs';
 import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
+import { Rol } from '../models/enums.model';
 
 @Component({
   selector: 'app-nav',
@@ -53,14 +54,9 @@ export class NavComponent implements OnDestroy {
 
   ngOnInit() {
     this.user = this.authService.currentUserValue;
-    /*this.apiService.getUsername().subscribe(data => {
-      this.user = data;
-    }, error => {
-      console.log(error);
-    })*/
 
     this.apiService
-      .getJSON()
+      .getJSONAsync()
       .subscribe(
         data => {
           this.menuProfesional = data['menuProfesional'];
@@ -79,7 +75,12 @@ export class NavComponent implements OnDestroy {
     this.menuProfesional.forEach((item) => {
       for (let key in item) {
         let value = item[key];
-        let labelText = key + ' - ' + this.literaleses[key];
+        let labelText = '';
+        if (this.user && this.user.rol == Rol.Desarrollador) {
+          labelText =  this.literaleses[key];
+        } else {
+        labelText = key + ' - ' +this.literaleses[key]
+        }
 
         if (value && value.length > 0) { // Si tiene subniveles
           this.appitemsInsert.push({ label: labelText, items: this.itemsSubMenu(value)});

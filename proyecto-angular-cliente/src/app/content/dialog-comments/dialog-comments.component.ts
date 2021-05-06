@@ -75,7 +75,7 @@ export class DialogCommentsComponent implements OnInit {
         isActive: true
       };
 
-      this.apiService.addComment(comment).subscribe(data => {
+      this.apiService.addCommentAsync(comment).subscribe(data => {
         switch (data.status) {
           case Status.Success:
             this.data.commentList.push(data.data);
@@ -111,7 +111,7 @@ export class DialogCommentsComponent implements OnInit {
       }
       comment.logs.push(log);
       comment.text = text;
-      this.apiService.updateComment(comment.commentId, comment).subscribe(data => {
+      this.apiService.updateCommentAsync(comment.commentId, comment).subscribe(data => {
         switch (data.status) {
           case Status.Success:
             this.toastr.success(data.message, 'Editar comentario');
@@ -144,7 +144,7 @@ export class DialogCommentsComponent implements OnInit {
     };
     comment.logs.push(log);
     comment.isActive = false;
-    this.apiService.deleteComment(comment.commentId, comment).subscribe(data => {
+    this.apiService.deleteCommentAsync(comment.commentId, comment).subscribe(data => {
       switch (data.status) {
         case Status.Success:
             this.data.commentList[index] = comment;
@@ -173,7 +173,7 @@ export class DialogCommentsComponent implements OnInit {
     };
     comment.logs.push(log);
     comment.isActive = true;
-    this.apiService.activateComment(comment.commentId, comment).subscribe(data => {
+    this.apiService.activateCommentAsync(comment.commentId, comment).subscribe(data => {
       switch (data.status) {
         case Status.Success:
             this.data.commentList[index] = comment;

@@ -1,6 +1,6 @@
 import { Component, OnInit, } from '@angular/core';
 import { ApiService } from '../shared/services/api.service';
-import { CommentDTO } from '../models/commentdto.model';
+import { CommentLog } from '../models/commentlog.model';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogRolComponent } from './dialog-rol/dialog-rol.component';
 import { User } from '../models/user.model';
@@ -15,7 +15,7 @@ import { Status } from '../models/enums.model';
 export class HomeComponent implements OnInit {
 
   user: User;
-  commentLogList: CommentDTO[] = [];
+  commentLogList: CommentLog[] = [];
   username: string;
   rolValue: number;
 
@@ -27,7 +27,8 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.apiService.getLast10Logs().subscribe(data => {
+    //let promise = new Promise(())
+    this.apiService.getLast10LogsAsync().subscribe(data => {
       switch (data.status) {
         case Status.Success:
           this.commentLogList = data.data;
@@ -38,7 +39,7 @@ export class HomeComponent implements OnInit {
       }
     });
 
-    this.apiService.getUser().subscribe(data => {
+    this.apiService.getUserAsync().subscribe(data => {
       switch (data.status) {
         case Status.Success:
           this.user = data.data;
@@ -68,7 +69,7 @@ export class HomeComponent implements OnInit {
         userId: 0,
         rol: result
       };
-      this.apiService.addUser(user).subscribe(data => {
+      this.apiService.addUserAsync(user).subscribe(data => {
         switch (data.status) {
           case Status.Success:
             this.user = data.data;
