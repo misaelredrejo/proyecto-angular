@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { SpinnerService } from './shared/spinner.service';
+import { SpinnerService } from './shared/services/spinner.service';
 
 @Component({
   selector: 'app-root',

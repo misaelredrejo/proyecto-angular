@@ -27,8 +27,10 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
 
-    //let promise = new Promise(())
+    let promise = new Promise<void>(async (resolve, reject) => {
+      
     this.apiService.getLast10LogsAsync().subscribe(data => {
+      console.log('log');
       switch (data.status) {
         case Status.Success:
           this.commentLogList = data.data;
@@ -39,7 +41,8 @@ export class HomeComponent implements OnInit {
       }
     });
 
-    this.apiService.getUserAsync().subscribe(data => {
+    await this.apiService.getUserAsync().subscribe(data => {
+      console.log('user')
       switch (data.status) {
         case Status.Success:
           this.user = data.data;
@@ -53,7 +56,8 @@ export class HomeComponent implements OnInit {
           break;
       }
     });
-
+    resolve();
+    }).then(() => console.log("Task Completed!"));
   }
 
   openDialogChooseUserRol() {

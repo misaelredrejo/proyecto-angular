@@ -8,7 +8,7 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { SpinnerService } from './spinner.service';
+import { SpinnerService } from './services/spinner.service';
 import {  Router } from '@angular/router';
 @Injectable()
 export class WinAuthInterceptor implements HttpInterceptor{
