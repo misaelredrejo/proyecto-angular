@@ -5,10 +5,10 @@ import {
   HttpErrorResponse,
 } from "@angular/common/http";
 import { catchError, map } from "rxjs/operators";
-import {Comment} from '../models/comment.model';
-import { CommentDTO } from '../models/commentdto.model';
-import { User } from '../models/user.model';
-import { ApiResponse } from '../models/api-response.model';
+import {Comment} from '../../models/comment.model';
+import { CommentDTO } from '../../models/commentdto.model';
+import { User } from '../../models/user.model';
+import { ApiResponse } from '../../models/api-response.model';
 
 
 @Injectable({
@@ -66,44 +66,43 @@ export class ApiService {
     return this.http.get<ApiResponse>(this.myAppUrl + this.myApiUserUrl);
   }
 
-  public addUser(user: User):Observable<User> {
-    return this.http.post<User>(this.myAppUrl + this.myApiUserUrl, user);
+  public addUser(user: User):Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(this.myAppUrl + this.myApiUserUrl, user);
   }
   //#endregion
 
 
   //#region Comentarios
-  public getComments(): Observable<Comment[]> {
-    return this.http.get<Comment[]>(this.myAppUrl + this.myApiCommentsUrl);
+  public getComments(): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl);
   }
 
-  public getCntCommentsSubPath(path: string): Observable<number> {
-    return this.http.get<number>(this.myAppUrl + this.myApiCommentsUrl + "subpath/" + path);
+  public getCntCommentsSubPath(path: string): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + "subpath/" + path);
   }
 
-  public getLast10Logs(): Observable<CommentDTO[]> {
-    return this.http.get<CommentDTO[]>(this.myAppUrl + this.myApiCommentsUrl + 'last10');
+  public getLast10Logs(): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + 'last10');
   }
 
-  public getCommentsByPath(path: string): Observable<Comment[]> {
-    return this.http.get<Comment[]>(this.myAppUrl + this.myApiCommentsUrl + path);
+  public getCommentsByPath(path: string): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + path);
   }
 
-  public addComment(comment: Comment): Observable<Comment> {
-
-    return this.http.post<Comment>(this.myAppUrl + this.myApiCommentsUrl, comment);
+  public addComment(comment: Comment): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl, comment);
   }
 
-  public updateComment(id: number, comment: Comment): Observable<any> {
-    return this.http.put(this.myAppUrl + this.myApiCommentsUrl + id, comment);
+  public updateComment(id: number, comment: Comment): Observable<ApiResponse> {
+    return this.http.put<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + id, comment);
   }
 
-  public deleteComment(id: number, comment: Comment): Observable<any> {
-    return this.http.put(this.myAppUrl + this.myApiCommentsUrl + "delete/" + id, comment);
+  public deleteComment(id: number, comment: Comment): Observable<ApiResponse> {
+    return this.http.put<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + "delete/" + id, comment);
   }
 
-  public activateComment(id: number, comment: Comment): Observable<any> {
-    return this.http.put(this.myAppUrl + this.myApiCommentsUrl + "activate/" + id, comment);
+  public activateComment(id: number, comment: Comment): Observable<ApiResponse> {
+    return this.http.put<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + "activate/" + id, comment);
   }
   //#endregion
 

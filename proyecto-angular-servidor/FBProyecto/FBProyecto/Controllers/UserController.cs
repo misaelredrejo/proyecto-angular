@@ -36,7 +36,7 @@ namespace FBProyecto.Controllers
                 if (user == null)
                 {
                     myResponse.Status = Status.NotFound;
-                    myResponse.Message = "El usuario " + username + " no existe";
+                    myResponse.Message = "El usuario " + username + " no existe.";
                     myResponse.Data = null;
                     return myResponse;
                 }
@@ -56,19 +56,27 @@ namespace FBProyecto.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] User user)
+        public async Task<ApiResponse> Post([FromBody] User user)
         {
+            ApiResponse myResponse = new ApiResponse();
             try
             {
                 string username = AccountHelper.GetWinAuthAccount(HttpContext);
                 user.Username = username;
                 _context.User.Add(user);
                 await _context.SaveChangesAsync();
-                return Ok(user);
+
+                myResponse.Status = Status.Success;
+                myResponse.Message = "Usuario añadido correctamente.";
+                myResponse.Data = user;
+                return myResponse;
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                myResponse.Status = Status.Error;
+                myResponse.Message = ex.Message;
+                myResponse.Data = null;
+                return myResponse;
             }
         }
 

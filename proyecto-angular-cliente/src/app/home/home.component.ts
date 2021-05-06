@@ -1,11 +1,10 @@
 import { Component, OnInit, } from '@angular/core';
-import { ApiService } from '../shared/api.service';
+import { ApiService } from '../shared/services/api.service';
 import { CommentDTO } from '../models/commentdto.model';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogRolComponent } from './dialog-rol/dialog-rol.component';
 import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
-import { SpinnerService } from '../shared/spinner.service';
 import { Status } from '../models/enums.model';
 
 @Component({
@@ -27,11 +26,17 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
     this.apiService.getLast10Logs().subscribe(data => {
-      this.commentLogList = data;
-    }), error => {
-      console.log(error);
-    };
+      switch (data.status) {
+        case Status.Success:
+          this.commentLogList = data.data;
+          break;
+        case Status.Error:
+          console.log(data.message);
+          break;
+      }
+    });
 
     this.apiService.getUser().subscribe(data => {
       switch (data.status) {
@@ -64,10 +69,17 @@ export class HomeComponent implements OnInit {
         rol: result
       };
       this.apiService.addUser(user).subscribe(data => {
-        this.user = data;
-        this.authenticationService.login(this.user);
-      }, error => {
-        console.log(error);
+        switch (data.status) {
+          case Status.Success:
+            this.user = data.data;
+            this.authenticationService.login(this.user);
+            break;
+
+          case Status.Error:
+            console.log(data.message);
+            break;
+        }
+
       })
     });
 

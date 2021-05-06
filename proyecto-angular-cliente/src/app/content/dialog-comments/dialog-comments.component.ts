@@ -2,9 +2,9 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ApiService } from 'src/app/shared/api.service';
+import { ApiService } from 'src/app/shared/services/api.service';
 import { Comment } from 'src/app/models/comment.model'
-import { Action} from 'src/app/models/enums.model';
+import { Action, Status } from 'src/app/models/enums.model';
 import { User } from 'src/app/models/user.model';
 import { Log } from 'src/app/models/log.model';
 import { DialogDataComments } from 'src/app/models/dialog-data-comments.model';
@@ -18,7 +18,6 @@ import { AuthenticationService } from 'src/app/core/authentication/authenticatio
 })
 export class DialogCommentsComponent implements OnInit {
 
-  canEditComment = false;
   formAdd: FormGroup;
   formEdit: FormGroup;
   indexComment: number | undefined;
@@ -57,7 +56,6 @@ export class DialogCommentsComponent implements OnInit {
       comment: this.data.commentList[index]['text']
     });
     this.indexComment = index;
-    this.canEditComment = true;
   }
 
   addComment() {
@@ -78,12 +76,21 @@ export class DialogCommentsComponent implements OnInit {
       };
 
       this.apiService.addComment(comment).subscribe(data => {
-        this.data.commentList.push(data);
-        this.formAdd.reset();
-        this.toastr.success('Comentario añadido correctamente.', 'Añadir comentario');
-      }, error => {
-        console.log(error);
-        this.toastr.error('Error al añadir comentario.', 'ERROR');
+        switch (data.status) {
+          case Status.Success:
+            this.data.commentList.push(data.data);
+            this.formAdd.reset();
+            this.toastr.success(data.message, 'Añadir comentario');
+            break;
+          case Status.NotFound:
+            this.toastr.error(data.message, 'ERROR');
+            break;
+          case Status.Error:
+            this.toastr.error('No se pudo añadir el comentario.', 'ERROR');
+            console.log(data.message);
+            break;
+        }
+
       });
     } else {
       this.toastr.error('El comentario no puede estar vacío.', 'ERROR');
@@ -105,13 +112,20 @@ export class DialogCommentsComponent implements OnInit {
       comment.logs.push(log);
       comment.text = text;
       this.apiService.updateComment(comment.commentId, comment).subscribe(data => {
-        this.toastr.success('Comentario editado correctamente', 'Editar comentario');
-        this.data.commentList[this.indexComment] = comment;
-        this.canEditComment = false;
-        this.indexComment = undefined;
-      }, error => {
-        console.log(error);
-        this.toastr.error('Error al editar comentario.', 'ERROR');
+        switch (data.status) {
+          case Status.Success:
+            this.toastr.success(data.message, 'Editar comentario');
+            this.data.commentList[this.indexComment] = comment;
+            this.indexComment = undefined;
+            break;
+          case Status.NotFound:
+            this.toastr.error(data.message, 'ERROR');
+            break;
+          case Status.Error:
+            this.toastr.error('No se pudo editar el comentario.', 'ERROR');
+            console.log(data.message);
+            break;
+        }
       });
     } else {
       this.toastr.error('El comentario no puede estar vacío.', 'ERROR');
@@ -131,14 +145,21 @@ export class DialogCommentsComponent implements OnInit {
     comment.logs.push(log);
     comment.isActive = false;
     this.apiService.deleteComment(comment.commentId, comment).subscribe(data => {
-      this.data.commentList[index] = comment;
-      this.toastr.success('Comentario eliminado correctamente', 'Eliminar comentario');
-    },
-      error => {
-        console.log(error);
-        this.toastr.error('Error al eliminar comentario.', 'ERROR');
-      });
-    this.canEditComment = false;
+      switch (data.status) {
+        case Status.Success:
+            this.data.commentList[index] = comment;
+            this.toastr.success(data.message, 'Eliminar comentario');
+          break;
+        case Status.NotFound:
+            this.toastr.success(data.message, 'ERROR');
+          break;
+        case Status.Error:
+            console.log(data.message);
+            this.toastr.error('Error al eliminar comentario.', 'ERROR');
+          break;
+      }
+      
+    });
   }
 
   activateComment(index: number) {
@@ -153,14 +174,21 @@ export class DialogCommentsComponent implements OnInit {
     comment.logs.push(log);
     comment.isActive = true;
     this.apiService.activateComment(comment.commentId, comment).subscribe(data => {
-      this.data.commentList[index] = comment;
-      this.toastr.success('Comentario activado correctamente', 'Activar comentario');
-    },
-      error => {
-        console.log(error);
-        this.toastr.error('Error al activar comentario.', 'ERROR');
-      });
-    this.canEditComment = false;
+      switch (data.status) {
+        case Status.Success:
+            this.data.commentList[index] = comment;
+            this.toastr.success(data.message, 'Activar comentario');
+          break;
+        case Status.NotFound:
+            this.toastr.success(data.message, 'ERROR');
+          break;
+          case Status.Error:
+              console.log(data.message);
+              this.toastr.error('Error al activar comentario.', 'ERROR');
+            break;
+      }
+      
+    });
   }
 
 

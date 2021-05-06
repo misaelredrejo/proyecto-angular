@@ -1,7 +1,7 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
-import { ApiService } from '../shared/api.service';
-import { TitleService } from '../shared/title.service';
+import { ApiService } from '../shared/services/api.service';
+import { TitleService } from '../shared/services/title.service';
 import { Subscription } from 'rxjs';
 import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
