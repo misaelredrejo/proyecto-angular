@@ -17,10 +17,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let row of node.tableItems" [ngClass]="{'row-number': row.esquema['type'] == 'number'}">
+            <tr *ngFor="let row of node.tableItems" [ngClass]="{'row-number': row.esquema['type'] == 'number', 'row-string': row.esquema['type'] == 'string'}">
               <td>
                 <button mat-button matBadge="{{row.cntComentarios}}" matBadgeColor="accent" matTooltip="Ver comentarios"
-                  (click)="openDialog(row.comentarios, row.esquema['path'])" class="table-button"
+                  (click)="openDialogComments(row.comentarios, row.esquema['path'])" class="table-button"
                   [matBadgeHidden]="row.cntComentarios == 0">
                   <span *ngIf="user?.rol == 1">{{row.name}}<br></span>
                   {{row.literal}}<br>{{row.literaleu}}
@@ -126,7 +126,7 @@
           </button>
           <span matBadge="{{node.cntComentarios}}" matBadgeOverlap="false" matBadgeColor="accent"
             [matBadgeHidden]="node.cntComentarios == 0">
-            <span *ngIf="user?.rol == 'Desarrollador'">{{node.name}} - </span>
+            <span *ngIf="user?.rol == 0">{{node.name}} - </span>
             {{node.literal}} - {{node.literaleu}}
             <span *ngIf="node.esquema['type'] == 'array'">
               -> Type: array, minItems: {{node.esquema['minItems']}}, maxItems: {{node.esquema['maxItems']}}

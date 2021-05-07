@@ -15,9 +15,8 @@ import { TitleService } from '../shared/services/title.service';
 import { EsquemaNode } from '../models/esquema-node.model';
 import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
-
-
-
+import { SpinnerService } from '../shared/services/spinner.service';
+import { VirtualTimeScheduler } from 'rxjs';
 
 @Component({
   selector: 'app-content',
@@ -56,7 +55,8 @@ export class ContentComponent implements OnInit {
     private apiService: ApiService,
     public dialog: MatDialog,
     private titleService: TitleService,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private spinnerService: SpinnerService
   ) {
 
   }
@@ -65,13 +65,12 @@ export class ContentComponent implements OnInit {
   ngOnInit(): void {
 
     this.checkUser();
-
     this.loadJSON();
   }
 
   checkUser(): void {
     this.user = this.authService.currentUserValue;
-    if (this.user.rol == Rol.Desarrollador) {
+    if (this.user.rol != Rol.Desarrollador) {
       this.TABLE_COLS.splice(7, 1);
       this.TABLE_NUM_COLS.splice(6, 1);
       this.TABLE_STR_COLS.splice(9, 1);
@@ -97,37 +96,12 @@ export class ContentComponent implements OnInit {
             this.literal = (this.literaleses[this.link] ? this.literaleses[this.link] : this.literaleses[this.link.toLowerCase()]);
             this.literaleu = (this.literaleseu[this.link] ? this.literaleseu[this.link] : this.literaleseu[this.link.toLowerCase()]);
             if (this.user && this.user.rol == Rol.Desarrollador) {
-              this.titleService.changeTitle(this.literal + ' - ' + this.literaleu);
-            } else {
               this.titleService.changeTitle(this.link + ' - ' + this.literal + ' - ' + this.literaleu);
-            }
-            
-            let dataInsert: EsquemaNode[] = [];
-
-            let obj: EsquemaNode = { name: this.link, esquema: this.esquema, literal: this.literal };
-
-
-            if (this.esquema['properties']) {
-              dataInsert = this.getChildren(this.esquema['properties']);
-            } else if (this.esquema['allOf']) {
-              dataInsert = this.getChildren(this.esquema['allOf'], true);
             } else {
-
-              this.apiService.getCommentsByPathAsync(this.esquema['path']).subscribe(data => {
-                switch (data.status) {
-                  case Status.Success:
-                    obj.comentarios = data.data;
-                    break;
-                  case Status.Error:
-                      console.log(data.message);
-                    break;
-                }
-              });
-              dataInsert.push(obj);
+              this.titleService.changeTitle(this.literal + ' - ' + this.literaleu);
             }
-            this.dataSource.data = dataInsert;
+            this.fillTree();
           });
-
         },
         err => {
           console.log(err);
@@ -135,12 +109,22 @@ export class ContentComponent implements OnInit {
       );
   }
 
+  fillTree() {
+    let dataInsert: EsquemaNode[] = [];
+    if (this.esquema['properties']) {
+      dataInsert = this.getChildren(this.esquema['properties']);
+    } else if (this.esquema['allOf']) {
+      dataInsert = this.getChildren(this.esquema['allOf'], true);
+    } 
+    this.dataSource.data = dataInsert;
+  }
+
 
   getChildren(properties: any, containsAllOf = false) {
     let children: EsquemaNode[] = [];
     let tableItems: any[] = [];
-    let tableNumberItems: any[] = [];
-    let tableStringItems: any[] = [];
+    /*let tableNumberItems: any[] = [];
+    let tableStringItems: any[] = [];*/
     if (containsAllOf) {
       for (let key in properties) {
         let value = properties[key];
@@ -160,14 +144,14 @@ export class ContentComponent implements OnInit {
               obj.comentarios = data.data;
               break;
             case Status.Error:
-                console.log(data.message);
+              console.log(data.message);
               break;
           }
         });
         this.apiService.getCntCommentsSubPathAsync(this.todoEsquema[key1]['path']).subscribe(data => {
           switch (data.status) {
             case Status.Success:
-          obj.cntComentarios = data.data;
+              obj.cntComentarios = data.data;
               break;
             case Status.Error:
               console.log(data.message);
@@ -184,11 +168,11 @@ export class ContentComponent implements OnInit {
         } else {
           obj.esquema = this.todoEsquema[key1];
           tableItems.push(obj);
-          if (obj.esquema['type'] == 'number') {
+          /*if (obj.esquema['type'] == 'number') {
             tableNumberItems.push(obj);
           } else if (obj.esquema['type'] == 'string') {
             tableStringItems.push(obj);
-          }
+          }*/
         }
       }
     } else {
@@ -209,14 +193,14 @@ export class ContentComponent implements OnInit {
               obj.comentarios = data.data;
               break;
             case Status.Error:
-                console.log(data.message);
+              console.log(data.message);
               break;
           }
         });
         this.apiService.getCntCommentsSubPathAsync(this.todoEsquema[key]['path']).subscribe(data => {
           switch (data.status) {
             case Status.Success:
-          obj.cntComentarios = data.data;
+              obj.cntComentarios = data.data;
               break;
             case Status.Error:
               console.log(data.message);
@@ -233,19 +217,20 @@ export class ContentComponent implements OnInit {
         } else {
           obj.esquema = this.todoEsquema[key];
           tableItems.push(obj);
-          if (obj.esquema['type'] == 'number') {
+          /*if (obj.esquema['type'] == 'number') {
             tableNumberItems.push(obj);
           } else if (obj.esquema['type'] == 'string') {
             tableStringItems.push(obj);
-          }
+          }*/
         }
       }
     }
-    if (tableItems.length > 0) children.push({ tableItems: tableItems, tableString: tableStringItems, tableNumber: tableNumberItems });
+    if (tableItems.length > 0) children.push({ tableItems: tableItems});
+    //if (tableItems.length > 0) children.push({ tableItems: tableItems, tableString: tableStringItems, tableNumber: tableNumberItems });
     return children;
   }
 
-  openDialog(commentList: Comment[], path: string) {
+  openDialogComments(commentList: Comment[], path: string) {
     this.dialog.open(DialogCommentsComponent, {
       data: {
         commentList: commentList,

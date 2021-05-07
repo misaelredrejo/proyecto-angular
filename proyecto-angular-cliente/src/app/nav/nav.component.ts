@@ -77,9 +77,9 @@ export class NavComponent implements OnDestroy {
         let value = item[key];
         let labelText = '';
         if (this.user && this.user.rol == Rol.Desarrollador) {
-          labelText =  this.literaleses[key];
+          labelText = key + ' - ' +this.literaleses[key]
         } else {
-        labelText = key + ' - ' +this.literaleses[key]
+          labelText =  this.literaleses[key];
         }
 
         if (value && value.length > 0) { // Si tiene subniveles
@@ -95,7 +95,12 @@ export class NavComponent implements OnDestroy {
   itemsSubMenu(items: string[]): any[] {
     let itemsSubMenu = [];
     items.forEach((element) => {
-      let labelText = element + ' - ' + (this.literaleses[element] ? this.literaleses[element] : this.literaleses[element.toLowerCase()]);
+      let labelText = '';
+      if (this.user && this.user.rol == Rol.Desarrollador) {
+        labelText = element + ' - ' + (this.literaleses[element] ? this.literaleses[element] : this.literaleses[element.toLowerCase()]);
+      } else {
+        labelText = (this.literaleses[element] ? this.literaleses[element] : this.literaleses[element.toLowerCase()]);
+      }
       itemsSubMenu.push({ label: labelText, link: "/content/" + element})
     });
     return itemsSubMenu

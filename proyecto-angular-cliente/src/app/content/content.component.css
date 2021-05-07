@@ -39,6 +39,10 @@
   background-color: aliceblue;
 }
 
+.row-string {
+  background-color: rgb(245, 245, 245);
+}
+
 .table-header {
     background-color: #95A5A6;
     text-transform: uppercase;
