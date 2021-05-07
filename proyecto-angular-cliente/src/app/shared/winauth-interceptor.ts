@@ -23,7 +23,7 @@ export class WinAuthInterceptor implements HttpInterceptor{
               if (event instanceof HttpResponse) {
               }
           }, (error) => {
-            this.router.navigate(['/error']);
+            this.router.navigate(['/error/database']);
           })
       );;
     }

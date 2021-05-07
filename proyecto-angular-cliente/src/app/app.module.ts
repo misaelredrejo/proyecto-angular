@@ -21,8 +21,9 @@ import { DialogCommentsComponent } from './content/dialog-comments/dialog-commen
 import { WinAuthInterceptor } from './shared/winauth-interceptor';
 import { DialogRolComponent } from './home/dialog-rol/dialog-rol.component';
 import { DialogEnumComponent } from './content/dialog-enum/dialog-enum.component';
-import { NotFoundComponent } from './not-found/not-found.component';
 import { ErrorComponent } from './error/error.component';
+import { NotFoundComponent } from './error/not-found/not-found.component';
+import { DatabaseComponent } from './error/database/database.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { ErrorComponent } from './error/error.component';
     DialogRolComponent,
     DialogEnumComponent,
     NotFoundComponent,
-    ErrorComponent
+    ErrorComponent,
+    DatabaseComponent
   ],
   imports: [
     BrowserModule,

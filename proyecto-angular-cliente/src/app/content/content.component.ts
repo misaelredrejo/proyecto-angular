@@ -89,7 +89,7 @@ export class ContentComponent implements OnInit {
             this.link = params['link'];
             this.esquema = this.todoEsquema[this.link];
             if (this.esquema == null) {
-              this.router.navigate(['/404']);
+              this.router.navigate(['/error/test']);
               return;
             }
             this.literal = (this.literaleses[this.link] ? this.literaleses[this.link] : this.literaleses[this.link.toLowerCase()]);
