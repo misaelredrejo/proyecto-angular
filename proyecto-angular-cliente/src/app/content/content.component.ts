@@ -16,7 +16,6 @@ import { EsquemaNode } from '../models/esquema-node.model';
 import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
 import { SpinnerService } from '../shared/services/spinner.service';
-import { VirtualTimeScheduler } from 'rxjs';
 
 @Component({
   selector: 'app-content',
@@ -123,8 +122,6 @@ export class ContentComponent implements OnInit {
   getChildren(properties: any, containsAllOf = false) {
     let children: EsquemaNode[] = [];
     let tableItems: any[] = [];
-    /*let tableNumberItems: any[] = [];
-    let tableStringItems: any[] = [];*/
     if (containsAllOf) {
       for (let key in properties) {
         let value = properties[key];
@@ -168,11 +165,6 @@ export class ContentComponent implements OnInit {
         } else {
           obj.esquema = this.todoEsquema[key1];
           tableItems.push(obj);
-          /*if (obj.esquema['type'] == 'number') {
-            tableNumberItems.push(obj);
-          } else if (obj.esquema['type'] == 'string') {
-            tableStringItems.push(obj);
-          }*/
         }
       }
     } else {
@@ -217,17 +209,15 @@ export class ContentComponent implements OnInit {
         } else {
           obj.esquema = this.todoEsquema[key];
           tableItems.push(obj);
-          /*if (obj.esquema['type'] == 'number') {
-            tableNumberItems.push(obj);
-          } else if (obj.esquema['type'] == 'string') {
-            tableStringItems.push(obj);
-          }*/
         }
       }
     }
     if (tableItems.length > 0) children.push({ tableItems: tableItems});
-    //if (tableItems.length > 0) children.push({ tableItems: tableItems, tableString: tableStringItems, tableNumber: tableNumberItems });
     return children;
+  }
+
+  getChildrenContainsAllOf(){
+    
   }
 
   openDialogComments(commentList: Comment[], path: string) {

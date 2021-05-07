@@ -27,7 +27,10 @@ const routes: Routes = [
   },
   {
     path: 'error',
-    component: ErrorComponent
+    component: ErrorComponent,
+    children: [
+      
+    ]
   },
   {
     path: '**',

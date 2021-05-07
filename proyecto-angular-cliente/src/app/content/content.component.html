@@ -22,7 +22,7 @@
                 <button mat-button matBadge="{{row.cntComentarios}}" matBadgeColor="accent" matTooltip="Ver comentarios"
                   (click)="openDialogComments(row.comentarios, row.esquema['path'])" class="table-button"
                   [matBadgeHidden]="row.cntComentarios == 0">
-                  <span *ngIf="user?.rol == 1">{{row.name}}<br></span>
+                  <span *ngIf="user?.rol == 0">{{row.name}}<br></span>
                   {{row.literal}}<br>{{row.literaleu}}
                 </button>
               </td>
@@ -42,77 +42,6 @@
           </tbody>
         </table>
 
-        <!--TERMINARTABLA-->
-        <!--Number tabla-->
-        <!--
-<table *ngIf="node.tableNumber.length > 0" class="table table-bordered table-hover table-text">
-          <thead>
-            <tr class="table-header">
-              <th scope="col">Código-Literal</th>
-              <th scope="col" *ngFor="let column of TABLE_NUM_COLS">{{column}}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of node.tableNumber">
-              <td>
-                <button mat-button matBadge="{{row.cntComentarios}}" matBadgeColor="accent" matTooltip="Ver comentarios"
-                  (click)="openDialog(row.comentarios, row.esquema['path'])" class="table-button"
-                  [matBadgeHidden]="row.cntComentarios == 0">
-                  {{row.name}}<br>{{row.literal}}<br>{{row.literaleu}}
-                </button>
-              </td>
-              <td *ngFor="let column of TABLE_NUM_COLS">
-                <span *ngIf="column == 'enum'">
-                  <span *ngIf="row.esquema[column]?.length > 4" (click)="openDialogEnumList(row.esquema[column])">
-                    {{row.esquema[column] | slice:0:4}}...
-                  </span>
-                  <span *ngIf="row.esquema[column]?.length <= 4">
-                    {{row.esquema[column]}}
-                  </span>
-                </span>
-
-                <span *ngIf="column != 'enum'">{{ row.esquema[column] }}</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        -->
-
-        <!--String tabla-->
-        <!--
-<table *ngIf="node.tableString.length > 0" class="table table-bordered table-hover table-text">
-          <thead>
-            <tr class="table-header">
-              <th scope="col">Código-Literal</th>
-              <th scope="col" *ngFor="let column of TABLE_STR_COLS">{{column}}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of node.tableString">
-              <td>
-                <button mat-button matBadge="{{row.cntComentarios}}" matBadgeColor="accent" matTooltip="Ver comentarios"
-                  (click)="openDialog(row.comentarios, row.esquema['path'])" class="table-button"
-                  [matBadgeHidden]="row.cntComentarios == 0">
-                  {{row.name}}<br>{{row.literal}}<br>{{row.literaleu}}
-                </button>
-              </td>
-              <td *ngFor="let column of TABLE_STR_COLS">
-                <span *ngIf="column == 'enum'">
-                  <span *ngIf="row.esquema[column]?.length > 4" (click)="openDialogEnumList(row.esquema[column])">
-                    {{row.esquema[column] | slice:0:4}}...
-                  </span>
-                  <span *ngIf="row.esquema[column]?.length <= 4">
-                    {{row.esquema[column]}}
-                  </span>
-                </span>
-
-                <span *ngIf="column != 'enum'">{{ row.esquema[column] }}</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        -->
-        
       </li>
     </mat-tree-node>
     <!-- This is the tree node template for expandable nodes -->
