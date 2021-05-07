@@ -9,6 +9,7 @@ import { User } from 'src/app/models/user.model';
 import { Log } from 'src/app/models/log.model';
 import { DialogDataComments } from 'src/app/models/dialog-data-comments.model';
 import { AuthenticationService } from 'src/app/core/authentication/authentication.service';
+import { SpinnerService } from 'src/app/shared/services/spinner.service';
 
 
 @Component({
@@ -29,7 +30,8 @@ export class DialogCommentsComponent implements OnInit {
     private toastr: ToastrService,
     private fb: FormBuilder,
     private apiService: ApiService,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private spinnerService: SpinnerService
   ) {
     this.formAdd = this.fb.group({
       comment: ['', Validators.required]
@@ -74,7 +76,7 @@ export class DialogCommentsComponent implements OnInit {
         ],
         isActive: true
       };
-
+      this.spinnerService.show();
       this.apiService.addCommentAsync(comment).subscribe(data => {
         switch (data.status) {
           case Status.Success:
@@ -90,7 +92,9 @@ export class DialogCommentsComponent implements OnInit {
             console.log(data.message);
             break;
         }
-
+        this.spinnerService.hide();
+      }, err => {
+        this.spinnerService.hide();
       });
     } else {
       this.toastr.error('El comentario no puede estar vacío.', 'ERROR');
@@ -111,6 +115,7 @@ export class DialogCommentsComponent implements OnInit {
       }
       comment.logs.push(log);
       comment.text = text;
+      this.spinnerService.show();
       this.apiService.updateCommentAsync(comment.commentId, comment).subscribe(data => {
         switch (data.status) {
           case Status.Success:
@@ -126,6 +131,9 @@ export class DialogCommentsComponent implements OnInit {
             console.log(data.message);
             break;
         }
+        this.spinnerService.hide();
+      }, err => {
+        this.spinnerService.hide();
       });
     } else {
       this.toastr.error('El comentario no puede estar vacío.', 'ERROR');
@@ -144,6 +152,7 @@ export class DialogCommentsComponent implements OnInit {
     };
     comment.logs.push(log);
     comment.isActive = false;
+    this.spinnerService.show();
     this.apiService.deleteCommentAsync(comment.commentId, comment).subscribe(data => {
       switch (data.status) {
         case Status.Success:
@@ -158,7 +167,9 @@ export class DialogCommentsComponent implements OnInit {
             this.toastr.error('Error al eliminar comentario.', 'ERROR');
           break;
       }
-      
+      this.spinnerService.hide();
+    }, err => {
+      this.spinnerService.hide();
     });
   }
 
@@ -173,6 +184,7 @@ export class DialogCommentsComponent implements OnInit {
     };
     comment.logs.push(log);
     comment.isActive = true;
+    this.spinnerService.show();
     this.apiService.activateCommentAsync(comment.commentId, comment).subscribe(data => {
       switch (data.status) {
         case Status.Success:
@@ -187,7 +199,9 @@ export class DialogCommentsComponent implements OnInit {
               this.toastr.error('Error al activar comentario.', 'ERROR');
             break;
       }
-      
+      this.spinnerService.hide();
+    }, err => {
+      this.spinnerService.hide();
     });
   }
 

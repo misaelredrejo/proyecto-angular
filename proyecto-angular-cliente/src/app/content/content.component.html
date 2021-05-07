@@ -22,7 +22,7 @@
                 <button mat-button matBadge="{{row.cntComentarios}}" matBadgeColor="accent" matTooltip="Ver comentarios"
                   (click)="openDialog(row.comentarios, row.esquema['path'])" class="table-button"
                   [matBadgeHidden]="row.cntComentarios == 0">
-                  <span *ngIf="user?.rol == 'Desarrollador'">{{row.name}}<br></span>
+                  <span *ngIf="user?.rol == 1">{{row.name}}<br></span>
                   {{row.literal}}<br>{{row.literaleu}}
                 </button>
               </td>

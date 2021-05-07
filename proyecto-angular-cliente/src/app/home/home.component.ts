@@ -27,48 +27,35 @@ export class HomeComponent implements OnInit {
     private spinnerService: SpinnerService
   ) { }
 
+  
   ngOnInit(): void {
 
     this.spinnerService.show();
-    let p1 = new Promise<void>((resolve, reject) => {
-      this.apiService.getLast10LogsAsync().subscribe(data => {
-        switch (data.status) {
-          case Status.Success:
-            this.commentLogList = data.data;
-            resolve();
-            break;
-          case Status.Error:
-            console.log(data.message);
-            reject();
-            break;
-        }
-      }, error => {
-        resolve();
-      });
-    });
-    let p2 = new Promise<void>((resolve, reject) => {
-      this.apiService.getUserAsync().subscribe(data => {
-        switch (data.status) {
-          case Status.Success:
-            this.user = data.data;
-            this.authenticationService.login(this.user);
-            resolve();
-            break;
-          case Status.NotFound:
-            this.openDialogChooseUserRol();
-            reject();
-            break;
-          case Status.Error:
-            console.log(data.message);
-            reject();
-            break;
-        }
-      }, error => {
-        resolve();
-      });
-    });
-    Promise.all([p1, p2]).then(() => this.spinnerService.hide());
 
+    let p0 = this.apiService.getLast10LogsAsync().toPromise();
+    let p1 = this.apiService.getUserAsync().toPromise();
+
+    Promise.all([p0, p1]).then(res => {
+      if (res[0].status == Status.Success) {
+        this.commentLogList = res[0].data;
+      }else {
+        console.log(res[0].message);
+      }
+      if (res[1].status == Status.Success) {
+        this.user = res[1].data;
+        this.authenticationService.login(this.user);
+      } else if (res[1].status == Status.NotFound) {
+        this.openDialogChooseUserRol();
+      } else {
+        console.log(res[1].message);
+      }
+
+      this.spinnerService.hide();
+    }).catch(e => {
+      console.log(e);
+      this.spinnerService.hide();
+    });
+    
 
   }
 
