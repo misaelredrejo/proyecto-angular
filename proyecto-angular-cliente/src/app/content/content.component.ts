@@ -41,9 +41,7 @@ export class ContentComponent implements OnInit {
   literaleu: string;
 
   TABLE_COLS = ['type', 'format', 'minimum', 'maximum', 'minLength', 'maxLength', 'enum', 'expandible', 'readOnly', 'multipleOf', 'required', 'path'];
-  TABLE_NUM_COLS = ['type', "minimum", "maximum", "path", "readOnly", "format", "expandible"];
-  TABLE_STR_COLS = ['type', "minLength", "maxLength", "enum", "path", "format", "readOnly", "required", "multipleOf", "expandible"];
-
+  COLS_HIDE = ['expandible', 'multipleOf', 'path'];
   treeControl = new NestedTreeControl<EsquemaNode>(node => node.children);
   dataSource = new MatTreeNestedDataSource<EsquemaNode>();
 
@@ -70,9 +68,10 @@ export class ContentComponent implements OnInit {
   checkUser(): void {
     this.user = this.authService.currentUserValue;
     if (this.user.rol != Rol.Desarrollador) {
-      this.TABLE_COLS.splice(7, 1);
-      this.TABLE_NUM_COLS.splice(6, 1);
-      this.TABLE_STR_COLS.splice(9, 1);
+      this.COLS_HIDE.forEach(col => {
+        var index = this.TABLE_COLS.indexOf(col);
+        if (index != -1) this.TABLE_COLS.splice(index, 1);
+      });
     }
   }
 

@@ -1,12 +1,92 @@
-<div class="container mt-5">
-    <h3>Actividad reciente: </h3>
+<mat-tab-group mat-align-tabs="start">
+    <mat-tab label="Actividad reciente">
+        <div class="container mat-elevation-z8 mt-3 mb-3">
 
-    <mat-card class="card" *ngFor="let log of commentLogList">
-        El usuario {{log.username}} ha
-        <span *ngIf="log.action == 0">añadido</span>
-        <span *ngIf="log.action == 1">editado</span>
-        <span *ngIf="log.action == 2">borrado</span>
-        <span *ngIf="log.action == 3">activado</span>
-        un comentario en la ruta {{log.path}} - {{log['date'] | date: 'dd/MM/yyyy'}}
-    </mat-card>
-</div>
+            <table mat-table [dataSource]="dataSourceLast10">
+
+                <!-- Position Column -->
+                <ng-container matColumnDef="username">
+                    <th mat-header-cell *matHeaderCellDef> Usuario </th>
+                    <td mat-cell *matCellDef="let element"> {{element.username}} </td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef> Acción </th>
+                    <td mat-cell *matCellDef="let element">
+                        <span *ngIf="element.action == 0">Añadir</span>
+                        <span *ngIf="element.action == 1">Editar</span>
+                        <span *ngIf="element.action == 2">Borrar</span>
+                        <span *ngIf="element.action == 3">Activar</span>
+                    </td>
+                </ng-container>
+
+                <!-- Weight Column -->
+                <ng-container matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                    <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="path">
+                    <th mat-header-cell *matHeaderCellDef> Ruta </th>
+                    <td mat-cell *matCellDef="let element"> {{element.path}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+
+
+
+
+    </mat-tab>
+    <mat-tab label="Toda actividad">
+        <div class="container mt-3 mb-3">
+            <mat-form-field>
+                <mat-label>Filtro</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="TCSA\usuario" #input>
+            </mat-form-field>
+            <div class="container mat-elevation-z8 mt-3">
+
+
+                <table mat-table [dataSource]="dataSource" matSort>
+
+                    <!-- Position Column -->
+                    <ng-container matColumnDef="username">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Usuario </th>
+                        <td mat-cell *matCellDef="let element"> {{element.username}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Acción </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span *ngIf="element.action == 0">Añadir</span>
+                            <span *ngIf="element.action == 1">Editar</span>
+                            <span *ngIf="element.action == 2">Borrar</span>
+                            <span *ngIf="element.action == 3">Activar</span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Weight Column -->
+                    <ng-container matColumnDef="date">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+                        <td mat-cell *matCellDef="let element"> {{ element.date | date: 'dd/MM/yyyy' }} </td>
+                    </ng-container>
+
+                    <!-- Symbol Column -->
+                    <ng-container matColumnDef="path">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Literal </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{literaleses[element.path.split('/')[element.path.split('/').length-1]]}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>

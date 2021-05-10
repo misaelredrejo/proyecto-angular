@@ -77,8 +77,12 @@ export class ApiService {
     return this.http.get<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + "subpath/" + path);
   }
 
-  public getLast10LogsAsync(): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + 'last10');
+  public getCommentLogsAsync(): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + 'commentlogs');
+  }
+
+  public getLast10CommentLogsAsync(): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + 'commentlogs/last10');
   }
 
   public getCommentsByPathAsync(path: string): Observable<ApiResponse> {

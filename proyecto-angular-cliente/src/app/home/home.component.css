@@ -1,5 +1,9 @@
-.card {
-    margin: 10px;
-    width: 85%;
+table {
+    width: 100%;
+    background-color: var(--tracasa-foreground-color) !important;
 }
 
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }

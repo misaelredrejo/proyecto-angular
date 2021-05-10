@@ -1,4 +1,4 @@
-import { Component, OnInit, } from '@angular/core';
+import { Component, OnInit, ViewChild, } from '@angular/core';
 import { ApiService } from '../shared/services/api.service';
 import { CommentLog } from '../models/commentlog.model';
 import { MatDialog } from '@angular/material/dialog';
@@ -7,6 +7,8 @@ import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
 import { Status } from '../models/enums.model';
 import { SpinnerService } from '../shared/services/spinner.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-home',
@@ -14,11 +16,17 @@ import { SpinnerService } from '../shared/services/spinner.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-
+  literaleses: string[] = [];
+  literaleseu: string[] = [];
   user: User;
   commentLogList: CommentLog[] = [];
   username: string;
   rolValue: number;
+  displayedColumns = ['username', 'action', 'date', 'path'];
+  dataSource: MatTableDataSource<CommentLog>;
+  dataSourceLast10: MatTableDataSource<CommentLog>;
+
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private apiService: ApiService,
@@ -30,21 +38,36 @@ export class HomeComponent implements OnInit {
   
   ngOnInit(): void {
 
+    this.apiService.getJSONAsync().subscribe(data => {
+      this.literaleses = data['literaleses'];
+      this.literaleseu = data['literaleseu'];
+    }, error => {
+      console.log(error);
+    });
+
     this.spinnerService.show();
 
-    let p0 = this.apiService.getLast10LogsAsync().toPromise();
-    let p1 = this.apiService.getUserAsync().toPromise();
+    let p0 = this.apiService.getLast10CommentLogsAsync().toPromise();
+    let p1 = this.apiService.getCommentLogsAsync().toPromise();
+    let p2 = this.apiService.getUserAsync().toPromise();
 
-    Promise.all([p0, p1]).then(res => {
+    Promise.all([p0, p1, p2]).then(res => {
       if (res[0].status == Status.Success) {
-        this.commentLogList = res[0].data;
+        this.dataSourceLast10 = new MatTableDataSource(res[0].data);
       }else {
         console.log(res[0].message);
       }
       if (res[1].status == Status.Success) {
-        this.user = res[1].data;
+        this.dataSource = new MatTableDataSource(res[1].data);
+        this.dataSource.sort = this.sort;
+      }
+      else {
+        console.log(res[1].message);
+      }
+      if (res[2].status == Status.Success) {
+        this.user = res[2].data;
         this.authenticationService.login(this.user);
-      } else if (res[1].status == Status.NotFound) {
+      } else if (res[2].status == Status.NotFound) {
         this.openDialogChooseUserRol();
       } else {
         console.log(res[1].message);
@@ -55,9 +78,15 @@ export class HomeComponent implements OnInit {
       console.log(e);
       this.spinnerService.hide();
     });
-    
 
   }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+  }
+
 
   openDialogChooseUserRol() {
 

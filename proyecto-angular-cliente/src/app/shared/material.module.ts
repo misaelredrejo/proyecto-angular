@@ -23,11 +23,13 @@ import {
   NgMaterialMultilevelMenuModule,
   MultilevelMenuService
 } from "ng-material-multilevel-menu";
+import { MatSortModule } from '@angular/material/sort';
+import { LimitArrayPipe } from './pipes/limit-array.pipe';
 
 
 
 @NgModule({
-  declarations: [],
+  declarations: [LimitArrayPipe],
   exports: [
     CommonModule,
     MatIconModule,
@@ -48,7 +50,9 @@ import {
     MatDialogModule,
     MatInputModule,
     MatSelectModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSortModule,
+    LimitArrayPipe
   ],
   providers: [MultilevelMenuService],
 })

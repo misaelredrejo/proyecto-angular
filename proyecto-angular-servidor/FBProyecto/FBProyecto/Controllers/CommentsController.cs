@@ -47,14 +47,36 @@ namespace FBProyecto.Controllers
 
         }
 
-        // GET api/<CommentsController>/path
-        [HttpGet("last10")]
-        public async Task<ApiResponse> GetLast10Comments()
+        [HttpGet("commentlogs")]
+        public async Task<ApiResponse> GetCommentLogs()
         {
             ApiResponse myResponse = new ApiResponse();
             try
             {
                 var listCommentDTO = await _context.CommentLog.FromSqlRaw("exec dbo.Last10Logs").ToListAsync();
+                myResponse.Status = Status.Success;
+                myResponse.Message = "";
+                myResponse.Data = listCommentDTO;
+                return myResponse;
+            }
+            catch (Exception ex)
+            {
+                myResponse.Status = Status.Error;
+                myResponse.Message = ex.Message;
+                myResponse.Data = null;
+                return myResponse;
+            }
+
+        }
+
+        // GET api/<CommentsController>/path
+        [HttpGet("commentlogs/last10")]
+        public async Task<ApiResponse> GetLast10CommentLogs()
+        {
+            ApiResponse myResponse = new ApiResponse();
+            try
+            {
+                var listCommentDTO = await _context.CommentLog.FromSqlRaw("exec dbo.Last10Logs 10").ToListAsync();
                 myResponse.Status = Status.Success;
                 myResponse.Message = "";
                 myResponse.Data = listCommentDTO;

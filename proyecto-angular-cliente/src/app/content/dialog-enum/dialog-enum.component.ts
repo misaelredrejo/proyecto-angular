@@ -20,9 +20,10 @@ export class DialogEnumComponent implements OnInit {
 
   ngOnInit(): void {
     for (var i = 0; i < this.data.enumList.length; i++) {
-      let literalEs = this.data.literaleses[this.data.codigo + '_' + this.data.enumList[i]];
-      let literalEu = this.data.literaleseu[this.data.codigo + '_' + this.data.enumList[i]];
-      this.enumLiteralList.push(literalEs + ' - ' + literalEu);
+      let codigo = this.data.codigo + '_' + this.data.enumList[i];
+      let literalEs = this.data.literaleses[codigo];
+      let literalEu = this.data.literaleseu[codigo];
+      this.enumLiteralList.push(codigo + ' - ' + literalEs + ' - ' + literalEu);
     }
   }
 
