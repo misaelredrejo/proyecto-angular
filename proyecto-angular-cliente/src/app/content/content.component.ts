@@ -91,7 +91,6 @@ export class ContentComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.link = params['link'];
       this.esquema = this.todoEsquema[this.link];
-      console.log(this.link)
       if (this.esquema == null) {
         this.router.navigate(['/error/test']);
         return;
@@ -112,106 +111,57 @@ export class ContentComponent implements OnInit {
     if (this.esquema['properties']) {
       dataInsert = this.getChildren(this.esquema['properties']);
     } else if (this.esquema['allOf']) {
-      dataInsert = this.getChildren(this.esquema['allOf'], true);
-    } 
+      dataInsert = this.getChildren(this.esquema['allOf']);
+    }
     this.dataSource.data = dataInsert;
   }
 
 
-  getChildren(properties: any, containsAllOf = false) {
+  getChildren(properties: any) {
     let children: EsquemaNode[] = [];
     let tableItems: any[] = [];
-    if (containsAllOf) {
-      for (let key in properties) {
-        let value = properties[key];
-        let key1 = value['$ref'].substring(2);
-        let literal = (this.literaleses[key1] ? this.literaleses[key1] : this.literaleses[key1.toLowerCase()]);
-        let literaleu = (this.literaleseu[key1] ? this.literaleseu[key1] : this.literaleseu[key1.toLowerCase()]);
-        let esquema = this.todoEsquema[key1];
-        let obj: any = {};
-        obj.name = key1;
-        obj.literal = literal;
-        obj.literaleu = literaleu;
-        obj.comentarios = [];
-        obj.esquema = esquema;
-        this.apiService.getCommentsByPathAsync(this.todoEsquema[key1]['path']).subscribe(data => {
-          switch (data.status) {
-            case Status.Success:
-              obj.comentarios = data.data;
-              break;
-            case Status.Error:
-              console.log(data.message);
-              break;
-          }
-        });
-        this.apiService.getCntCommentsSubPathAsync(this.todoEsquema[key1]['path']).subscribe(data => {
-          switch (data.status) {
-            case Status.Success:
-              obj.cntComentarios = data.data;
-              break;
-            case Status.Error:
-              console.log(data.message);
-              break;
-          }
-        });
+    for (let key in properties) {
+      let value = properties[key];
+      let code = value['$ref'].substring(2);
+      console.log(code)
+      console.log(this.todoEsquema[code])
+      let literal = (this.literaleses[code] ? this.literaleses[code] : this.literaleses[code.toLowerCase()]);
+      let literaleu = (this.literaleseu[code] ? this.literaleseu[code] : this.literaleseu[code.toLowerCase()]);
+      let esquema = this.todoEsquema[code];
 
-        if (this.todoEsquema[key1]['properties']) {
-          obj.children = this.getChildren(this.todoEsquema[key1]['properties']);
-          children.push(obj);
-        } else if (this.todoEsquema[key1]['allOf']) {
-          obj.children = this.getChildren(this.todoEsquema[key1]['allOf'], true);
-          children.push(obj);
-        } else {
-          obj.esquema = this.todoEsquema[key1];
-          tableItems.push(obj);
+      let node: EsquemaNode = {name: code, literal: literal, literaleu: literaleu, esquema: esquema, comentarios: []};
+      this.apiService.getCommentsByPathAsync(this.todoEsquema[code]['path']).subscribe(data => {
+        switch (data.status) {
+          case Status.Success:
+            node.comentarios = data.data;
+            break;
+          case Status.Error:
+            console.log(data.message);
+            break;
         }
-      }
-    } else {
-      for (let key in properties) {
-        let literal = (this.literaleses[key] ? this.literaleses[key] : this.literaleses[key.toLowerCase()]);
-        let literaleu = (this.literaleseu[key] ? this.literaleseu[key] : this.literaleseu[key.toLowerCase()]);
-
-        let obj: any = {};
-        let esquema = this.todoEsquema[key];
-        obj.name = key;
-        obj.literal = literal;
-        obj.literaleu = literaleu;
-        obj.esquema = esquema;
-        obj.comentarios = [];
-        this.apiService.getCommentsByPathAsync(this.todoEsquema[key]['path']).subscribe(data => {
-          switch (data.status) {
-            case Status.Success:
-              obj.comentarios = data.data;
-              break;
-            case Status.Error:
-              console.log(data.message);
-              break;
-          }
-        });
-        this.apiService.getCntCommentsSubPathAsync(this.todoEsquema[key]['path']).subscribe(data => {
-          switch (data.status) {
-            case Status.Success:
-              obj.cntComentarios = data.data;
-              break;
-            case Status.Error:
-              console.log(data.message);
-              break;
-          }
-        });
-
-        if (this.todoEsquema[key]['properties']) {
-          obj.children = this.getChildren(this.todoEsquema[key]['properties']);
-          children.push(obj);
-        } else if (this.todoEsquema[key]['allOf']) {
-          obj.children = this.getChildren(this.todoEsquema[key]['allOf'], true);
-          children.push(obj);
-        } else {
-          obj.esquema = this.todoEsquema[key];
-          tableItems.push(obj);
+      });
+      this.apiService.getCntCommentsSubPathAsync(this.todoEsquema[code]['path']).subscribe(data => {
+        switch (data.status) {
+          case Status.Success:
+            node.cntComentarios = data.data;
+            break;
+          case Status.Error:
+            console.log(data.message);
+            break;
         }
+      });
+
+      if (this.todoEsquema[code]['properties']) {
+        node.children = this.getChildren(this.todoEsquema[code]['properties']);
+        children.push(node);
+      } else if (this.todoEsquema[code]['allOf']) {
+        node.children = this.getChildren(this.todoEsquema[code]['allOf']);
+        children.push(node);
+      } else {
+        tableItems.push(node);
       }
     }
-    if (tableItems.length > 0) children.push({ tableItems: tableItems});
+    if (tableItems.length > 0) children.push({ tableItems: tableItems });
     return children;
   }
 
@@ -239,12 +189,11 @@ export class ContentComponent implements OnInit {
     let filteredTreeData;
     if (filterText) {
       filteredTreeData = this.dataSource.data.filter(
-        d =>
-          {
-            if (d.name.toLocaleLowerCase().indexOf(filterText.toLocaleLowerCase()) > -1 || (d.children && this.childrenContainsFilterText(filterText, d.children))) {
-              return true;
-            }
+        d => {
+          if (d.name.toLocaleLowerCase().indexOf(filterText.toLocaleLowerCase()) > -1 || (d.children && this.childrenContainsFilterText(filterText, d.children))) {
+            return true;
           }
+        }
       );
       console.log(filteredTreeData)
     } else {
@@ -258,7 +207,7 @@ export class ContentComponent implements OnInit {
     let flag = false;
     children.forEach(element => {
       if (element.tableItems) return false;
-      if (element.name.toLocaleLowerCase().indexOf(filterText.toLocaleLowerCase()) > -1 ) { //|| (element.children && this.childrenContainsFilterText(filterText, element.children))
+      if (element.name.toLocaleLowerCase().indexOf(filterText.toLocaleLowerCase()) > -1) { //|| (element.children && this.childrenContainsFilterText(filterText, element.children))
         flag = true;
       }
     });

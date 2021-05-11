@@ -81,6 +81,39 @@ namespace FBProyecto.Controllers
         }
 
 
+        [HttpPut("{id}")]
+        public async Task<ApiResponse> Put(int id, [FromBody] User user)
+        {
+            ApiResponse myResponse = new ApiResponse();
+            try
+            {
+                var userDb = await _context.User.FindAsync(user.UserId);
+                if (userDb == null)
+                {
+                    myResponse.Status = Status.NotFound;
+                    myResponse.Message = "No existe el usuario.";
+                    myResponse.Data = null;
+                    return myResponse;
+                }
+                _context.Entry(userDb).State = EntityState.Detached;
+                _context.Entry(user).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                myResponse.Status = Status.Success;
+                myResponse.Message = "Usuario editado correctamente.";
+                myResponse.Data = user;
+                return myResponse;
+            }
+            catch (Exception ex)
+            {
+                myResponse.Status = Status.Error;
+                myResponse.Message = ex.Message;
+                myResponse.Data = null;
+                return myResponse;
+            }
+        }
+
+
     }
 
 

@@ -210,6 +210,11 @@ namespace FBProyecto.Controllers
                     comment.Logs[i].User = null;
                 }
                 _context.Update(comment);
+                /*
+                 * 
+                 _context.Entry(user).State = EntityState.Detached;
+                _context.Entry(comment).State = EntityState.Modified;
+                 */
                 await _context.SaveChangesAsync();
                 myResponse.Status = Status.Success;
                 myResponse.Message = "Comentario borrado correctamente.";

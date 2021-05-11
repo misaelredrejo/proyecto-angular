@@ -68,6 +68,11 @@ export class ApiService {
   public addUserAsync(user: User):Observable<ApiResponse> {
     return this.http.post<ApiResponse>(this.myAppUrl + this.myApiUserUrl, user);
   }
+
+  public updateUserAsync(id: number, user: User): Observable<ApiResponse> {
+    return this.http.put<ApiResponse>(this.myAppUrl + this.myApiUserUrl + id, user);
+  }
+
   //#endregion
 
 
