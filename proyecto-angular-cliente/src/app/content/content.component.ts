@@ -53,14 +53,12 @@ export class ContentComponent implements OnInit {
     public dialog: MatDialog,
     private titleService: TitleService,
     private authService: AuthenticationService,
-    private spinnerService: SpinnerService
   ) {
 
   }
   hasChild = (_: number, node: EsquemaNode) => !!node.children && node.children.length > 0;
 
   ngOnInit(): void {
-
     this.checkUser();
     this.loadJSON();
   }
@@ -75,36 +73,38 @@ export class ContentComponent implements OnInit {
     }
   }
 
-  loadJSON(): void {
-    this.apiService
-      .getJSONAsync()
-      .subscribe(
-        data => {
-          this.literaleses = data["literaleses"];
-          this.literaleseu = data["literaleseu"];
-          this.todoEsquema = data["esquema"];
+  async loadJSON(): Promise<void> {
 
-          this.route.params.subscribe(params => {
-            this.link = params['link'];
-            this.esquema = this.todoEsquema[this.link];
-            if (this.esquema == null) {
-              this.router.navigate(['/error/test']);
-              return;
-            }
-            this.literal = (this.literaleses[this.link] ? this.literaleses[this.link] : this.literaleses[this.link.toLowerCase()]);
-            this.literaleu = (this.literaleseu[this.link] ? this.literaleseu[this.link] : this.literaleseu[this.link.toLowerCase()]);
-            if (this.user && this.user.rol == Rol.Desarrollador) {
-              this.titleService.changeTitle(this.link + ' - ' + this.literal + ' - ' + this.literaleu);
-            } else {
-              this.titleService.changeTitle(this.literal + ' - ' + this.literaleu);
-            }
-            this.fillTree();
-          });
-        },
-        err => {
-          console.log(err);
-        }
-      );
+    await this.apiService.getJSONAsync().toPromise().then(result => {
+      this.literaleses = result["literaleses"];
+      this.literaleseu = result["literaleseu"];
+      this.todoEsquema = result["esquema"];
+    }).catch(err => {
+      console.log(err);
+    });
+
+    this.subscribeParams();
+  }
+
+
+  subscribeParams() {
+    this.route.params.subscribe(params => {
+      this.link = params['link'];
+      this.esquema = this.todoEsquema[this.link];
+      console.log(this.link)
+      if (this.esquema == null) {
+        this.router.navigate(['/error/test']);
+        return;
+      }
+      this.literal = (this.literaleses[this.link] ? this.literaleses[this.link] : this.literaleses[this.link.toLowerCase()]);
+      this.literaleu = (this.literaleseu[this.link] ? this.literaleseu[this.link] : this.literaleseu[this.link.toLowerCase()]);
+      if (this.user && this.user.rol == Rol.Desarrollador) {
+        this.titleService.changeTitle(this.link + ' - ' + this.literal + ' - ' + this.literaleu);
+      } else {
+        this.titleService.changeTitle(this.literal + ' - ' + this.literaleu);
+      }
+      this.fillTree();
+    });
   }
 
   fillTree() {
@@ -215,10 +215,6 @@ export class ContentComponent implements OnInit {
     return children;
   }
 
-  getChildrenContainsAllOf(){
-    
-  }
-
   openDialogComments(commentList: Comment[], path: string) {
     this.dialog.open(DialogCommentsComponent, {
       data: {
@@ -237,6 +233,36 @@ export class ContentComponent implements OnInit {
         literaleseu: this.literaleseu
       }
     });
+  }
+
+  filter(filterText: string) {
+    let filteredTreeData;
+    if (filterText) {
+      filteredTreeData = this.dataSource.data.filter(
+        d =>
+          {
+            if (d.name.toLocaleLowerCase().indexOf(filterText.toLocaleLowerCase()) > -1 || (d.children && this.childrenContainsFilterText(filterText, d.children))) {
+              return true;
+            }
+          }
+      );
+      console.log(filteredTreeData)
+    } else {
+      filteredTreeData = this.dataSource.data;
+    }
+
+    this.dataSource.data = filteredTreeData;
+  }
+
+  childrenContainsFilterText(filterText: string, children: EsquemaNode[]): boolean {
+    let flag = false;
+    children.forEach(element => {
+      if (element.tableItems) return false;
+      if (element.name.toLocaleLowerCase().indexOf(filterText.toLocaleLowerCase()) > -1 ) { //|| (element.children && this.childrenContainsFilterText(filterText, element.children))
+        flag = true;
+      }
+    });
+    return flag;
   }
 
 

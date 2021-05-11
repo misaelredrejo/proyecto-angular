@@ -48,3 +48,8 @@
     background-color: #95A5A6;
     text-transform: uppercase;
 }
+
+.test {
+  border: 1px solid;
+  background-color: var(--tracasa-primary-color-light)
+}

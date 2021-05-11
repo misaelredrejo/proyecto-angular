@@ -6,8 +6,8 @@ export enum Action {
 }
 
 export enum Rol {
-    Desarrollador = 0,
-    Otro = 1
+    Desarrollador = "Desarrollador",
+    Otro = "Otro"
 }
 
 export enum Status

@@ -12,7 +12,7 @@ import { Rol } from 'src/app/models/enums.model';
 })
 export class DialogRolComponent implements OnInit {
 
-  public rolTypes = Object.values(Rol).filter(x => !isNaN(+x));;
+  public rolTypes = Object.keys(Rol).map(k => Rol[k as any])
   rol = Rol;
 
   constructor(
