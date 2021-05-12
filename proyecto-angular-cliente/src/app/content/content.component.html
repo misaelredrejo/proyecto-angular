@@ -69,8 +69,8 @@
             <span *ngIf="node.literal"> - {{node.literal}}</span>
             <span *ngIf="node.literal"> - {{node.literaleu}} </span>
              
-            <span *ngIf="node.esquema['type'] == 'array'" class="test">
-              -> Type: array, minItems: {{node.esquema['minItems']}}, maxItems: {{node.esquema['maxItems']}}
+            <span *ngIf="node.esquema['type'] == 'array'" class="highlighted">
+              Type: array, minItems: {{node.esquema['minItems']}}, maxItems: {{node.esquema['maxItems']}}
             </span>
           </span>
         </div>

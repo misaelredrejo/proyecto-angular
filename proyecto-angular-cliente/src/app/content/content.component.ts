@@ -15,7 +15,6 @@ import { TitleService } from '../shared/services/title.service';
 import { EsquemaNode } from '../models/esquema-node.model';
 import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
-import { SpinnerService } from '../shared/services/spinner.service';
 
 @Component({
   selector: 'app-content',
@@ -116,40 +115,20 @@ export class ContentComponent implements OnInit {
     this.dataSource.data = dataInsert;
   }
 
-
   getChildren(properties: any) {
     let children: EsquemaNode[] = [];
     let tableItems: any[] = [];
     for (let key in properties) {
       let value = properties[key];
       let code = value['$ref'].substring(2);
-      console.log(code)
-      console.log(this.todoEsquema[code])
       let literal = (this.literaleses[code] ? this.literaleses[code] : this.literaleses[code.toLowerCase()]);
       let literaleu = (this.literaleseu[code] ? this.literaleseu[code] : this.literaleseu[code.toLowerCase()]);
       let esquema = this.todoEsquema[code];
 
       let node: EsquemaNode = {name: code, literal: literal, literaleu: literaleu, esquema: esquema, comentarios: []};
-      this.apiService.getCommentsByPathAsync(this.todoEsquema[code]['path']).subscribe(data => {
-        switch (data.status) {
-          case Status.Success:
-            node.comentarios = data.data;
-            break;
-          case Status.Error:
-            console.log(data.message);
-            break;
-        }
-      });
-      this.apiService.getCntCommentsSubPathAsync(this.todoEsquema[code]['path']).subscribe(data => {
-        switch (data.status) {
-          case Status.Success:
-            node.cntComentarios = data.data;
-            break;
-          case Status.Error:
-            console.log(data.message);
-            break;
-        }
-      });
+
+      this.getCommentsByPath(this.todoEsquema[code]['path']).then(data => node.comentarios = data);
+      this.getCntCommentsSubPath(this.todoEsquema[code]['path']).then(data => node.cntComentarios = data);
 
       if (this.todoEsquema[code]['properties']) {
         node.children = this.getChildren(this.todoEsquema[code]['properties']);
@@ -163,6 +142,40 @@ export class ContentComponent implements OnInit {
     }
     if (tableItems.length > 0) children.push({ tableItems: tableItems });
     return children;
+  }
+
+  async getCommentsByPath(path: string): Promise<Comment[]> {
+    let comments: Comment[] = [];
+    await this.apiService.getCommentsByPathAsync(path).toPromise().then(result => {
+      switch (result.status) {
+        case Status.Success:
+          comments = result.data;
+          break;
+        case Status.Error:
+          console.log(result.message);
+          break;
+      }
+    }).catch(err => {
+      console.log(err);
+    });
+    return comments;
+  }
+
+  async getCntCommentsSubPath(path: string): Promise<number> {
+    let cnt: number;
+    await this.apiService.getCntCommentsSubPathAsync(path).toPromise().then(result => {
+      switch (result.status) {
+        case Status.Success:
+          cnt = result.data;
+          break;
+        case Status.Error:
+          console.log(result.message);
+          break;
+      }
+    }).catch(err => {
+      console.log(err);
+    });
+    return cnt;
   }
 
   openDialogComments(commentList: Comment[], path: string) {
