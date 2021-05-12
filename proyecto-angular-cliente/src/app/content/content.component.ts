@@ -77,6 +77,10 @@ export class ContentComponent implements OnInit {
       } else {
         this.TABLE_COLS = Object.assign([], this.ALL_TABLE_COLS);
       }
+      /*
+      if (this.link) {
+        this.titleService.changeTitle((this.user.rol == Rol.Desarrollador ? this.link : '') + this.literal + ' - ' + this.literaleu);
+      }*/
     }, error => {
       console.log(error);
     })

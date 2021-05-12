@@ -167,12 +167,8 @@ namespace FBProyecto.Controllers
                     myResponse.Data = null;
                     return myResponse;
                 }
-                for (int i = 0; i < comment.Logs.Count; i++)
-                {
-                    comment.Logs[i].UserId = comment.Logs[i].User.UserId;
-                    comment.Logs[i].User = null;
-                }
-                _context.Update(comment);
+
+                _context.Entry(comment).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 myResponse.Status = Status.Success;
                 myResponse.Message = "Comentario actualizado correctamente.";
@@ -238,13 +234,7 @@ namespace FBProyecto.Controllers
                     return myResponse;
                 }
                 comment.IsActive = true;
-                for (int i = 0; i < comment.Logs.Count; i++)
-                {
-                    comment.Logs[i].UserId = comment.Logs[i].User.UserId;
-                    comment.Logs[i].User = null;
-                }
-                _context.Update(comment);
-                await _context.SaveChangesAsync();
+                _context.Entry(comment).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 myResponse.Status = Status.Success;
                 myResponse.Message = "Comentario activado correctamente.";

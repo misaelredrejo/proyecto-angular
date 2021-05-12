@@ -9,6 +9,7 @@ import { Status } from '../models/enums.model';
 import { SpinnerService } from '../shared/services/spinner.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -22,9 +23,18 @@ export class HomeComponent implements OnInit {
   commentLogList: CommentLog[] = [];
   username: string;
   rolValue: number;
+
   displayedColumns = ['username', 'action', 'date', 'path'];
   dataSource: MatTableDataSource<CommentLog>;
   dataSourceLast10: MatTableDataSource<CommentLog>;
+
+  usernameFilter = new FormControl('');
+  actionFilter = new FormControl('');
+  actionList: string[] = ['Añadir', 'Editar', 'Borrar', 'Activar'];
+  filterValues = {
+    username: '',
+    action: -1,
+  };
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -33,7 +43,8 @@ export class HomeComponent implements OnInit {
     public dialog: MatDialog,
     private authenticationService: AuthenticationService,
     private spinnerService: SpinnerService
-  ) { }
+  ) { 
+  }
 
   
   ngOnInit(): void {
@@ -60,6 +71,7 @@ export class HomeComponent implements OnInit {
       if (res[1].status == Status.Success) {
         this.dataSource = new MatTableDataSource(res[1].data);
         this.dataSource.sort = this.sort;
+        this.dataSource.filterPredicate = this.createFilter();
       }
       else {
         console.log(res[1].message);
@@ -79,12 +91,37 @@ export class HomeComponent implements OnInit {
       this.spinnerService.hide();
     });
 
+    this.usernameFilter.valueChanges
+      .subscribe(
+        username => {
+          this.filterValues.username = username;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+    );
+    this.actionFilter.valueChanges
+      .subscribe(
+        action => {
+          this.filterValues.action = action;
+          console.log(action);
+          //this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+    );
+
+
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
+  }
+
+  createFilter(): (data: any, filter: string) => boolean {
+    let filterFunction = function(data, filter): boolean {
+      let searchTerms = JSON.parse(filter);
+      return data.username.toLowerCase().indexOf(searchTerms.username.toLowerCase()) !== -1
+    }
+    return filterFunction;
   }
 
 
