@@ -5,7 +5,7 @@ import { TitleService } from '../shared/services/title.service';
 import { Subscription } from 'rxjs';
 import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
-import { Rol } from '../models/enums.model';
+import { Rol, Status } from '../models/enums.model';
 
 @Component({
   selector: 'app-nav',
@@ -19,6 +19,7 @@ export class NavComponent implements OnDestroy {
   user: User;
   title: string = "Configuración NPR";
   value: string;
+  rolTypes = Object.keys(Rol).map(k => Rol[k as any]);
 
   appitemsInsert = [];
   appitems = [
@@ -53,25 +54,38 @@ export class NavComponent implements OnDestroy {
   }
 
   ngOnInit() {
-    this.user = this.authService.currentUserValue;
 
-    this.apiService
-      .getJSONAsync()
-      .subscribe(
-        data => {
-          this.menuProfesional = data['menuProfesional'];
-          this.literaleses = data['literaleses'];
-          this.fillMenu();
-
-        },
-        err => {
-          console.log(err);
-        }
-      );
-
+    this.checkUser();
+    this.loadJSON();
   }
 
-  fillMenu() {
+  checkUser(): void {
+    this.authService.currentUser.subscribe(data => {
+      this.user = data;
+      this.fillMenu();
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  loadJSON(): void {
+    this.apiService
+    .getJSONAsync()
+    .subscribe(
+      data => {
+        this.menuProfesional = data['menuProfesional'];
+        this.literaleses = data['literaleses'];
+        this.fillMenu();
+
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  fillMenu(): void {
+    this.appitemsInsert = [];
     this.menuProfesional.forEach((item) => {
       for (let key in item) {
         let value = item[key];
@@ -101,12 +115,31 @@ export class NavComponent implements OnDestroy {
       } else {
         labelText = (this.literaleses[element] ? this.literaleses[element] : this.literaleses[element.toLowerCase()]);
       }
-      itemsSubMenu.push({ label: labelText, link: "/content/" + element})
+      itemsSubMenu.push({ label: labelText, link: "/content/" + element});
     });
-    return itemsSubMenu
+    return itemsSubMenu;
   }
 
-
+  changeRol(rol: string): void {
+    if (!this.user) return;
+    this.user.rol = Rol[rol];
+    this.apiService.updateUserAsync(this.user.userId, this.user).subscribe(data => {
+      switch (data.status) {
+        case Status.Success:
+          this.user = data.data;
+          this.authService.login(this.user);
+          break;
+        case Status.NotFound:
+          console.log(data.message);
+          break;
+        case Status.Error:
+          console.log(data.message);
+          break;
+      }
+    }, error => {
+      console.log(error);
+    });
+  }
 
 }
 

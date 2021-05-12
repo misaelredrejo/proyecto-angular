@@ -15,6 +15,7 @@ import { TitleService } from '../shared/services/title.service';
 import { EsquemaNode } from '../models/esquema-node.model';
 import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
+import { SpinnerService } from '../shared/services/spinner.service';
 
 @Component({
   selector: 'app-content',
@@ -39,6 +40,7 @@ export class ContentComponent implements OnInit {
   literal: string;
   literaleu: string;
 
+  ALL_TABLE_COLS = ['type', 'format', 'minimum', 'maximum', 'minLength', 'maxLength', 'enum', 'expandible', 'readOnly', 'multipleOf', 'required', 'path'];
   TABLE_COLS = ['type', 'format', 'minimum', 'maximum', 'minLength', 'maxLength', 'enum', 'expandible', 'readOnly', 'multipleOf', 'required', 'path'];
   COLS_HIDE = ['expandible', 'multipleOf', 'path'];
   treeControl = new NestedTreeControl<EsquemaNode>(node => node.children);
@@ -52,6 +54,7 @@ export class ContentComponent implements OnInit {
     public dialog: MatDialog,
     private titleService: TitleService,
     private authService: AuthenticationService,
+    private spinnerService: SpinnerService
   ) {
 
   }
@@ -59,17 +62,25 @@ export class ContentComponent implements OnInit {
 
   ngOnInit(): void {
     this.checkUser();
+    //this.spinnerService.show();
     this.loadJSON();
   }
 
   checkUser(): void {
-    this.user = this.authService.currentUserValue;
-    if (this.user.rol != Rol.Desarrollador) {
-      this.COLS_HIDE.forEach(col => {
-        var index = this.TABLE_COLS.indexOf(col);
-        if (index != -1) this.TABLE_COLS.splice(index, 1);
-      });
-    }
+    this.authService.currentUser.subscribe(data => {
+      this.user = data;
+      if (this.user.rol != Rol.Desarrollador) {
+        this.COLS_HIDE.forEach(col => {
+          var index = this.TABLE_COLS.indexOf(col);
+          if (index != -1) this.TABLE_COLS.splice(index, 1);
+        });
+      } else {
+        this.TABLE_COLS = Object.assign([], this.ALL_TABLE_COLS);
+      }
+    }, error => {
+      console.log(error);
+    })
+    
   }
 
   async loadJSON(): Promise<void> {
@@ -113,6 +124,7 @@ export class ContentComponent implements OnInit {
       dataInsert = this.getChildren(this.esquema['allOf']);
     }
     this.dataSource.data = dataInsert;
+    //this.spinnerService.hide();
   }
 
   getChildren(properties: any) {

@@ -42,7 +42,9 @@ export class DialogCommentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.user = this.authService.currentUserValue;
+    this.authService.currentUser.subscribe(data => {
+      this.user = data;
+    });
   }
 
   // Workaround for angular component issue #13870

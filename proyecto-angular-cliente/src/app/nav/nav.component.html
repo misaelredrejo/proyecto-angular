@@ -4,28 +4,36 @@
       <mat-icon>menu</mat-icon>
     </button>
     <button mat-icon-button [routerLink]="['/home']" (click)="title='Configuración NPR'">
-        <mat-icon>home</mat-icon>
-      </button>
+      <mat-icon>home</mat-icon>
+    </button>
     <h1 class="example-app-name mr-2">{{title}}</h1>
-    <form class="form-search ml-auto mr-2" >
-      <mat-form-field >
-      <input matInput type="text" [(ngModel)]="value" placeholder="Buscar" name="textSearch" autocomplete="off" >
-      <button mat-button mat-icon-button matSuffix aria-label="Search icon" [routerLink]="['/content', value]">
-        <mat-icon>search</mat-icon>
-      </button>
-    </mat-form-field>
+    <form class="form-search ml-auto mr-2">
+      <mat-form-field>
+        <input matInput type="text" [(ngModel)]="value" placeholder="Buscar" name="textSearch" autocomplete="off">
+        <button mat-button mat-icon-button matSuffix aria-label="Search icon" [routerLink]="['/content', value]">
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
     </form>
-    
-    <h1 >{{user?.username}}</h1>
+
+    <!--<h1 >{{user?.username}}</h1> -->
+    <div *ngIf="user">
+      <button mat-button [matMenuTriggerFor]="menu" >{{user?.username}}({{user?.rol}})</button>
+      <mat-menu #menu="matMenu">
+        <span *ngFor="let rol of rolTypes">
+            <button *ngIf="rol != user.rol" mat-menu-item (click)="changeRol(rol)">{{rol}}</button>
+        </span>
+      </mat-menu>
+    </div>
   </mat-toolbar>
 
   <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
     <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
       fixedTopGap="56">
 
-      <ng-material-multilevel-menu [configuration]='config' [items]='appitems' >
-        </ng-material-multilevel-menu>
-      
+      <ng-material-multilevel-menu [configuration]='config' [items]='appitems'>
+      </ng-material-multilevel-menu>
+
     </mat-sidenav>
 
     <mat-sidenav-content>
