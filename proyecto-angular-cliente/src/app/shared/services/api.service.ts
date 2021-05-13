@@ -8,6 +8,7 @@ import { catchError, map } from "rxjs/operators";
 import {Comment} from '../../models/comment.model';
 import { User } from '../../models/user.model';
 import { ApiResponse } from '../../models/api-response.model';
+import { FilterQuery } from 'src/app/models/filter-query.model';
 
 
 @Injectable({
@@ -73,6 +74,10 @@ export class ApiService {
     return this.http.put<ApiResponse>(this.myAppUrl + this.myApiUserUrl + id, user);
   }
 
+  public getActiveUsersActive(): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(this.myAppUrl + this.myApiUserUrl + 'active');
+  }
+
   //#endregion
 
 
@@ -88,6 +93,10 @@ export class ApiService {
 
   public getLast10CommentLogsAsync(): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + 'commentlogs/last10');
+  }
+
+  public getCommentLogsByFilter(filter: {}): Observable<ApiResponse>{
+    return this.http.get<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + 'commentLogs/filter', {params: filter});
   }
 
   public getCommentsByPathAsync(path: string): Observable<ApiResponse> {

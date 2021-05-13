@@ -5,11 +5,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogRolComponent } from './dialog-rol/dialog-rol.component';
 import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
-import { Status } from '../models/enums.model';
+import { Status, Action } from '../models/enums.model';
 import { SpinnerService } from '../shared/services/spinner.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FilterQuery } from '../models/filter-query.model';
 
 @Component({
   selector: 'app-home',
@@ -25,15 +26,23 @@ export class HomeComponent implements OnInit {
   rolValue: number;
 
   displayedColumns = ['username', 'action', 'date', 'path'];
+  displayedColumnsForm = ['usernameForm', 'actionForm', 'startDateForm', 'endDateForm'];
   dataSource: MatTableDataSource<CommentLog>;
   dataSourceLast10: MatTableDataSource<CommentLog>;
 
+  formBackendFilter: FormGroup;
+  activeUserList: User[] = [];
+
   usernameFilter = new FormControl('');
   actionFilter = new FormControl('');
-  actionList: string[] = ['Añadir', 'Editar', 'Borrar', 'Activar'];
+  actionList: string[] = ['Añadir', 'Modificar', 'Eliminar', 'Activar'];
+  startDateFilter = new FormControl('');
+  endDateFilter = new FormControl('');
   filterValues = {
     username: '',
-    action: -1,
+    action: [],
+    startDate: new Date(-8640000000000000),
+    endDate: new Date()
   };
 
   @ViewChild(MatSort) sort: MatSort;
@@ -42,12 +51,32 @@ export class HomeComponent implements OnInit {
     private apiService: ApiService,
     public dialog: MatDialog,
     private authenticationService: AuthenticationService,
-    private spinnerService: SpinnerService
-  ) { 
+    private spinnerService: SpinnerService,
+    private fb: FormBuilder,
+  ) {
+    this.formBackendFilter = this.fb.group({
+      username: [''],
+      action: [''],
+      startDate: ['', Validators.required],
+      endDate: ['', Validators.required]
+    });
   }
 
-  
+
   ngOnInit(): void {
+
+    this.apiService.getActiveUsersActive().subscribe(data => {
+      switch (data.status) {
+        case Status.Success:
+          this.activeUserList = data.data;
+          break;
+        case Status.Error:
+          console.log(data.message);
+          break;
+      }
+    }, error => {
+      console.log(error);
+    });
 
     this.apiService.getJSONAsync().subscribe(data => {
       this.literaleses = data['literaleses'];
@@ -65,7 +94,7 @@ export class HomeComponent implements OnInit {
     Promise.all([p0, p1, p2]).then(res => {
       if (res[0].status == Status.Success) {
         this.dataSourceLast10 = new MatTableDataSource(res[0].data);
-      }else {
+      } else {
         console.log(res[0].message);
       }
       if (res[1].status == Status.Success) {
@@ -97,15 +126,32 @@ export class HomeComponent implements OnInit {
           this.filterValues.username = username;
           this.dataSource.filter = JSON.stringify(this.filterValues);
         }
-    );
+      );
     this.actionFilter.valueChanges
       .subscribe(
         action => {
           this.filterValues.action = action;
-          console.log(action);
-          //this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.dataSource.filter = JSON.stringify(this.filterValues);
         }
-    );
+      );
+    this.startDateFilter.valueChanges
+      .subscribe(
+        startDate => {
+          this.filterValues.startDate = startDate ? startDate : new Date(-8640000000000000);
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      );
+    this.endDateFilter.valueChanges
+      .subscribe(
+        endDate => {
+          endDate = endDate ? endDate : new Date();
+          endDate.setHours(23);
+          endDate.setMinutes(59);
+          endDate.setSeconds(59);
+          this.filterValues.endDate = endDate;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      );
 
 
   }
@@ -117,9 +163,18 @@ export class HomeComponent implements OnInit {
   }
 
   createFilter(): (data: any, filter: string) => boolean {
-    let filterFunction = function(data, filter): boolean {
+    let filterFunction = function (data, filter): boolean {
       let searchTerms = JSON.parse(filter);
-      return data.username.toLowerCase().indexOf(searchTerms.username.toLowerCase()) !== -1
+      let containsAction = false;
+      searchTerms.action.forEach(action => {
+        if (Action[data.action] == action) containsAction = true;
+      });
+      if (searchTerms.action == null || searchTerms.action.length == 0) containsAction = true;
+      return data.username.toLowerCase().indexOf(searchTerms.username.toLowerCase()) !== -1 &&
+        containsAction &&
+        data.date >= searchTerms.startDate &&
+        data.date <= searchTerms.endDate
+        ;
     }
     return filterFunction;
   }
@@ -152,6 +207,54 @@ export class HomeComponent implements OnInit {
 
       })
     });
+  }
+
+  filterTable() {
+    if (this.formBackendFilter.valid) {
+      let username: string = this.formBackendFilter.get('username').value;
+      let actionStr: string = this.formBackendFilter.get('action').value
+      let startDate: Date = this.formBackendFilter.get('startDate').value;
+      let endDate: Date = this.formBackendFilter.get('endDate').value;
+      let action: Action;
+      if (actionStr) {
+        switch (actionStr) {
+          case 'Añadir':
+            action = Action.Añadir
+            break;
+          case 'Modificar':
+            action = Action.Modificar
+            break;
+          case 'Eliminar':
+            action = Action.Eliminar
+            break;
+          case 'Activar':
+            action = Action.Activar
+            break;
+        }
+      }
+      let filterQuery: FilterQuery = {
+        username: username,
+        action: action,
+        startDate: startDate.toDateString(),
+        endDate: endDate.toDateString()
+      }
+      console.log(filterQuery);
+      this.apiService.getCommentLogsByFilter(filterQuery).subscribe(data => {
+        switch (data.status) {
+          case Status.Success:
+            this.dataSource = new MatTableDataSource(data.data);
+            this.dataSource.sort = this.sort;
+            this.dataSource.filterPredicate = this.createFilter();
+            console.log(data.data);
+            break;
+          case Status.Error:
+            console.log(data.message);
+            break;
+        }
+      });
+    } else {
+      console.log('?')
+    }
 
   }
 

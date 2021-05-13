@@ -55,6 +55,30 @@ namespace FBProyecto.Controllers
             
         }
 
+        // GET: api/<UserController>
+        [HttpGet("active")]
+        public async Task<ApiResponse> GetActiveUsers()
+        {
+            ApiResponse myResponse = new ApiResponse();
+            try
+            {
+                var users = await _context.User.Where(u => u.Logs.Length > 0).ToListAsync();
+
+                myResponse.Status = Status.Success;
+                myResponse.Message = "";
+                myResponse.Data = users;
+                return myResponse;
+            }
+            catch (Exception ex)
+            {
+                myResponse.Status = Status.Error;
+                myResponse.Message = ex.Message;
+                myResponse.Data = null;
+                return myResponse;
+            }
+
+        }
+
         [HttpPost]
         public async Task<ApiResponse> Post([FromBody] User user)
         {

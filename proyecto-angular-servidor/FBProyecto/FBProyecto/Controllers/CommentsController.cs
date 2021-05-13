@@ -92,6 +92,32 @@ namespace FBProyecto.Controllers
 
         }
 
+        // GET api/<CommentsController>/path
+        [HttpGet("commentlogs/filter")]
+        public async Task<ApiResponse> GetCommentLogsByFilter([FromQuery] FilterQuery filterQuery)
+        {
+            ApiResponse myResponse = new ApiResponse();
+            try
+            {
+                var startDate = filterQuery.StartDate.ToShortDateString().Replace("/","-");
+                var endDate = filterQuery.EndDate.ToShortDateString().Replace("/", "-");
+                //var listCommentDTO = await _context.CommentLog.FromSqlRaw($"exec dbo.CommentLogsFilter {filterQuery.Username} {(int)filterQuery.Action} {filterQuery.StartDate} {filterQuery.EndDate}").ToListAsync();
+                var listCommentDTO = await _context.CommentLog.FromSqlRaw($"exec dbo.CommentLogsFilter @Username = 'TCSA\\mredrejo-ext', @Action = 0, @StartDate = {startDate}, @EndDate = {endDate}").ToListAsync();
+                myResponse.Status = Status.Success;
+                myResponse.Message = "";
+                myResponse.Data = listCommentDTO;
+                return myResponse;
+            }
+            catch (Exception ex)
+            {
+                myResponse.Status = Status.Error;
+                myResponse.Message = ex.Message;
+                myResponse.Data = null;
+                return myResponse;
+            }
+
+        }
+
 
         // GET api/<ComentariosController>/5
         [HttpGet("subpath/{*path}", Name = "CommentsSubPathByPath")]

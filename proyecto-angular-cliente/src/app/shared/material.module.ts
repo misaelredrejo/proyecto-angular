@@ -18,6 +18,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 
 import {
   NgMaterialMultilevelMenuModule,
@@ -25,6 +26,7 @@ import {
 } from "ng-material-multilevel-menu";
 import { MatSortModule } from '@angular/material/sort';
 import { LimitArrayPipe } from './pipes/limit-array.pipe';
+import { MatNativeDateModule } from '@angular/material/core';
 
 
 
@@ -52,7 +54,9 @@ import { LimitArrayPipe } from './pipes/limit-array.pipe';
     MatSelectModule,
     MatProgressSpinnerModule,
     MatSortModule,
-    LimitArrayPipe
+    LimitArrayPipe,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   providers: [MultilevelMenuService],
 })
