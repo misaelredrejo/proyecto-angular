@@ -5,13 +5,13 @@
 
             <table mat-table [dataSource]="dataSourceLast2Weeks" class="mat-elevation-z8">
 
-                <!-- Position Column -->
+                <!-- Username Column -->
                 <ng-container matColumnDef="username">
                     <th mat-header-cell *matHeaderCellDef> Usuario </th>
                     <td mat-cell *matCellDef="let element"> {{element.username}} </td>
                 </ng-container>
 
-                <!-- Name Column -->
+                <!-- Action Column -->
                 <ng-container matColumnDef="action">
                     <th mat-header-cell *matHeaderCellDef> Acción </th>
                     <td mat-cell *matCellDef="let element">
@@ -22,19 +22,26 @@
                     </td>
                 </ng-container>
 
-                <!-- Weight Column -->
+                <!-- Date Column -->
                 <ng-container matColumnDef="date">
                     <th mat-header-cell *matHeaderCellDef> Fecha </th>
                     <td mat-cell *matCellDef="let element"> {{element.date | date: 'dd/MM/yyyy'}} </td>
                 </ng-container>
 
-                <!-- Symbol Column -->
+                <!-- Path Column -->
                 <ng-container matColumnDef="path">
                     <th mat-header-cell *matHeaderCellDef> Ruta </th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.path}}
+                        {{literaleses[element.path.split('/')[element.path.split('/').length-1]]}}
+                    </td>
+                </ng-container>
+
+                <!-- Route Column -->
+                <ng-container matColumnDef="route">
+                    <th mat-header-cell *matHeaderCellDef> Dirigirse </th>
+                    <td mat-cell *matCellDef="let element">
                         <button mat-button color="primary"
-                            [routerLink]="['/content', element.path.split('/')[element.path.split('/').length-2]]">Ir</button>
+                        [routerLink]="['/content', element.path.split('/')[element.path.split('/').length-2]]">Ir</button>
                     </td>
                 </ng-container>
 
@@ -108,7 +115,17 @@
                 <ng-container matColumnDef="path">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Literal </th>
                     <td mat-cell *matCellDef="let element">
-                        {{literaleses[element.path.split('/')[element.path.split('/').length-1]]}} </td>
+                        {{literaleses[element.path.split('/')[element.path.split('/').length-1]]}}
+                    </td>
+                </ng-container>
+
+                <!-- Route Column -->
+                <ng-container matColumnDef="route">
+                    <th mat-header-cell *matHeaderCellDef> Dirigirse </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-button color="primary"
+                        [routerLink]="['/content', element.path.split('/')[element.path.split('/').length-2]]">Ir</button>
+                    </td>
                 </ng-container>
 
                 <!-- UsernameForm Column -->

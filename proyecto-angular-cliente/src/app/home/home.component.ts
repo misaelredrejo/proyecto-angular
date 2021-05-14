@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit {
   username: string;
   rolValue: number;
 
-  displayedColumns = ['username', 'action', 'date', 'path'];
+  displayedColumns = ['username', 'action', 'date', 'path', 'route'];
   displayedColumnsForm = ['usernameForm', 'actionForm', 'startDateForm', 'endDateForm'];
   dataSource: MatTableDataSource<CommentLog>;
   dataSourceLast2Weeks: MatTableDataSource<CommentLog>;
