@@ -19,8 +19,9 @@
 
 .table-button {
   background-color: rgb(232, 232, 252);
-  min-width: 200px;
   width: 100%;
+  min-width: 200px;
+  max-width: 300px;
   font-size: 12px;
   font-weight:800;
   white-space: pre-wrap ;
@@ -31,6 +32,7 @@
 }
 
 .cursor-default {cursor: default;}
+
 
 .table-text {
   font-size: 12px;
@@ -44,12 +46,30 @@
   background-color: rgb(245, 245, 245);
 }
 
-.table-header {
-    background-color: #95A5A6;
-    text-transform: uppercase;
-}
-
 .highlighted {
   border: 1px solid;
   background-color: var(--tracasa-primary-color-light)
+}
+
+.mat-cell, .mat-header-cell {
+  padding: 8px 8px 8px 8px;
+  font-size: 13px;
+}
+
+table {
+  text-align: center !important;
+  width: 100%;
+}
+
+.mat-header-cell {
+  text-align: center;
+}
+
+.table-header {
+  background-color: #95A5A6;
+  text-transform: uppercase;
+}
+
+.mat-row:hover {
+  background-color: whitesmoke !important;
 }
