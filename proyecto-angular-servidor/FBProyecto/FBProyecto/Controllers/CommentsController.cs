@@ -1,5 +1,6 @@
 ﻿using FBProyecto.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -47,13 +48,14 @@ namespace FBProyecto.Controllers
 
         }
 
-        [HttpGet("commentlogs")]
+        [HttpGet("commentlogs/last2weeks")]
         public async Task<ApiResponse> GetCommentLogs()
         {
             ApiResponse myResponse = new ApiResponse();
             try
             {
-                var listCommentDTO = await _context.CommentLog.FromSqlRaw("exec dbo.Last10Logs").ToListAsync();
+                string sqlQuery = $"exec dbo.CommentLogsFilter @Username = null, @Action = null, @StartDate = '{DateTime.Today.AddDays(-13).ToString("yyyy-MM-dd")}', @EndDate = '{DateTime.Today.ToString("yyyy-MM-dd")}'";
+                var listCommentDTO = await _context.CommentLog.FromSqlRaw(sqlQuery).ToListAsync();
                 myResponse.Status = Status.Success;
                 myResponse.Message = "";
                 myResponse.Data = listCommentDTO;
@@ -99,10 +101,13 @@ namespace FBProyecto.Controllers
             ApiResponse myResponse = new ApiResponse();
             try
             {
-                var startDate = filterQuery.StartDate.ToShortDateString().Replace("/","-");
-                var endDate = filterQuery.EndDate.ToShortDateString().Replace("/", "-");
-                //var listCommentDTO = await _context.CommentLog.FromSqlRaw($"exec dbo.CommentLogsFilter {filterQuery.Username} {(int)filterQuery.Action} {filterQuery.StartDate} {filterQuery.EndDate}").ToListAsync();
-                var listCommentDTO = await _context.CommentLog.FromSqlRaw($"exec dbo.CommentLogsFilter @Username = 'TCSA\\mredrejo-ext', @Action = 0, @StartDate = {startDate}, @EndDate = {endDate}").ToListAsync();
+                var startDate = filterQuery.StartDate.ToString("yyyy-MM-dd");
+                var endDate = filterQuery.EndDate.ToString("yyyy-MM-dd");
+
+                string sqlQuery = $"exec dbo.CommentLogsFilter @Username = {(filterQuery.Username != null ?  "'" + filterQuery.Username + "'" : "null")}, @Action = {(filterQuery.Action != null ? (int)filterQuery.Action : "null")}, @StartDate = '{startDate}', @EndDate = '{endDate}'";
+                var listCommentDTO = await _context.CommentLog.FromSqlRaw(sqlQuery).ToListAsync();
+               
+
                 myResponse.Status = Status.Success;
                 myResponse.Message = "";
                 myResponse.Data = listCommentDTO;

@@ -2,7 +2,7 @@
     <mat-tab label="Actividad reciente">
         <div class="container mt-3 mb-3">
 
-            <table mat-table [dataSource]="dataSourceLast10" class="mat-elevation-z8">
+            <table mat-table [dataSource]="dataSourceLast2Weeks" class="mat-elevation-z8">
 
                 <!-- Position Column -->
                 <ng-container matColumnDef="username">
@@ -46,9 +46,9 @@
     <mat-tab label="Toda actividad">
         <div class="container mt-3 mb-3">
             <!--  FORM BACKEND -->
-            <form class="" [formGroup]="formBackendFilter" (ngSubmit)="filterTable()">
+            <form  [formGroup]="formBackendFilter" (ngSubmit)="filterTable()">
                 <!--"-->
-                <mat-form-field appearance="fill">
+                <mat-form-field appearance="fill" class="ml-2">
                     <mat-label>Usuario</mat-label>
                     <mat-select formControlName="username">
                         <mat-option *ngFor="let user of activeUserList" [value]="user.username">
@@ -56,7 +56,7 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field appearance="fill">
+                <mat-form-field appearance="fill" class="ml-2">
                     <mat-label>Acción</mat-label>
                     <mat-select formControlName="action">
                         <mat-option *ngFor="let action of actionList" [value]="action">
@@ -64,7 +64,7 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field appearance="fill">
+                <mat-form-field appearance="fill" class="ml-2">
                     <mat-label>Rango de fecha*</mat-label>
                     <mat-date-range-input [rangePicker]="pickerRange">
                         <input matStartDate formControlName="startDate" placeholder="Fecha inicio">
@@ -74,7 +74,8 @@
                     <mat-date-range-picker #pickerRange></mat-date-range-picker>
                 </mat-form-field>
 
-                <button mat-raised-button color="primary" type="submit" matTooltip="Buscar">Buscar</button>
+                <button mat-raised-button color="primary" type="submit" matTooltip="Buscar" class="ml-2">Buscar</button>
+                <button  mat-raised-button color="warn" type="button" matTooltip="Buscar" (click)="resetForm()" class="ml-2">Resetear</button>
             </form>
             <!-- END FORM BACKEND -->
 

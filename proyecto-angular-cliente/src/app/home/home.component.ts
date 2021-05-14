@@ -11,6 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FilterQuery } from '../models/filter-query.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-home',
@@ -28,7 +29,7 @@ export class HomeComponent implements OnInit {
   displayedColumns = ['username', 'action', 'date', 'path'];
   displayedColumnsForm = ['usernameForm', 'actionForm', 'startDateForm', 'endDateForm'];
   dataSource: MatTableDataSource<CommentLog>;
-  dataSourceLast10: MatTableDataSource<CommentLog>;
+  dataSourceLast2Weeks: MatTableDataSource<CommentLog>;
 
   formBackendFilter: FormGroup;
   activeUserList: User[] = [];
@@ -53,6 +54,7 @@ export class HomeComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private spinnerService: SpinnerService,
     private fb: FormBuilder,
+    private toastrService: ToastrService
   ) {
     this.formBackendFilter = this.fb.group({
       username: [''],
@@ -88,12 +90,12 @@ export class HomeComponent implements OnInit {
     this.spinnerService.show();
 
     let p0 = this.apiService.getLast10CommentLogsAsync().toPromise();
-    let p1 = this.apiService.getCommentLogsAsync().toPromise();
+    let p1 = this.apiService.getLast2WeeksCommentLogsAsync().toPromise();
     let p2 = this.apiService.getUserAsync().toPromise();
 
     Promise.all([p0, p1, p2]).then(res => {
       if (res[0].status == Status.Success) {
-        this.dataSourceLast10 = new MatTableDataSource(res[0].data);
+        this.dataSourceLast2Weeks = new MatTableDataSource(res[0].data);
       } else {
         console.log(res[0].message);
       }
@@ -216,28 +218,30 @@ export class HomeComponent implements OnInit {
       let startDate: Date = this.formBackendFilter.get('startDate').value;
       let endDate: Date = this.formBackendFilter.get('endDate').value;
       let action: Action;
-      if (actionStr) {
-        switch (actionStr) {
-          case 'Añadir':
-            action = Action.Añadir
-            break;
-          case 'Modificar':
-            action = Action.Modificar
-            break;
-          case 'Eliminar':
-            action = Action.Eliminar
-            break;
-          case 'Activar':
-            action = Action.Activar
-            break;
-        }
-      }
       let filterQuery: FilterQuery = {
-        username: username,
-        action: action,
         startDate: startDate.toDateString(),
         endDate: endDate.toDateString()
       }
+      if (actionStr) {
+        switch (actionStr) {
+          case 'Añadir':
+            action = Action.Añadir;
+            break;
+          case 'Modificar':
+            action = Action.Modificar;
+            break;
+          case 'Eliminar':
+            action = Action.Eliminar;
+            break;
+          case 'Activar':
+            action = Action.Activar;
+            break;
+        }
+        filterQuery.action = action;
+      }
+      if (username) filterQuery.username = username;      
+
+      
       console.log(filterQuery);
       this.apiService.getCommentLogsByFilter(filterQuery).subscribe(data => {
         switch (data.status) {
@@ -245,17 +249,21 @@ export class HomeComponent implements OnInit {
             this.dataSource = new MatTableDataSource(data.data);
             this.dataSource.sort = this.sort;
             this.dataSource.filterPredicate = this.createFilter();
-            console.log(data.data);
+            this.toastrService.success('Datos actualizados correctamente.', 'Actualizar tabla');
             break;
           case Status.Error:
-            console.log(data.message);
+              this.toastrService.error(data.message, 'ERROR');
             break;
         }
       });
     } else {
-      console.log('?')
+      this.toastrService.error('Formulario inválido, por favor revise los datos.', 'ERROR');
     }
 
+  }
+
+  resetForm(): void {
+    this.formBackendFilter.reset()
   }
 
 }
