@@ -12,7 +12,6 @@ import { MatSort } from '@angular/material/sort';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FilterQuery } from '../models/filter-query.model';
 import { ToastrService } from 'ngx-toastr';
-import { MAT_DATE_LOCALE, DateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-home',
@@ -27,8 +26,8 @@ export class HomeComponent implements OnInit {
   username: string;
   rolValue: number;
 
-  displayedColumns = ['username', 'action', 'date', 'path', 'route'];
-  displayedColumnsForm = ['usernameForm', 'actionForm', 'startDateForm', 'endDateForm'];
+  displayedColumns = ['username', 'action', 'date', 'path'];
+  displayedColumnsForm = ['usernameForm', 'actionForm', 'rangeDateForm'];
   dataSource: MatTableDataSource<CommentLog>;
   dataSourceLast2Weeks: MatTableDataSource<CommentLog>;
 
@@ -37,7 +36,7 @@ export class HomeComponent implements OnInit {
 
   usernameFilter = new FormControl('');
   actionFilter = new FormControl('');
-  actionList: string[] = ['Añadir', 'Modificar', 'Eliminar', 'Activar'];
+  actionList: string[] = ['Aniadir', 'Modificar', 'Eliminar', 'Activar'];
   startDateFilter = new FormControl('');
   endDateFilter = new FormControl('');
   filterValues = {
@@ -46,6 +45,8 @@ export class HomeComponent implements OnInit {
     startDate: new Date(-8640000000000000),
     endDate: new Date()
   };
+  maxDate: Date;
+  ActionType = Action;
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -56,19 +57,23 @@ export class HomeComponent implements OnInit {
     private spinnerService: SpinnerService,
     private fb: FormBuilder,
     private toastrService: ToastrService,
+    
   ) {
+    let date2WeeksAgo = new Date();
+    date2WeeksAgo.setDate(date2WeeksAgo.getDate() - 14);
+    this.maxDate = new Date();
     this.formBackendFilter = this.fb.group({
       username: [''],
       action: [''],
-      startDate: ['', Validators.required],
-      endDate: ['', Validators.required]
+      startDate: [date2WeeksAgo, Validators.required],
+      endDate: [new Date(), Validators.required]
     });
   }
 
 
   ngOnInit(): void {
 
-    this.apiService.getActiveUsersActive().subscribe(data => {
+    this.apiService.getActiveUsersAsync().subscribe(data => {
       switch (data.status) {
         case Status.Success:
           this.activeUserList = data.data;
@@ -123,6 +128,11 @@ export class HomeComponent implements OnInit {
       this.spinnerService.hide();
     });
 
+    this.frontFiltersValueChanges();
+
+  }
+
+  frontFiltersValueChanges(): void {
     this.usernameFilter.valueChanges
       .subscribe(
         username => {
@@ -155,8 +165,6 @@ export class HomeComponent implements OnInit {
           this.dataSource.filter = JSON.stringify(this.filterValues);
         }
       );
-
-
   }
 
   applyFilter(event: Event) {
@@ -226,7 +234,7 @@ export class HomeComponent implements OnInit {
       if (actionStr) {
         switch (actionStr) {
           case 'Añadir':
-            action = Action.Añadir;
+            action = Action.Aniadir;
             break;
           case 'Modificar':
             action = Action.Modificar;
@@ -240,9 +248,9 @@ export class HomeComponent implements OnInit {
         }
         filterQuery.action = action;
       }
-      if (username) filterQuery.username = username;      
+      if (username) filterQuery.username = username;
 
-      
+
       console.log(filterQuery);
       this.apiService.getCommentLogsByFilter(filterQuery).subscribe(data => {
         switch (data.status) {
@@ -253,7 +261,7 @@ export class HomeComponent implements OnInit {
             this.toastrService.success('Datos actualizados correctamente.', 'Actualizar tabla');
             break;
           case Status.Error:
-              this.toastrService.error(data.message, 'ERROR');
+            this.toastrService.error(data.message, 'ERROR');
             break;
         }
       });

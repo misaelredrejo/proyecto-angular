@@ -62,7 +62,8 @@ namespace FBProyecto.Controllers
             ApiResponse myResponse = new ApiResponse();
             try
             {
-                var users = await _context.User.Where(u => u.Logs.Count > 0).ToListAsync();
+                //var users = await _context.User.Where(u => u.Logs.Count > 0).ToListAsync();
+                var users = await _context.Log.Select(l => l.User).ToListAsync();
 
                 myResponse.Status = Status.Success;
                 myResponse.Message = "";

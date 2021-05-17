@@ -39,6 +39,7 @@ export class ContentComponent implements OnInit {
   esquema: any[] = [];
   literal: string;
   literaleu: string;
+  literalMaxLength: number = 50;
 
   ALL_TABLE_COLS = ['type', 'format', 'minimum', 'maximum', 'minLength', 'maxLength', 'enum', 'expandible', 'readOnly', 'multipleOf', 'required', 'path'];
   TABLE_COLS = ['type', 'format', 'minimum', 'maximum', 'minLength', 'maxLength', 'enum', 'expandible', 'readOnly', 'multipleOf', 'required', 'path'];
@@ -126,12 +127,15 @@ export class ContentComponent implements OnInit {
       dataInsert = this.getChildren(this.esquema['properties']);
     } else if (this.esquema['allOf']) {
       dataInsert = this.getChildren(this.esquema['allOf']);
+    } else {
+      dataInsert = this.getOnlyChild();
     }
     this.dataSource.data = dataInsert;
     //this.spinnerService.hide();
   }
 
   getChildren(properties: any) {
+    console.log(properties)
     let children: EsquemaNode[] = [];
     let tableItems: any[] = [];
     for (let key in properties) {
@@ -158,6 +162,18 @@ export class ContentComponent implements OnInit {
     }
     if (tableItems.length > 0) children.push({ tableItems: tableItems });
     return children;
+  }
+
+  getOnlyChild(){
+    let child: EsquemaNode[] = [];
+    let tableItems: any[] = [];
+    let node: EsquemaNode = {name: this.link, literal: this.literal, literaleu: this.literaleu, esquema: this.esquema, comentarios: []};
+    this.getCommentsByPath(this.todoEsquema[this.link]['path']).then(data => node.comentarios = data);
+    this.getCntCommentsSubPath(this.todoEsquema[this.link]['path']).then(data => node.cntComentarios = data);
+    tableItems.push(node);
+    child.push({tableItems: tableItems});
+    
+    return child;
   }
 
   async getCommentsByPath(path: string): Promise<Comment[]> {

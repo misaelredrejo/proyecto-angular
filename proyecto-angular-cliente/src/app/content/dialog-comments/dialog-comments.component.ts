@@ -73,7 +73,7 @@ export class DialogCommentsComponent implements OnInit {
           logId: 0,
           user: this.user,
           date: new Date(),
-          action: Action.Añadir
+          action: Action.Aniadir
         }
         ],
         isActive: true
@@ -186,6 +186,7 @@ export class DialogCommentsComponent implements OnInit {
     };
     comment.logs.push(log);
     comment.isActive = true;
+    console.log(comment);
     this.spinnerService.show();
     this.apiService.activateCommentAsync(comment.commentId, comment).subscribe(data => {
       switch (data.status) {

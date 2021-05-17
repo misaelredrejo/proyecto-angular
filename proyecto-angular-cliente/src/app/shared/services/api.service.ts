@@ -74,7 +74,7 @@ export class ApiService {
     return this.http.put<ApiResponse>(this.myAppUrl + this.myApiUserUrl + id, user);
   }
 
-  public getActiveUsersActive(): Observable<ApiResponse> {
+  public getActiveUsersAsync(): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(this.myAppUrl + this.myApiUserUrl + 'active');
   }
 

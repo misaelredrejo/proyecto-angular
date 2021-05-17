@@ -1,5 +1,5 @@
 export enum Action {
-    Añadir = 0,
+    Aniadir = 0,
     Modificar = 1,
     Eliminar = 2,
     Activar = 3
