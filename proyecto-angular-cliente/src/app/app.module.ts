@@ -24,6 +24,7 @@ import { DialogEnumComponent } from './content/dialog-enum/dialog-enum.component
 import { ErrorComponent } from './error/error.component';
 import { NotFoundComponent } from './error/not-found/not-found.component';
 import { DatabaseComponent } from './error/database/database.component';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -53,8 +54,9 @@ import { DatabaseComponent } from './error/database/database.component';
   providers: [{
     provide: HTTP_INTERCEPTORS,
     useClass: WinAuthInterceptor,
-    multi: true
-}],
+    multi: true,
+},
+{provide: MAT_DATE_LOCALE, useValue: 'es-ES'}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

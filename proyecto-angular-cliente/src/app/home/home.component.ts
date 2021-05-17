@@ -12,6 +12,7 @@ import { MatSort } from '@angular/material/sort';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FilterQuery } from '../models/filter-query.model';
 import { ToastrService } from 'ngx-toastr';
+import { MAT_DATE_LOCALE, DateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-home',
@@ -54,7 +55,7 @@ export class HomeComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private spinnerService: SpinnerService,
     private fb: FormBuilder,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
   ) {
     this.formBackendFilter = this.fb.group({
       username: [''],
