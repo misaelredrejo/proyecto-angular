@@ -14,5 +14,6 @@ namespace FBProyecto.Models
         public string Username { get; set; }
         [Required]
         public String Rol { get; set; }
+        public ICollection<Log> Logs { get; set; }
     }
 }

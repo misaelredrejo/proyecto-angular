@@ -186,7 +186,6 @@ export class DialogCommentsComponent implements OnInit {
     };
     comment.logs.push(log);
     comment.isActive = true;
-    console.log(comment);
     this.spinnerService.show();
     this.apiService.activateCommentAsync(comment.commentId, comment).subscribe(data => {
       switch (data.status) {
