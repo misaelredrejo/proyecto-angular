@@ -1,25 +1,24 @@
 <div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
   <mat-toolbar color="primary" class="example-toolbar">
-    <button mat-icon-button (click)="snav.toggle()">
+    <button mat-icon-button (click)="snav.toggle()" matTooltip="Menú">
       <mat-icon>menu</mat-icon>
     </button>
-    <button mat-icon-button [routerLink]="['/home']" (click)="title='Configuración NPR'">
+    <button mat-icon-button [routerLink]="['/home']" (click)="title='Configuración NPR'" matTooltip="Página inicio">
       <mat-icon>home</mat-icon>
     </button>
     <h1 class="example-app-name mr-2">{{title}}</h1>
     <form class="form-search ml-auto mr-2">
       <mat-form-field>
         <input matInput type="text" [(ngModel)]="value" placeholder="Buscar" name="textSearch" autocomplete="off">
-        <button mat-button mat-icon-button matSuffix aria-label="Search icon" [routerLink]="['/content', value]">
+        <button mat-button mat-icon-button matSuffix aria-label="Search icon" [routerLink]="['/content', value]" matTooltip="Buscar">
           <mat-icon>search</mat-icon>
         </button>
       </mat-form-field>
     </form>
 
-    <!--<h1 >{{user?.username}}</h1> -->
-    <div *ngIf="user">
+    <div *ngIf="user" matTooltip="Cambiar rol">
       <button mat-button [matMenuTriggerFor]="menu" >{{user?.username}}({{user?.rol}})</button>
-      <mat-menu #menu="matMenu">
+      <mat-menu #menu="matMenu" >
         <span *ngFor="let rol of rolTypes">
             <button *ngIf="rol != user.rol" mat-menu-item (click)="changeRol(rol)">{{rol}}</button>
         </span>

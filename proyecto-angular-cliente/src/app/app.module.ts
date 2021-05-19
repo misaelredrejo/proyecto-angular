@@ -24,7 +24,8 @@ import { DialogEnumComponent } from './content/dialog-enum/dialog-enum.component
 import { ErrorComponent } from './error/error.component';
 import { NotFoundComponent } from './error/not-found/not-found.component';
 import { DatabaseComponent } from './error/database/database.component';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_DATE_LOCALE, DateAdapter } from '@angular/material/core';
+import { CustomDateAdapter } from './shared/custom-date-adapter';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     useClass: WinAuthInterceptor,
     multi: true,
 },
-{provide: MAT_DATE_LOCALE, useValue: 'es-ES'}],
+{provide: MAT_DATE_LOCALE, useValue: 'es-ES'},
+{ provide: DateAdapter, useClass: CustomDateAdapter }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

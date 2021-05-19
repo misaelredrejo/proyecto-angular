@@ -1,6 +1,8 @@
+<!--TABLE TO LOAD MAT TABLE STYLES-->
 <mat-table style="display: none">
   <mat-header-row *matHeaderRowDef="[]"></mat-header-row>
 </mat-table>
+<!--END TABLE-->
 <div class="m-5">
   <h4>{{ literal }}</h4>
   <h4>{{ literaleu }}</h4>
@@ -11,17 +13,18 @@
         <!-- use a disabled button to provide padding for tree leaf -->
         <button mat-icon-button disabled></button>
 
+        <!-- Añadir tabla -->
         <table class="mat-table mat-elevation-z8 table-bordered">
           <thead>
-            <tr class="mat-header-row table-header">
+            <tr class="mat-header-row">
               <th class="mat-header-cell">Código-Literal</th>
               <th class="mat-header-cell" *ngFor="let column of TABLE_COLS">{{column}}</th>
             </tr>
           </thead>
           <tbody>
             <tr class="mat-row" *ngFor="let row of node.tableItems">
-              <td class="mat-cell">
-                <button mat-button matBadge="{{row.cntComentarios}}" matBadgeColor="accent" matTooltip="Ver comentarios"
+              <td class="mat-cell mat-cell-button">
+                <button mat-raised-button matBadge="{{row.cntComentarios}}" matBadgeColor="accent" matTooltip="Ver comentarios"
                   (click)="openDialogComments(row.comentarios, row.esquema['path'])" class="table-button"
                   [matBadgeHidden]="row.cntComentarios == 0">
                   <span *ngIf="user?.rol == 'Desarrollador'">{{row.name}}<br></span>
@@ -51,49 +54,7 @@
             </tr>
           </tbody>
         </table>
-        <!-- Añadir tabla 
-        <table class="table table-bordered table-hover table-text">
-          <thead>
-            <tr class="table-header">
-              <th>Código-Literal</th>
-              <th *ngFor="let column of TABLE_COLS">{{column}}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of node.tableItems"
-              [ngClass]="{'row-number': row.esquema['type'] == 'number', 'row-string': row.esquema['type'] == 'string'}">
-              <td>
-                <button mat-button matBadge="{{row.cntComentarios}}" matBadgeColor="accent" matTooltip="Ver comentarios"
-                  (click)="openDialogComments(row.comentarios, row.esquema['path'])" class="table-button"
-                  [matBadgeHidden]="row.cntComentarios == 0">
-                  <span *ngIf="user?.rol == 'Desarrollador'">{{row.name}}<br></span>
-                  <span *ngIf="row.literal?.length > 50" matTooltip="{{row.literal}}">
-                    {{row.literal | slice:0:50}}...
-                  </span>
-                  <span *ngIf="row.literal?.length <= 50">
-                    {{row.literal}}
-                  </span>
-                  <br>
-                  <span *ngIf="row.literaleu?.length > 50" matTooltip="{{row.literaleu}}">
-                    {{row.literaleu | slice:0:50}}...
-                  </span>
-                  <span *ngIf="row.literaleu?.length <= 50">
-                    {{row.literaleu}}
-                  </span>
-                </button>
-              </td>
-              <td *ngFor="let column of TABLE_COLS">
-                <span *ngIf="column == 'enum' && row.esquema[column]">
-                  <span (click)="openDialogEnumList(row.name,row.esquema[column])">
-                    {{ row.esquema[column] | limitArray:25 }}
-                  </span>
-                </span>
-
-                <span *ngIf="column != 'enum'">{{ row.esquema[column] }}</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>-->
+        <!-- FIN TABLA -->
 
       </li>
     </mat-tree-node>
@@ -110,7 +71,7 @@
             [matBadgeHidden]="node.cntComentarios == 0">
             <span *ngIf="user?.rol == 'Desarrollador'">{{node.name}}</span>
             <span *ngIf="node.literal"> - {{node.literal}}</span>
-            <span *ngIf="node.literal"> - {{node.literaleu}} </span>
+            <span *ngIf="node.literalEU"> - {{node.literaleu}} </span>
 
             <span *ngIf="node.esquema['type'] == 'array'" class="highlighted">
               Type: array, minItems: {{node.esquema['minItems']}}, maxItems: {{node.esquema['maxItems']}}
