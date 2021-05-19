@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit {
 
   usernameFilter = new FormControl('');
   actionFilter = new FormControl('');
-  actionList: string[] = ['Aniadir', 'Modificar', 'Eliminar', 'Activar'];
+  actionList: string[] = ['Añadir', 'Modificar', 'Eliminar', 'Activar'];
   startDateFilter = new FormControl('');
   endDateFilter = new FormControl('');
   filterValues = {
@@ -178,6 +178,7 @@ export class HomeComponent implements OnInit {
       let searchTerms = JSON.parse(filter);
       let containsAction = false;
       searchTerms.action.forEach(action => {
+        action = (action == "Añadir" ? "Aniadir" : action);
         if (Action[data.action] == action) containsAction = true;
       });
       if (searchTerms.action == null || searchTerms.action.length == 0) containsAction = true;
@@ -250,8 +251,6 @@ export class HomeComponent implements OnInit {
       }
       if (username) filterQuery.username = username;
 
-
-      console.log(filterQuery);
       this.apiService.getCommentLogsByFilter(filterQuery).subscribe(data => {
         switch (data.status) {
           case Status.Success:
@@ -272,7 +271,15 @@ export class HomeComponent implements OnInit {
   }
 
   resetForm(): void {
-    this.formBackendFilter.reset()
+    let date2WeeksAgo = new Date();
+    date2WeeksAgo.setDate(date2WeeksAgo.getDate() - 14);
+    this.formBackendFilter = this.fb.group({
+      username: [''],
+      action: [''],
+      startDate: [date2WeeksAgo, Validators.required],
+      endDate: [new Date(), Validators.required]
+    });
+
   }
 
 }

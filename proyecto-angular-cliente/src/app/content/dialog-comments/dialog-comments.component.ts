@@ -69,22 +69,24 @@ export class DialogCommentsComponent implements OnInit {
         commentId: 0,
         path: this.data.path,
         text: text,
-        logs: [{
-          logId: 0,
-          user: this.user,
-          date: new Date(),
-          action: Action.Aniadir
-        }
-        ],
         isActive: true
       };
       this.spinnerService.show();
       this.apiService.addCommentAsync(comment).subscribe(data => {
         switch (data.status) {
           case Status.Success:
-            this.data.commentList.push(data.data);
             this.formAdd.reset();
-            this.toastr.success(data.message, 'Añadir comentario');
+            let comment: Comment = data.data;
+            let log: Log = {
+              logId: 0,
+              commentId: comment.commentId,
+              user: this.user,
+              date: new Date(),
+              action: Action.Aniadir
+            }
+            this.data.commentList.push(comment);
+            this.addLog(comment, log);
+            this.toastr.success(data.message, 'ATENCIÓN');
             break;
           case Status.NotFound:
             this.toastr.error(data.message, 'ERROR');
@@ -94,8 +96,8 @@ export class DialogCommentsComponent implements OnInit {
             console.log(data.message);
             break;
         }
-        this.spinnerService.hide();
       }, err => {
+        console.log(err);
         this.spinnerService.hide();
       });
     } else {
@@ -105,25 +107,25 @@ export class DialogCommentsComponent implements OnInit {
   }
 
   editComment() {
-
     if (this.formEdit.valid) {
       let comment: Comment = Object.assign({}, this.data.commentList[this.indexComment]);
       let text: string = this.formEdit.get('comment').value;
-      let log: Log = {
-        logId: 0,
-        user: this.user,
-        date: new Date(),
-        action: Action.Modificar
-      }
-      comment.logs.push(log);
       comment.text = text;
       this.spinnerService.show();
       this.apiService.updateCommentAsync(comment.commentId, comment).subscribe(data => {
         switch (data.status) {
           case Status.Success:
-            this.toastr.success(data.message, 'Editar comentario');
+            let log: Log = {
+              logId: 0,
+              commentId: comment.commentId,
+              user: this.user,
+              date: new Date(),
+              action: Action.Modificar
+            };
             this.data.commentList[this.indexComment] = comment;
             this.indexComment = undefined;
+            this.addLog(data.data, log);
+            this.toastr.success(data.message, 'ATENCIÓN');
             break;
           case Status.NotFound:
             this.toastr.error(data.message, 'ERROR');
@@ -133,8 +135,8 @@ export class DialogCommentsComponent implements OnInit {
             console.log(data.message);
             break;
         }
-        this.spinnerService.hide();
       }, err => {
+        console.log(err);
         this.spinnerService.hide();
       });
     } else {
@@ -144,68 +146,86 @@ export class DialogCommentsComponent implements OnInit {
   }
 
   deleteComment(index: number) {
-
     let comment: Comment = Object.assign({}, this.data.commentList[index]);
-    let log: Log = {
-      logId: 0,
-      user: this.user,
-      date: new Date(),
-      action: Action.Eliminar
-    };
-    comment.logs.push(log);
     comment.isActive = false;
     this.spinnerService.show();
-    this.apiService.deleteCommentAsync(comment.commentId, comment).subscribe(data => {
+    this.apiService.updateCommentAsync(comment.commentId, comment).subscribe(data => {
       switch (data.status) {
         case Status.Success:
-            this.data.commentList[index] = comment;
-            this.toastr.success(data.message, 'Eliminar comentario');
+          let log: Log = {
+            logId: 0,
+            commentId: comment.commentId,
+            user: this.user,
+            date: new Date(),
+            action: Action.Eliminar
+          };
+          this.data.commentList[index] = comment;
+          this.addLog(data.data, log);
+          this.toastr.success(data.message, 'ATENCIÓN');
           break;
         case Status.NotFound:
-            this.toastr.success(data.message, 'ERROR');
+          this.toastr.error(data.message, 'ERROR');
           break;
         case Status.Error:
-            console.log(data.message);
-            this.toastr.error('Error al eliminar comentario.', 'ERROR');
+          console.log(data.message);
+          this.toastr.error('Error al eliminar comentario.', 'ERROR');
           break;
       }
-      this.spinnerService.hide();
     }, err => {
+      console.log(err);
       this.spinnerService.hide();
     });
   }
 
   activateComment(index: number) {
-
     let comment: Comment = Object.assign({}, this.data.commentList[index]);
-    let log: Log = {
-      logId: 0,
-      user: this.user,
-      date: new Date(),
-      action: Action.Activar
-    };
-    comment.logs.push(log);
     comment.isActive = true;
     this.spinnerService.show();
-    this.apiService.activateCommentAsync(comment.commentId, comment).subscribe(data => {
+    this.apiService.updateCommentAsync(comment.commentId, comment).subscribe(data => {
       switch (data.status) {
         case Status.Success:
-            this.data.commentList[index] = comment;
-            this.toastr.success(data.message, 'Activar comentario');
+          let log: Log = {
+            logId: 0,
+            commentId: comment.commentId,
+            user: this.user,
+            date: new Date(),
+            action: Action.Activar
+          };
+          this.data.commentList[index] = comment;
+          this.addLog(data.data, log);
+          this.toastr.success(data.message, "ATENCIÓN");
           break;
         case Status.NotFound:
-            this.toastr.success(data.message, 'ERROR');
+          this.toastr.error(data.message, 'ERROR');
           break;
-          case Status.Error:
-              console.log(data.message);
-              this.toastr.error('Error al activar comentario.', 'ERROR');
-            break;
+        case Status.Error:
+          console.log(data.message);
+          this.toastr.error('Error al activar comentario.', 'ERROR');
+          break;
       }
-      this.spinnerService.hide();
     }, err => {
       this.spinnerService.hide();
     });
   }
 
+
+  addLog(comment: Comment, log: Log): void {
+    this.apiService.addLogAsync(log).subscribe(data => {
+      switch (data.status) {
+        case Status.Success:
+          break;
+        case Status.NotFound:
+          this.toastr.error(data.message, 'ERROR');
+          break;
+        case Status.Error:
+          this.toastr.error(data.message, 'ERROR');
+          break;
+      }
+      this.spinnerService.hide();
+    }, error => {
+      console.log(error);
+      this.spinnerService.hide();
+    });
+  }
 
 }

@@ -63,7 +63,7 @@ namespace FBProyecto.Controllers
             try
             {
                 //var users = await _context.User.Where(u => u.Logs.Count > 0).ToListAsync();
-                var users = await _context.Log.Select(l => l.User).ToListAsync();
+                var users = await _context.User.Where(u => u.Logs.Count > 0).ToListAsync();
 
                 myResponse.Status = Status.Success;
                 myResponse.Message = "";

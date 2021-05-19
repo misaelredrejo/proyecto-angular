@@ -8,7 +8,7 @@ import { catchError, map } from "rxjs/operators";
 import {Comment} from '../../models/comment.model';
 import { User } from '../../models/user.model';
 import { ApiResponse } from '../../models/api-response.model';
-import { FilterQuery } from 'src/app/models/filter-query.model';
+import { Log } from 'src/app/models/log.model';
 
 
 @Injectable({
@@ -19,6 +19,7 @@ export class ApiService {
   private myAppUrl: string = 'https://localhost:44361/';
   private myApiCommentsUrl: string = 'api/comments/';
   private myApiUserUrl: string = 'api/user/';
+  private myApiLogsUrl: string = 'api/logs/';
 
   constructor(private http: HttpClient) { 
   }
@@ -110,16 +111,13 @@ export class ApiService {
   public updateCommentAsync(id: number, comment: Comment): Observable<ApiResponse> {
     return this.http.put<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + id, comment);
   }
-
-  public deleteCommentAsync(id: number, comment: Comment): Observable<ApiResponse> {
-    return this.http.put<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + "delete/" + id, comment);
-  }
-
-  public activateCommentAsync(id: number, comment: Comment): Observable<ApiResponse> {
-    return this.http.put<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + "activate/" + id, comment);
-  }
   //#endregion
 
+  //#region Logs
+  public addLogAsync(log: Log) {
+    return this.http.post<ApiResponse>(this.myAppUrl + this.myApiLogsUrl, log);
+  }
+  //#endregion
 
 
 }

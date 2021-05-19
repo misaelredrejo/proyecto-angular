@@ -135,7 +135,6 @@ export class ContentComponent implements OnInit {
   }
 
   getChildren(properties: any) {
-    console.log(properties)
     let children: EsquemaNode[] = [];
     let tableItems: any[] = [];
     for (let key in properties) {

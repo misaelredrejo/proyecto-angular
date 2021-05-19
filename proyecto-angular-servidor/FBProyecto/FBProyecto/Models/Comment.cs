@@ -14,7 +14,6 @@ namespace FBProyecto.Models
         public string Path { get; set; }
         [Required]
         public string Text { get; set; }
-        [Required]
         public IList<Log> Logs { get; set; }
         [Required]
         public bool IsActive { get; set; }
