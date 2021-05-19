@@ -24,9 +24,9 @@
           <tbody>
             <tr class="mat-row" *ngFor="let row of node.tableItems">
               <td class="mat-cell mat-cell-button">
-                <button mat-raised-button matBadge="{{row.cntComentarios}}" matBadgeColor="accent" matTooltip="Ver comentarios"
-                  (click)="openDialogComments(row.comentarios, row.esquema['path'])" class="table-button"
-                  [matBadgeHidden]="row.cntComentarios == 0">
+                <button mat-raised-button matBadge="{{row.cntComentarios}}" matBadgeColor="accent"
+                  matTooltip="Ver comentarios" (click)="openDialogComments(row.comentarios, row.esquema['path'])"
+                  class="table-button" [matBadgeHidden]="row.cntComentarios == 0">
                   <span *ngIf="user?.rol == 'Desarrollador'">{{row.name}}<br></span>
                   <span *ngIf="row.literal?.length > literalMaxLength" matTooltip="{{row.literal}}">
                     {{row.literal | slice:0:literalMaxLength}}...
@@ -69,9 +69,9 @@
           </button>
           <span matBadge="{{node.cntComentarios}}" matBadgeOverlap="false" matBadgeColor="accent"
             [matBadgeHidden]="node.cntComentarios == 0">
-            <span *ngIf="user?.rol == 'Desarrollador'">{{node.name}}</span>
-            <span *ngIf="node.literal"> - {{node.literal}}</span>
-            <span *ngIf="node.literalEU"> - {{node.literaleu}} </span>
+            <span *ngIf="user?.rol == 'Desarrollador'">{{node.name}} - </span>
+            <span *ngIf="node.literal">{{node.literal}}</span>
+            <span *ngIf="node.literaleu"> - {{node.literaleu}} </span>
 
             <span *ngIf="node.esquema['type'] == 'array'" class="highlighted">
               Type: array, minItems: {{node.esquema['minItems']}}, maxItems: {{node.esquema['maxItems']}}

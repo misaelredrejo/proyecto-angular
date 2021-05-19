@@ -78,10 +78,9 @@ export class ContentComponent implements OnInit {
       } else {
         this.TABLE_COLS = Object.assign([], this.ALL_TABLE_COLS);
       }
-      /*
-      if (this.link) {
-        this.titleService.changeTitle((this.user.rol == Rol.Desarrollador ? this.link : '') + this.literal + ' - ' + this.literaleu);
-      }*/
+      if (this.titleService.currentTitleValue != 'Configuración NPR') {
+        this.titleService.changeTitle((this.user.rol == Rol.Desarrollador ? this.link + ' - ' : '') + this.literal + ' - ' + this.literaleu);
+      }
     }, error => {
       console.log(error);
     })
@@ -110,6 +109,7 @@ export class ContentComponent implements OnInit {
         this.router.navigate(['/error/test']);
         return;
       }
+      if (this.esquema['type'] == 'array') console.log(this.esquema)
       this.literal = (this.literaleses[this.link] ? this.literaleses[this.link] : this.literaleses[this.link.toLowerCase()]);
       this.literaleu = (this.literaleseu[this.link] ? this.literaleseu[this.link] : this.literaleseu[this.link.toLowerCase()]);
       if (this.user && this.user.rol == Rol.Desarrollador) {
@@ -129,6 +129,7 @@ export class ContentComponent implements OnInit {
       dataInsert = this.getChildren(this.esquema['allOf']);
     } else {
       dataInsert = this.getOnlyChild();
+      this.loadLiteralParent();
     }
     this.dataSource.data = dataInsert;
     //this.spinnerService.hide();
@@ -173,6 +174,14 @@ export class ContentComponent implements OnInit {
     child.push({tableItems: tableItems});
     
     return child;
+  }
+
+  loadLiteralParent(): void {
+    let path: string = this.esquema['path'];
+    let pathArray: string[] = path.split('/');
+    let code = pathArray[pathArray.length-2];
+    this.literal = this.literaleses[code] ? this.literaleses[code] : this.literaleses[code.toLowerCase()];
+    this.literaleu = this.literaleseu[code] ? this.literaleseu[code] : this.literaleseu[code.toLowerCase()];
   }
 
   async getCommentsByPath(path: string): Promise<Comment[]> {

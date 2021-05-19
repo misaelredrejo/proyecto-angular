@@ -71,7 +71,7 @@ export class DialogCommentsComponent implements OnInit {
         text: text,
         isActive: true
       };
-      this.spinnerService.show();
+      this.spinnerService.show();      
       this.apiService.addCommentAsync(comment).subscribe(data => {
         switch (data.status) {
           case Status.Success:
@@ -85,15 +85,16 @@ export class DialogCommentsComponent implements OnInit {
               action: Action.Aniadir
             }
             this.data.commentList.push(comment);
-            this.addLog(comment, log);
+            this.addLog(log);
             this.toastr.success(data.message, 'ATENCIÓN');
             break;
           case Status.NotFound:
             this.toastr.error(data.message, 'ERROR');
+            this.spinnerService.hide();
             break;
           case Status.Error:
-            this.toastr.error('No se pudo añadir el comentario.', 'ERROR');
-            console.log(data.message);
+            this.toastr.error(data.message, 'ERROR');
+            this.spinnerService.hide();
             break;
         }
       }, err => {
@@ -124,15 +125,16 @@ export class DialogCommentsComponent implements OnInit {
             };
             this.data.commentList[this.indexComment] = comment;
             this.indexComment = undefined;
-            this.addLog(data.data, log);
+            this.addLog(log);
             this.toastr.success(data.message, 'ATENCIÓN');
             break;
           case Status.NotFound:
             this.toastr.error(data.message, 'ERROR');
+            this.spinnerService.hide();
             break;
           case Status.Error:
-            this.toastr.error('No se pudo editar el comentario.', 'ERROR');
-            console.log(data.message);
+            this.toastr.error(data.message, 'ERROR');
+            this.spinnerService.hide();
             break;
         }
       }, err => {
@@ -160,15 +162,16 @@ export class DialogCommentsComponent implements OnInit {
             action: Action.Eliminar
           };
           this.data.commentList[index] = comment;
-          this.addLog(data.data, log);
+          this.addLog(log);
           this.toastr.success(data.message, 'ATENCIÓN');
           break;
         case Status.NotFound:
           this.toastr.error(data.message, 'ERROR');
+          this.spinnerService.hide();
           break;
         case Status.Error:
-          console.log(data.message);
-          this.toastr.error('Error al eliminar comentario.', 'ERROR');
+          this.toastr.error(data.message, 'ERROR');
+          this.spinnerService.hide();
           break;
       }
     }, err => {
@@ -192,15 +195,16 @@ export class DialogCommentsComponent implements OnInit {
             action: Action.Activar
           };
           this.data.commentList[index] = comment;
-          this.addLog(data.data, log);
+          this.addLog(log);
           this.toastr.success(data.message, "ATENCIÓN");
           break;
         case Status.NotFound:
           this.toastr.error(data.message, 'ERROR');
+          this.spinnerService.hide();
           break;
         case Status.Error:
-          console.log(data.message);
-          this.toastr.error('Error al activar comentario.', 'ERROR');
+          this.toastr.error(data.message, 'ERROR');
+          this.spinnerService.hide();
           break;
       }
     }, err => {
@@ -208,12 +212,9 @@ export class DialogCommentsComponent implements OnInit {
     });
   }
 
-
-  addLog(comment: Comment, log: Log): void {
+  addLog(log: Log): void {
     this.apiService.addLogAsync(log).subscribe(data => {
       switch (data.status) {
-        case Status.Success:
-          break;
         case Status.NotFound:
           this.toastr.error(data.message, 'ERROR');
           break;

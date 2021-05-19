@@ -17,7 +17,7 @@ export class NavComponent implements OnDestroy {
   menuProfesional: any[] = [];
   literaleses: any[] = [];
   user: User;
-  title: string = "Configuración NPR";
+  title: string;
   value: string;
   rolTypes = Object.keys(Rol).map(k => Rol[k as any]);
 
@@ -76,7 +76,6 @@ export class NavComponent implements OnDestroy {
         this.menuProfesional = data['menuProfesional'];
         this.literaleses = data['literaleses'];
         this.fillMenu();
-
       },
       err => {
         console.log(err);
@@ -139,6 +138,10 @@ export class NavComponent implements OnDestroy {
     }, error => {
       console.log(error);
     });
+  }
+
+  resetTitle(): void {
+    this.titleService.resetTitle();
   }
 
 }

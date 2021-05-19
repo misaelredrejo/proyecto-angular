@@ -1,18 +1,32 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable()
 export class TitleService {
 
-  // Observable string sources
-  private titleSource = new Subject<string>();
+  private defaultTitle = 'Configuración NPR';
 
-  // Observable string streams
-  title$ = this.titleSource.asObservable();
+  // Observable string sources
+  private titleSource: BehaviorSubject<string>;
+  public title$: Observable<string>;
+
+  constructor() {
+    this.titleSource = new BehaviorSubject<string>(this.defaultTitle);
+    // Observable string streams
+    this.title$ = this.titleSource.asObservable()
+  }
 
   // Service message commands
   changeTitle(title: string) {
     this.titleSource.next(title);
+  }
+
+  resetTitle() {
+    this.titleSource.next(this.defaultTitle);
+  }
+
+  public get currentTitleValue(): string {
+    return this.titleSource.getValue();
   }
 
 }

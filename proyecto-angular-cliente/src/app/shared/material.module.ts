@@ -58,6 +58,6 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatDatepickerModule,
     MatNativeDateModule,
   ],
-  providers: [MultilevelMenuService],
+  providers: [MultilevelMenuService,],
 })
 export class MaterialModule { }
