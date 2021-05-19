@@ -131,6 +131,12 @@ export class ContentComponent implements OnInit {
       this.loadLiteralParent();
     }
     this.dataSource.data = dataInsert;
+    //TODO
+    /*
+    setTimeout(() => {
+      this.updateCntComments(this.dataSource.data);
+  }, 5000);*/
+
     //this.spinnerService.hide();
   }
 
@@ -150,11 +156,11 @@ export class ContentComponent implements OnInit {
 
       if (this.todoEsquema[code]['properties']) {
         node.children = this.getChildren(this.todoEsquema[code]['properties']);
-        this.getCntCommentsSubPath(this.todoEsquema[code]['path']).then(data => node.cntComentarios = data);
+        //this.getCntCommentsSubPath(this.todoEsquema[code]['path']).then(data => node.cntComentarios = data);
         children.push(node);
       } else if (this.todoEsquema[code]['allOf']) {
         node.children = this.getChildren(this.todoEsquema[code]['allOf']);
-        this.getCntCommentsSubPath(this.todoEsquema[code]['path']).then(data => node.cntComentarios = data);
+        //this.getCntCommentsSubPath(this.todoEsquema[code]['path']).then(data => node.cntComentarios = data);
         children.push(node);
       } else {
         this.getCommentsByPath(this.todoEsquema[code]['path']).then(data => {
@@ -247,6 +253,30 @@ export class ContentComponent implements OnInit {
     commentList.forEach(comment => {
       cnt += (comment.isActive ? 1 : 0);
     });
+    return cnt;
+  }
+
+  updateCntComments(nodes: EsquemaNode[]): void {
+    nodes.forEach(node => {
+      if (node.children && node.children.length > 0) {
+        node.cntComentarios = this.countChildrenActiveComments(node);
+        this.updateCntComments(node.children);
+      }
+    });
+  }
+
+  countChildrenActiveComments(node: EsquemaNode): number {
+    let cnt = 0;
+    if (node.children && node.children.length > 0) {
+      node.children.forEach(nodeChild => {
+      cnt += this.countChildrenActiveComments(nodeChild);
+      });
+    } else {
+      node.tableItems.forEach(item => {
+        let cntComentarios: number = item['cntComentarios'];
+        cnt += cntComentarios ? cntComentarios : 0;
+      });
+    }
     return cnt;
   }
 
