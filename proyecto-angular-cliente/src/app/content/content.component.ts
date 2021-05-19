@@ -109,7 +109,6 @@ export class ContentComponent implements OnInit {
         this.router.navigate(['/error/test']);
         return;
       }
-      if (this.esquema['type'] == 'array') console.log(this.esquema)
       this.literal = (this.literaleses[this.link] ? this.literaleses[this.link] : this.literaleses[this.link.toLowerCase()]);
       this.literaleu = (this.literaleseu[this.link] ? this.literaleseu[this.link] : this.literaleseu[this.link.toLowerCase()]);
       if (this.user && this.user.rol == Rol.Desarrollador) {
@@ -145,18 +144,23 @@ export class ContentComponent implements OnInit {
       let literaleu = (this.literaleseu[code] ? this.literaleseu[code] : this.literaleseu[code.toLowerCase()]);
       let esquema = this.todoEsquema[code];
 
-      let node: EsquemaNode = {name: code, literal: literal, literaleu: literaleu, esquema: esquema, comentarios: []};
+      let node: EsquemaNode = {name: code, literal: literal, literaleu: literaleu, esquema: esquema, comentarios: [], cntComentarios: 0};
 
-      this.getCommentsByPath(this.todoEsquema[code]['path']).then(data => node.comentarios = data);
-      this.getCntCommentsSubPath(this.todoEsquema[code]['path']).then(data => node.cntComentarios = data);
+      //this.getCntCommentsSubPath(this.todoEsquema[code]['path']).then(data => node.cntComentarios = data);
 
       if (this.todoEsquema[code]['properties']) {
         node.children = this.getChildren(this.todoEsquema[code]['properties']);
+        this.getCntCommentsSubPath(this.todoEsquema[code]['path']).then(data => node.cntComentarios = data);
         children.push(node);
       } else if (this.todoEsquema[code]['allOf']) {
         node.children = this.getChildren(this.todoEsquema[code]['allOf']);
+        this.getCntCommentsSubPath(this.todoEsquema[code]['path']).then(data => node.cntComentarios = data);
         children.push(node);
       } else {
+        this.getCommentsByPath(this.todoEsquema[code]['path']).then(data => {
+          node.comentarios = data
+          node.cntComentarios = this.countActiveComments(node.comentarios);
+        });
         tableItems.push(node);
       }
     }
@@ -238,7 +242,15 @@ export class ContentComponent implements OnInit {
     });
   }
 
-  filter(filterText: string) {
+  countActiveComments(commentList: Comment[]): number {
+    let cnt: number = 0;
+    commentList.forEach(comment => {
+      cnt += (comment.isActive ? 1 : 0);
+    });
+    return cnt;
+  }
+
+  /*filter(filterText: string) {
     let filteredTreeData;
     if (filterText) {
       filteredTreeData = this.dataSource.data.filter(
@@ -265,7 +277,7 @@ export class ContentComponent implements OnInit {
       }
     });
     return flag;
-  }
+  }*/
 
 
 }

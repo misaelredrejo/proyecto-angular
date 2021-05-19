@@ -8,6 +8,4 @@ export interface EsquemaNode {
     comentarios?: Comment[];
     cntComentarios?: number;
     tableItems?: any[];
-    tableNumber?: any[];
-    tableString?: any[];
   }
