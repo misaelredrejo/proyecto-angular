@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
   rolValue: number;
 
   displayedColumns = ['username', 'action', 'date', 'path'];
-  displayedColumnsForm = ['usernameForm', 'actionForm', 'rangeDateForm'];
+  displayedColumnsForm = ['usernameForm', 'actionForm', 'rangeDateForm', 'literalForm'];
   dataSource: MatTableDataSource<CommentLog>;
   dataSourceLast2Weeks: MatTableDataSource<CommentLog>;
 
@@ -39,11 +39,13 @@ export class HomeComponent implements OnInit {
   actionList: string[] = ['Añadir', 'Modificar', 'Eliminar', 'Activar'];
   startDateFilter = new FormControl('');
   endDateFilter = new FormControl('');
+  literalFilter = new FormControl('');
   filterValues = {
     username: '',
     action: [],
     startDate: new Date(-8640000000000000),
-    endDate: new Date()
+    endDate: new Date(),
+    literal: ''
   };
   maxDate: Date;
   ActionType = Action;
@@ -164,6 +166,13 @@ export class HomeComponent implements OnInit {
           this.dataSource.filter = JSON.stringify(this.filterValues);
         }
       );
+      this.literalFilter.valueChanges
+      .subscribe(
+        literal => {
+          this.filterValues.literal = literal;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      )
   }
 
   applyFilter(event: Event) {
@@ -180,11 +189,17 @@ export class HomeComponent implements OnInit {
         if (Action[data.action] == action) containsAction = true;
       });
       if (searchTerms.action == null || searchTerms.action.length == 0) containsAction = true;
+      let path: string = data.path;
+      let pathArray = path.split('/');
+      let code = pathArray[pathArray.length-1];
+      //let literal = this.literaleses[code] ? this.literaleses[code] : this.literaleses[code.toLowerCase()];
+    
       return data.username.toLowerCase().indexOf(searchTerms.username.toLowerCase()) !== -1 &&
         containsAction &&
         data.date >= searchTerms.startDate &&
-        data.date <= searchTerms.endDate
-        ;
+        data.date <= searchTerms.endDate 
+        ;// && literal.toLowerCase().indexOf(searchTerms.literal.toLowerCase()) !== -1
+        
     }
     return filterFunction;
   }
