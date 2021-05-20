@@ -18,12 +18,12 @@
 }
 
 .table-button {
-  background-color: rgb(232, 232, 252);
+  background-color: whitesmoke;
   width: 100%;
   min-width: 200px;
   max-width: 300px;
   font-size: 12px;
-  font-weight:800;
+  font-weight: 600;
   white-space: pre-wrap;
 }
 
@@ -45,11 +45,12 @@ table {
   width: 100%;
 }
 .mat-header-cell {
+  
+  font-size: 12px;
   padding: 0px 8px 0px 8px;
   text-transform: uppercase;
-  background-color: #95A5A6;
+  background-color: var(--tracasa-primary-color-light);
   text-align: center;
-  font-weight: bold;
 }
 
 .mat-cell {
@@ -58,5 +59,5 @@ table {
 }
 
 .mat-row:hover {
-  background-color: whitesmoke !important;
+  background-color: whitesmoke;
 }

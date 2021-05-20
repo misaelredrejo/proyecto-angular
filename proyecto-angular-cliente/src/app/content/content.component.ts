@@ -63,7 +63,6 @@ export class ContentComponent implements OnInit {
 
   ngOnInit(): void {
     this.checkUser();
-    //this.spinnerService.show();
     this.loadJSON();
   }
 
@@ -83,12 +82,10 @@ export class ContentComponent implements OnInit {
       }
     }, error => {
       console.log(error);
-    })
-    
+    });
   }
 
   async loadJSON(): Promise<void> {
-
     await this.apiService.getJSONAsync().toPromise().then(result => {
       this.literaleses = result["literaleses"];
       this.literaleseu = result["literaleseu"];
@@ -131,7 +128,6 @@ export class ContentComponent implements OnInit {
       this.loadLiteralParent();
     }
     this.dataSource.data = dataInsert;
-    //this.spinnerService.hide();
   }
 
   getChildren(properties: any) {

@@ -6,7 +6,11 @@ table {
 .mat-form-field {
     font-size: 14px;
 }
-.button-group {
-    display: block;
-    margin-left: auto;
+
+.header-color {
+    background-color: var(--tracasa-primary-color-light);
+}
+
+.mat-row:hover {
+    background-color: whitesmoke;
 }

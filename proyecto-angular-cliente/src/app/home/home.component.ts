@@ -57,7 +57,7 @@ export class HomeComponent implements OnInit {
     private spinnerService: SpinnerService,
     private fb: FormBuilder,
     private toastrService: ToastrService,
-    
+
   ) {
     let date2WeeksAgo = new Date();
     date2WeeksAgo.setDate(date2WeeksAgo.getDate() - 14);
@@ -72,7 +72,6 @@ export class HomeComponent implements OnInit {
 
 
   ngOnInit(): void {
-
     this.apiService.getActiveUsersAsync().subscribe(data => {
       switch (data.status) {
         case Status.Success:
@@ -170,7 +169,6 @@ export class HomeComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
   }
 
   createFilter(): (data: any, filter: string) => boolean {
@@ -191,9 +189,7 @@ export class HomeComponent implements OnInit {
     return filterFunction;
   }
 
-
   openDialogChooseUserRol() {
-
     const dialogRef = this.dialog.open(DialogRolComponent, {
       width: '300px',
       data: { rolValue: this.rolValue },
@@ -216,8 +212,7 @@ export class HomeComponent implements OnInit {
             console.log(data.message);
             break;
         }
-
-      })
+      });
     });
   }
 
@@ -257,6 +252,8 @@ export class HomeComponent implements OnInit {
             this.dataSource = new MatTableDataSource(data.data);
             this.dataSource.sort = this.sort;
             this.dataSource.filterPredicate = this.createFilter();
+            this.startDateFilter.reset();
+            this.endDateFilter.reset();
             this.toastrService.success('Datos actualizados correctamente.', 'Actualizar tabla');
             break;
           case Status.Error:
@@ -279,7 +276,6 @@ export class HomeComponent implements OnInit {
       startDate: [date2WeeksAgo, Validators.required],
       endDate: [new Date(), Validators.required]
     });
-
   }
 
 }
