@@ -24,7 +24,7 @@
             <tr class="mat-row" *ngFor="let row of node.tableItems">
               <td class="mat-cell mat-cell-button">
                 <button mat-raised-button matBadge="{{row.cntComentarios}}" matBadgeColor="accent"
-                  matTooltip="Ver comentarios" (click)="openDialogComments(row.comentarios, row.esquema['path'])"
+                  matTooltip="Ver comentarios" (click)="openDialogComments(row)"
                   class="table-button" [matBadgeHidden]="row.cntComentarios == 0">
                   <span *ngIf="user?.rol == 'Desarrollador'">{{row.name}}<br></span>
                   <span *ngIf="row.literal?.length > literalMaxLength" matTooltip="{{row.literal}}">

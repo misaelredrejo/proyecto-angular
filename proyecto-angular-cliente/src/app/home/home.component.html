@@ -82,11 +82,11 @@
                     <mat-datepicker-toggle matSuffix [for]="pickerRange"></mat-datepicker-toggle>
                     <mat-date-range-picker #pickerRange></mat-date-range-picker>
                 </mat-form-field>
-
                 <button mat-raised-button color="primary" type="submit" matTooltip="Buscar" class="ml-2"
                     [disabled]="!formBackendFilter.valid">Buscar</button>
-                <button mat-raised-button color="warn" type="button" matTooltip="Restablecer valores" (click)="resetForm()"
-                    class="ml-2">Resetear</button>
+                <button mat-raised-button color="warn" type="button" matTooltip="Restablecer valores"
+                    (click)="resetForm()" class="ml-2">Resetear</button>
+
             </form>
             <!-- END FORM BACKEND -->
 
@@ -119,7 +119,7 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Literal </th>
                     <td mat-cell *matCellDef="let element">
                         <button mat-button color="primary"
-                            [routerLink]="['/content', element.path.split('/')[element.path.split('/').length-2]]">{{literaleses[element.path.split('/')[element.path.split('/').length-1]]}}</button>
+                            [routerLink]="['/content', element.path.split('/')[element.path.split('/').length-1]]">{{literaleses[element.path.split('/')[element.path.split('/').length-1]]}}</button>
                     </td>
                 </ng-container>
 

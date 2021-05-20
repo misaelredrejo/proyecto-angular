@@ -131,12 +131,6 @@ export class ContentComponent implements OnInit {
       this.loadLiteralParent();
     }
     this.dataSource.data = dataInsert;
-    //TODO
-    /*
-    setTimeout(() => {
-      this.updateCntComments(this.dataSource.data);
-  }, 5000);*/
-
     //this.spinnerService.hide();
   }
 
@@ -151,22 +145,15 @@ export class ContentComponent implements OnInit {
       let esquema = this.todoEsquema[code];
 
       let node: EsquemaNode = {name: code, literal: literal, literaleu: literaleu, esquema: esquema, comentarios: [], cntComentarios: 0};
-
-      //this.getCntCommentsSubPath(this.todoEsquema[code]['path']).then(data => node.cntComentarios = data);
+      this.getCntCommentsSubPath(this.todoEsquema[code]['path']).then(data => node.cntComentarios = data);
 
       if (this.todoEsquema[code]['properties']) {
         node.children = this.getChildren(this.todoEsquema[code]['properties']);
-        //this.getCntCommentsSubPath(this.todoEsquema[code]['path']).then(data => node.cntComentarios = data);
         children.push(node);
       } else if (this.todoEsquema[code]['allOf']) {
         node.children = this.getChildren(this.todoEsquema[code]['allOf']);
-        //this.getCntCommentsSubPath(this.todoEsquema[code]['path']).then(data => node.cntComentarios = data);
         children.push(node);
       } else {
-        this.getCommentsByPath(this.todoEsquema[code]['path']).then(data => {
-          node.comentarios = data
-          node.cntComentarios = this.countActiveComments(node.comentarios);
-        });
         tableItems.push(node);
       }
     }
@@ -228,12 +215,21 @@ export class ContentComponent implements OnInit {
     return cnt;
   }
 
-  openDialogComments(commentList: Comment[], path: string) {
-    this.dialog.open(DialogCommentsComponent, {
-      data: {
-        commentList: commentList,
-        path: path
-      }
+  openDialogComments(node: EsquemaNode) {
+    this.spinnerService.show();
+    this.getCommentsByPath(node.esquema['path']).then(data => {
+      node.comentarios = data
+      let dialogRef = this.dialog.open(DialogCommentsComponent, {
+        data: {
+          commentList: node.comentarios,
+          path: node.esquema['path']
+        }
+      });
+      this.spinnerService.hide();
+      dialogRef.afterClosed().subscribe(result => {
+        node.cntComentarios = this.countActiveComments(node.comentarios);
+        this.updateCntComments(this.dataSource.data);
+      });
     });
   }
 
@@ -250,6 +246,7 @@ export class ContentComponent implements OnInit {
 
   countActiveComments(commentList: Comment[]): number {
     let cnt: number = 0;
+    if (!commentList || commentList.length == 0) return 0;
     commentList.forEach(comment => {
       cnt += (comment.isActive ? 1 : 0);
     });
@@ -259,9 +256,9 @@ export class ContentComponent implements OnInit {
   updateCntComments(nodes: EsquemaNode[]): void {
     nodes.forEach(node => {
       if (node.children && node.children.length > 0) {
-        node.cntComentarios = this.countChildrenActiveComments(node);
         this.updateCntComments(node.children);
       }
+      node.cntComentarios = this.countChildrenActiveComments(node);
     });
   }
 
@@ -279,35 +276,5 @@ export class ContentComponent implements OnInit {
     }
     return cnt;
   }
-
-  /*filter(filterText: string) {
-    let filteredTreeData;
-    if (filterText) {
-      filteredTreeData = this.dataSource.data.filter(
-        d => {
-          if (d.name.toLocaleLowerCase().indexOf(filterText.toLocaleLowerCase()) > -1 || (d.children && this.childrenContainsFilterText(filterText, d.children))) {
-            return true;
-          }
-        }
-      );
-      console.log(filteredTreeData)
-    } else {
-      filteredTreeData = this.dataSource.data;
-    }
-
-    this.dataSource.data = filteredTreeData;
-  }
-
-  childrenContainsFilterText(filterText: string, children: EsquemaNode[]): boolean {
-    let flag = false;
-    children.forEach(element => {
-      if (element.tableItems) return false;
-      if (element.name.toLocaleLowerCase().indexOf(filterText.toLocaleLowerCase()) > -1) { //|| (element.children && this.childrenContainsFilterText(filterText, element.children))
-        flag = true;
-      }
-    });
-    return flag;
-  }*/
-
 
 }
