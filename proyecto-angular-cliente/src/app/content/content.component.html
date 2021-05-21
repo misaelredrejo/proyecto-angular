@@ -2,8 +2,16 @@
 <mat-table style="display: none">
   <mat-header-row *matHeaderRowDef="[]"></mat-header-row>
 </mat-table>
-<!--END TABLE-->
+<!--END LOAD TABLE-->
 <div class="m-5">
+
+  <span *ngFor="let breadcrumb of breadcrumbs; let i = index">
+    <span *ngIf="i > 0">></span>
+    <button mat-button color="primary" [routerLink]="['/content', breadcrumb]">
+      {{breadcrumb}}
+    </button>
+  </span>
+
   <h4>{{ literal }}</h4>
   <h4>{{ literaleu }}</h4>
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
@@ -24,8 +32,8 @@
             <tr class="mat-row" *ngFor="let row of node.tableItems">
               <td class="mat-cell mat-cell-button">
                 <button mat-raised-button matBadge="{{row.cntComentarios}}" matBadgeColor="accent"
-                  matTooltip="Ver comentarios" (click)="openDialogComments(row)"
-                  class="table-button" [matBadgeHidden]="row.cntComentarios == 0">
+                  matTooltip="Ver comentarios" (click)="openDialogComments(row)" class="table-button"
+                  [matBadgeHidden]="row.cntComentarios == 0">
                   <span *ngIf="user?.rol == 'Desarrollador'">{{row.name}}<br></span>
                   <span *ngIf="row.literal?.length > literalMaxLength" matTooltip="{{row.literal}}">
                     {{row.literal | slice:0:literalMaxLength}}...

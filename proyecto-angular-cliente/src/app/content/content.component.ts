@@ -32,6 +32,8 @@ import { SpinnerService } from '../shared/services/spinner.service';
 export class ContentComponent implements OnInit {
   user: User;
 
+  breadcrumbs: string[];
+
   link: string;
   literaleses: string[] = [];
   literaleseu: string[] = [];
@@ -40,6 +42,7 @@ export class ContentComponent implements OnInit {
   literal: string;
   literaleu: string;
   literalMaxLength: number = 50;
+  defaultTitle = 'Configuración NPR';
 
   ALL_TABLE_COLS = ['type', 'format', 'minimum', 'maximum', 'minLength', 'maxLength', 'enum', 'expandible', 'readOnly', 'multipleOf', 'required', 'path'];
   TABLE_COLS = ['type', 'format', 'minimum', 'maximum', 'minLength', 'maxLength', 'enum', 'expandible', 'readOnly', 'multipleOf', 'required', 'path'];
@@ -77,7 +80,7 @@ export class ContentComponent implements OnInit {
       } else {
         this.TABLE_COLS = Object.assign([], this.ALL_TABLE_COLS);
       }
-      if (this.titleService.currentTitleValue != 'Configuración NPR') {
+      if (this.titleService.currentTitleValue != this.defaultTitle) {
         this.titleService.changeTitle((this.user.rol == Rol.Desarrollador ? this.link + ' - ' : '') + this.literal + ' - ' + this.literaleu);
       }
     }, error => {
@@ -103,9 +106,10 @@ export class ContentComponent implements OnInit {
       this.link = params['link'];
       this.esquema = this.todoEsquema[this.link];
       if (this.esquema == null) {
-        this.router.navigate(['/error/test']);
+        this.router.navigate(['/error/404']);
         return;
       }
+      this.loadBreadcrumb();
       this.literal = (this.literaleses[this.link] ? this.literaleses[this.link] : this.literaleses[this.link.toLowerCase()]);
       this.literaleu = (this.literaleseu[this.link] ? this.literaleseu[this.link] : this.literaleseu[this.link.toLowerCase()]);
       if (this.user && this.user.rol == Rol.Desarrollador) {
@@ -115,6 +119,14 @@ export class ContentComponent implements OnInit {
       }
       this.fillTree();
     });
+  }
+
+  loadBreadcrumb() {
+    let path: string = this.esquema['path'];
+    if (!path) return;
+    let pathArray = path.split('/');
+    pathArray.shift();
+    this.breadcrumbs = pathArray;
   }
 
   fillTree() {
@@ -128,6 +140,7 @@ export class ContentComponent implements OnInit {
       this.loadLiteralParent();
     }
     this.dataSource.data = dataInsert;
+    console.log(this.esquema)
   }
 
   getChildren(properties: any) {
@@ -241,11 +254,8 @@ export class ContentComponent implements OnInit {
   }
 
   countActiveComments(commentList: Comment[]): number {
-    let cnt: number = 0;
     if (!commentList || commentList.length == 0) return 0;
-    commentList.forEach(comment => {
-      cnt += (comment.isActive ? 1 : 0);
-    });
+    let cnt: number = commentList.filter(c => c.isActive).length;
     return cnt;
   }
 

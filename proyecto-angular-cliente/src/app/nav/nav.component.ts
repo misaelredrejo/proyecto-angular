@@ -15,7 +15,7 @@ import { Rol, Status } from '../models/enums.model';
 })
 export class NavComponent implements OnDestroy {
   menuProfesional: any[] = [];
-  literaleses: any[] = [];
+  literaleses: string[] = [];
   user: User;
   title: string;
   value: string;

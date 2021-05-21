@@ -8,12 +8,12 @@ import { SpinnerService } from './shared/services/spinner.service';
 })
 export class AppComponent {
   
+  jsonObject: {};
   showSpinner: boolean;
 
-  constructor(public spinnerService: SpinnerService, private cdRef:ChangeDetectorRef) { }
+  constructor(private spinnerService: SpinnerService, private cdRef:ChangeDetectorRef) { }
 
   ngOnInit() {
-
   }
 
   ngAfterViewChecked(){
