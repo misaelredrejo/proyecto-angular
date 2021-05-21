@@ -53,14 +53,14 @@ export class ApiService {
     return body || {};
   }
 
-  public getJSONAsync(): Observable<any> {
+  /*public getJSONAsync(): Observable<any> {
 
     // Call the http GET
     return this.http.get("./../../assets/configuracionNPR.json").pipe(
       map(this.extractData),
       catchError(this.handleError)
     );
-  }
+  }*/
 
   //#region Usuario
   public getUserAsync(): Observable<ApiResponse> {

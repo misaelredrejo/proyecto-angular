@@ -26,6 +26,7 @@ import { NotFoundComponent } from './error/not-found/not-found.component';
 import { DatabaseComponent } from './error/database/database.component';
 import { MAT_DATE_LOCALE, DateAdapter } from '@angular/material/core';
 import { CustomDateAdapter } from './shared/custom-date-adapter';
+import { Globals } from './shared/globals';
 
 @NgModule({
   declarations: [
@@ -56,9 +57,10 @@ import { CustomDateAdapter } from './shared/custom-date-adapter';
     provide: HTTP_INTERCEPTORS,
     useClass: WinAuthInterceptor,
     multi: true,
-},
-{provide: MAT_DATE_LOCALE, useValue: 'es-ES'},
-{ provide: DateAdapter, useClass: CustomDateAdapter }],
+  },
+    Globals,
+  { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },
+  { provide: DateAdapter, useClass: CustomDateAdapter }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

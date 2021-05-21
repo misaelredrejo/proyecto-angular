@@ -16,6 +16,7 @@ import { EsquemaNode } from '../models/esquema-node.model';
 import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
 import { SpinnerService } from '../shared/services/spinner.service';
+import { Globals } from '../shared/globals';
 
 @Component({
   selector: 'app-content',
@@ -35,10 +36,10 @@ export class ContentComponent implements OnInit {
   breadcrumbs: string[];
 
   link: string;
-  literaleses: string[] = [];
-  literaleseu: string[] = [];
-  todoEsquema: any[] = [];
-  esquema: any[] = [];
+  literaleses: {} = {};
+  literaleseu: {} = {};
+  todoEsquema: {} = {};
+  esquema: {} = {};
   literal: string;
   literaleu: string;
   literalMaxLength: number = 50;
@@ -52,6 +53,7 @@ export class ContentComponent implements OnInit {
 
 
   constructor(
+    private globals: Globals,
     private route: ActivatedRoute,
     private router: Router,
     private apiService: ApiService,
@@ -60,48 +62,41 @@ export class ContentComponent implements OnInit {
     private authService: AuthenticationService,
     private spinnerService: SpinnerService
   ) {
-
+    this.todoEsquema = globals.esquema;
+    this.literaleses = globals.literaleses;
+    this.literaleseu = globals.literaleseu;
   }
   hasChild = (_: number, node: EsquemaNode) => !!node.children && node.children.length > 0;
 
   ngOnInit(): void {
     this.checkUser();
-    this.loadJSON();
+    this.subscribeParams();
   }
 
   checkUser(): void {
     this.authService.currentUser.subscribe(data => {
       this.user = data;
-      if (this.user.rol != Rol.Desarrollador) {
-        this.COLS_HIDE.forEach(col => {
-          var index = this.TABLE_COLS.indexOf(col);
-          if (index != -1) this.TABLE_COLS.splice(index, 1);
-        });
-      } else {
-        this.TABLE_COLS = Object.assign([], this.ALL_TABLE_COLS);
-      }
-      if (this.titleService.currentTitleValue != this.defaultTitle) {
-        this.titleService.changeTitle((this.user.rol == Rol.Desarrollador ? this.link + ' - ' : '') + this.literal + ' - ' + this.literaleu);
-      }
+      this.updateUserRolContent();
     }, error => {
       console.log(error);
     });
   }
 
-  async loadJSON(): Promise<void> {
-    await this.apiService.getJSONAsync().toPromise().then(result => {
-      this.literaleses = result["literaleses"];
-      this.literaleseu = result["literaleseu"];
-      this.todoEsquema = result["esquema"];
-    }).catch(err => {
-      console.log(err);
-    });
-
-    this.subscribeParams();
+  updateUserRolContent() {
+    if (this.user.rol != Rol.Desarrollador) {
+      this.COLS_HIDE.forEach(col => {
+        var index = this.TABLE_COLS.indexOf(col);
+        if (index != -1) this.TABLE_COLS.splice(index, 1);
+      });
+    } else {
+      this.TABLE_COLS = Object.assign([], this.ALL_TABLE_COLS);
+    }
+    if (this.titleService.currentTitleValue != this.defaultTitle) {
+      this.titleService.changeTitle((this.user.rol == Rol.Desarrollador ? this.link + ' - ' : '') + this.literal + ' - ' + this.literaleu);
+    }
   }
 
-
-  subscribeParams() {
+  subscribeParams(): void {
     this.route.params.subscribe(params => {
       this.link = params['link'];
       this.esquema = this.todoEsquema[this.link];
@@ -140,7 +135,6 @@ export class ContentComponent implements OnInit {
       this.loadLiteralParent();
     }
     this.dataSource.data = dataInsert;
-    console.log(this.esquema)
   }
 
   getChildren(properties: any) {
@@ -153,7 +147,7 @@ export class ContentComponent implements OnInit {
       let literaleu = (this.literaleseu[code] ? this.literaleseu[code] : this.literaleseu[code.toLowerCase()]);
       let esquema = this.todoEsquema[code];
 
-      let node: EsquemaNode = {name: code, literal: literal, literaleu: literaleu, esquema: esquema, comentarios: [], cntComentarios: 0};
+      let node: EsquemaNode = { name: code, literal: literal, literaleu: literaleu, esquema: esquema, comentarios: [], cntComentarios: 0 };
       this.getCntCommentsSubPath(this.todoEsquema[code]['path']).then(data => node.cntComentarios = data);
 
       if (this.todoEsquema[code]['properties']) {
@@ -170,22 +164,22 @@ export class ContentComponent implements OnInit {
     return children;
   }
 
-  getOnlyChild(){
+  getOnlyChild() {
     let child: EsquemaNode[] = [];
     let tableItems: any[] = [];
-    let node: EsquemaNode = {name: this.link, literal: this.literal, literaleu: this.literaleu, esquema: this.esquema, comentarios: []};
+    let node: EsquemaNode = { name: this.link, literal: this.literal, literaleu: this.literaleu, esquema: this.esquema, comentarios: [] };
     this.getCommentsByPath(this.todoEsquema[this.link]['path']).then(data => node.comentarios = data);
     this.getCntCommentsSubPath(this.todoEsquema[this.link]['path']).then(data => node.cntComentarios = data);
     tableItems.push(node);
-    child.push({tableItems: tableItems});
-    
+    child.push({ tableItems: tableItems });
+
     return child;
   }
 
   loadLiteralParent(): void {
     let path: string = this.esquema['path'];
     let pathArray: string[] = path.split('/');
-    let code = pathArray[pathArray.length-2];
+    let code = pathArray[pathArray.length - 2];
     this.literal = this.literaleses[code] ? this.literaleses[code] : this.literaleses[code.toLowerCase()];
     this.literaleu = this.literaleseu[code] ? this.literaleseu[code] : this.literaleseu[code.toLowerCase()];
   }
@@ -243,12 +237,11 @@ export class ContentComponent implements OnInit {
   }
 
   openDialogEnumList(codigo: string, enumList: any[]) {
+    console.log(enumList)
     this.dialog.open(DialogEnumComponent, {
       data: {
         codigo: codigo,
-        enumList: enumList,
-        literaleses: this.literaleses,
-        literaleseu: this.literaleseu
+        enumList: enumList
       }
     });
   }
@@ -272,7 +265,7 @@ export class ContentComponent implements OnInit {
     let cnt = 0;
     if (node.children && node.children.length > 0) {
       node.children.forEach(nodeChild => {
-      cnt += this.countChildrenActiveComments(nodeChild);
+        cnt += this.countChildrenActiveComments(nodeChild);
       });
     } else {
       node.tableItems.forEach(item => {

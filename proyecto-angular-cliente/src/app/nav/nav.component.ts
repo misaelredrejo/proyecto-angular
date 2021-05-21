@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
 import { Rol, Status } from '../models/enums.model';
+import { Globals } from '../shared/globals';
 
 @Component({
   selector: 'app-nav',
@@ -14,15 +15,18 @@ import { Rol, Status } from '../models/enums.model';
   providers: [TitleService]
 })
 export class NavComponent implements OnDestroy {
-  menuProfesional: any[] = [];
-  literaleses: string[] = [];
   user: User;
+  
+  menuProfesional: {}[] = [];
+  literaleses: {} = {};
+
   title: string;
   value: string;
-  rolTypes = Object.keys(Rol).map(k => Rol[k as any]);
+  rolTypes: string[] = Object.keys(Rol).map(k => Rol[k as any]);
 
   appitemsInsert = [];
   appitems = [
+    {label: 'MENÚ'}
   ];
 
   config = {
@@ -33,13 +37,12 @@ export class NavComponent implements OnDestroy {
 
 
   mobileQuery: MediaQueryList;
-
   
   subscription: Subscription;
 
   private _mobileQueryListener: () => void;
 
-  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private apiService: ApiService, private titleService: TitleService, private authService: AuthenticationService) {
+  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private globals: Globals, private apiService: ApiService, private titleService: TitleService, private authService: AuthenticationService) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
@@ -47,6 +50,8 @@ export class NavComponent implements OnDestroy {
       title => {
         this.title = title;
     });
+    this.menuProfesional = globals.menuProfesional;
+    this.literaleses = globals.literaleses;
   }
 
   ngOnDestroy(): void {
@@ -54,9 +59,7 @@ export class NavComponent implements OnDestroy {
   }
 
   ngOnInit() {
-
     this.checkUser();
-    this.loadJSON();
   }
 
   checkUser(): void {
@@ -68,31 +71,17 @@ export class NavComponent implements OnDestroy {
     });
   }
 
-  loadJSON(): void {
-    this.apiService
-    .getJSONAsync()
-    .subscribe(
-      data => {
-        this.menuProfesional = data['menuProfesional'];
-        this.literaleses = data['literaleses'];
-        this.fillMenu();
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
   fillMenu(): void {
     this.appitemsInsert = [];
     this.menuProfesional.forEach((item) => {
       for (let key in item) {
         let value = item[key];
         let labelText = '';
+        let literales = (this.literaleses[key] ? this.literaleses[key] : this.literaleses[key.toLowerCase()]);
         if (this.user && this.user.rol == Rol.Desarrollador) {
-          labelText = key + ' - ' +this.literaleses[key]
+          labelText = key + ' - ' + literales;
         } else {
-          labelText =  this.literaleses[key];
+          labelText =  literales;
         }
 
         if (value && value.length > 0) { // Si tiene subniveles
@@ -109,10 +98,11 @@ export class NavComponent implements OnDestroy {
     let itemsSubMenu = [];
     items.forEach((element) => {
       let labelText = '';
+      let literales = (this.literaleses[element] ? this.literaleses[element] : this.literaleses[element.toLowerCase()]);
       if (this.user && this.user.rol == Rol.Desarrollador) {
-        labelText = element + ' - ' + (this.literaleses[element] ? this.literaleses[element] : this.literaleses[element.toLowerCase()]);
+        labelText = element + ' - ' + literales;
       } else {
-        labelText = (this.literaleses[element] ? this.literaleses[element] : this.literaleses[element.toLowerCase()]);
+        labelText = literales;
       }
       itemsSubMenu.push({ label: labelText, link: "/content/" + element});
     });

@@ -12,6 +12,7 @@ import { MatSort } from '@angular/material/sort';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FilterQuery } from '../models/filter-query.model';
 import { ToastrService } from 'ngx-toastr';
+import { Globals } from '../shared/globals';
 
 @Component({
   selector: 'app-home',
@@ -19,8 +20,8 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  literaleses: string[] = [];
-  literaleseu: string[] = [];
+  literaleses: {} = {};
+  literaleseu: {} = {};
   user: User;
   commentLogList: CommentLog[] = [];
   username: string;
@@ -53,6 +54,7 @@ export class HomeComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
+    private globals: Globals,
     private apiService: ApiService,
     public dialog: MatDialog,
     private authenticationService: AuthenticationService,
@@ -70,6 +72,9 @@ export class HomeComponent implements OnInit {
       startDate: [date2WeeksAgo, Validators.required],
       endDate: [new Date(), Validators.required]
     });
+
+    this.literaleses = globals.literaleses;
+    this.literaleseu = globals.literaleseu;
   }
 
 
@@ -83,13 +88,6 @@ export class HomeComponent implements OnInit {
           console.log(data.message);
           break;
       }
-    }, error => {
-      console.log(error);
-    });
-
-    this.apiService.getJSONAsync().subscribe(data => {
-      this.literaleses = data['literaleses'];
-      this.literaleseu = data['literaleseu'];
     }, error => {
       console.log(error);
     });
@@ -175,11 +173,6 @@ export class HomeComponent implements OnInit {
       )
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
   createFilter(): (data: any, filter: string) => boolean {
     let filterFunction = function (data, filter): boolean {
       let searchTerms = JSON.parse(filter);
@@ -227,6 +220,9 @@ export class HomeComponent implements OnInit {
             console.log(data.message);
             break;
         }
+      },
+      error => {
+        console.log(error);
       });
     });
   }
