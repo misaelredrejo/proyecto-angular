@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, } from '@angular/core';
 import { ApiService } from '../shared/services/api.service';
-import { CommentLog } from '../models/commentlog.model';
+import { CommentLog } from '../models/comment-log.model';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogRolComponent } from './dialog-rol/dialog-rol.component';
 import { User } from '../models/user.model';
@@ -27,8 +27,8 @@ export class HomeComponent implements OnInit {
   username: string;
   rolValue: number;
 
-  displayedColumns = ['username', 'action', 'date', 'path'];
-  displayedColumnsForm = ['usernameForm', 'actionForm', 'rangeDateForm'];//, 'literalForm'
+  displayedColumns = ['username', 'action', 'date', 'path', 'commentText'];
+  displayedColumnsForm = ['usernameForm', 'actionForm', 'rangeDateForm', 'commentTextForm'];//, 'literalForm'
   dataSource: MatTableDataSource<CommentLog>;
   dataSourceLast2Weeks: MatTableDataSource<CommentLog>;
 
@@ -41,12 +41,14 @@ export class HomeComponent implements OnInit {
   startDateFilter = new FormControl('');
   endDateFilter = new FormControl('');
   literalFilter = new FormControl('');
+  commentTextFilter = new FormControl('');
   filterValues = {
     username: '',
     action: [],
     startDate: new Date(-8640000000000000),
     endDate: new Date(),
-    literal: ''
+    literal: '',
+    commentText: ''
   };
   maxDate: Date;
   ActionType = Action;
@@ -171,6 +173,13 @@ export class HomeComponent implements OnInit {
           this.dataSource.filter = JSON.stringify(this.filterValues);
         }
       )
+      this.commentTextFilter.valueChanges
+      .subscribe(
+        commentText => {
+          this.filterValues.commentText = commentText;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      )
   }
 
   createFilter(): (data: any, filter: string) => boolean {
@@ -190,7 +199,8 @@ export class HomeComponent implements OnInit {
       return data.username.toLowerCase().indexOf(searchTerms.username.toLowerCase()) !== -1 &&
         containsAction &&
         data.date >= searchTerms.startDate &&
-        data.date <= searchTerms.endDate 
+        data.date <= searchTerms.endDate &&
+        data.commentText.toLowerCase().indexOf(searchTerms.commentText.toLowerCase()) !== -1
         ;// && literal.toLowerCase().indexOf(searchTerms.literal.toLowerCase()) !== -1
         
     }

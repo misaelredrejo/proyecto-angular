@@ -80,6 +80,7 @@ export class DialogCommentsComponent implements OnInit {
             let log: Log = {
               logId: 0,
               commentId: comment.commentId,
+              commentText: comment.text,
               user: this.user,
               date: new Date(),
               action: Action.Aniadir
@@ -120,6 +121,7 @@ export class DialogCommentsComponent implements OnInit {
             let log: Log = {
               logId: 0,
               commentId: comment.commentId,
+              commentText: comment.text,
               user: this.user,
               date: new Date(),
               action: Action.Modificar
@@ -158,6 +160,7 @@ export class DialogCommentsComponent implements OnInit {
           let log: Log = {
             logId: 0,
             commentId: comment.commentId,
+            commentText: comment.text,
             user: this.user,
             date: new Date(),
             action: Action.Eliminar
@@ -191,6 +194,7 @@ export class DialogCommentsComponent implements OnInit {
           let log: Log = {
             logId: 0,
             commentId: comment.commentId,
+            commentText: comment.text,
             user: this.user,
             date: new Date(),
             action: Action.Activar

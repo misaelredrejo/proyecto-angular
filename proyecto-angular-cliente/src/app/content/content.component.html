@@ -12,13 +12,14 @@
       {{ literaleses[breadcrumb] ? literaleses[breadcrumb] : literaleses[breadcrumb.toLowerCase()] }}
     </button>
   </span>
-
-  <h4>{{ literal }}</h4>
-  <h4>{{ literaleu }}</h4>
+<div>
+  <h5>{{ literal }}</h5>
+  <h5>{{ literaleu }}</h5>
   <button mat-icon-button color="primary" aria-label="Comments" matBadge="{{cntComentarios}}" matBadgeColor="primary"
     matTooltip="Ver comentarios" [matBadgeHidden]="cntComentarios == 0" (click)="openDialogCommentsByPath(path)">
     <mat-icon> comment</mat-icon>
   </button>
+</div>
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
     <!-- This is the tree node template for leaf nodes -->
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>

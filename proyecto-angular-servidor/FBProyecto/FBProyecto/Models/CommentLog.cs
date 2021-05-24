@@ -10,6 +10,7 @@ namespace FBProyecto.Models
     [Keyless]
     public class CommentLog
     {
+        public string CommentText { get; set; }
         public DateTime Date { get; set; }
         public string Path { get; set; }
         public Action Action { get; set; }

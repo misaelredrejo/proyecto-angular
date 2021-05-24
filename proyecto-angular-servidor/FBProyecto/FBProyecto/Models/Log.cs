@@ -23,6 +23,8 @@ namespace FBProyecto.Models
         [Required]
         public User User { get; set; }
         [Required]
+        public string CommentText { get; set; }
+        [Required]
         public DateTime Date { get; set; }
         [Required]
         public Action Action { get; set; }
