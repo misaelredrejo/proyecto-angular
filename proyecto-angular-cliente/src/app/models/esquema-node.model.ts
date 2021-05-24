@@ -6,6 +6,7 @@ export interface EsquemaNode {
     children?: EsquemaNode[];
     esquema?: any;
     comentarios?: Comment[];
-    cntComentarios?: number;
+    cntComentariosSubpath?: number;
+    cntComentariosActivos?: number;
     tableItems?: any[];
   }

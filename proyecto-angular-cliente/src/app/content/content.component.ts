@@ -36,10 +36,13 @@ export class ContentComponent implements OnInit {
   breadcrumbs: string[];
 
   link: string;
+  path: string;
   literaleses: {} = {};
   literaleseu: {} = {};
   todoEsquema: {} = {};
   esquema: {} = {};
+  comentarios: Comment[] = [];
+  cntComentarios: number = 0;
   literal: string;
   literaleu: string;
   literalMaxLength: number = 50;
@@ -62,9 +65,9 @@ export class ContentComponent implements OnInit {
     private authService: AuthenticationService,
     private spinnerService: SpinnerService
   ) {
-    this.todoEsquema = globals.esquema;
-    this.literaleses = globals.literaleses;
-    this.literaleseu = globals.literaleseu;
+    this.todoEsquema = this.globals.esquema;
+    this.literaleses = this.globals.literaleses;
+    this.literaleseu = this.globals.literaleseu;
   }
   hasChild = (_: number, node: EsquemaNode) => !!node.children && node.children.length > 0;
 
@@ -104,7 +107,12 @@ export class ContentComponent implements OnInit {
         this.router.navigate(['/error/404']);
         return;
       }
-      this.loadBreadcrumb();
+      this.path = this.esquema['path'];
+      if (!this.esquema['allOf'] && !this.esquema['properties']) {
+        let parentCode = this.path.split('/')[this.path.split('/').length -2];
+        this.link = parentCode;
+        this.esquema = this.todoEsquema[parentCode];
+      }
       this.literal = (this.literaleses[this.link] ? this.literaleses[this.link] : this.literaleses[this.link.toLowerCase()]);
       this.literaleu = (this.literaleseu[this.link] ? this.literaleseu[this.link] : this.literaleseu[this.link.toLowerCase()]);
       if (this.user && this.user.rol == Rol.Desarrollador) {
@@ -112,11 +120,21 @@ export class ContentComponent implements OnInit {
       } else {
         this.titleService.changeTitle(this.literal + ' - ' + this.literaleu);
       }
+
+      this.loadComentarios(this.esquema['path']);
+      this.loadBreadcrumbs();
       this.fillTree();
     });
   }
 
-  loadBreadcrumb() {
+  loadComentarios(path: string): void {
+    this.getCommentsByPath(path).then(data => {
+      this.comentarios = data;
+      this.cntComentarios = this.countActiveComments(this.comentarios);
+    });
+  }
+
+  loadBreadcrumbs(): void {
     let path: string = this.esquema['path'];
     if (!path) return;
     let pathArray = path.split('/');
@@ -130,10 +148,10 @@ export class ContentComponent implements OnInit {
       dataInsert = this.getChildren(this.esquema['properties']);
     } else if (this.esquema['allOf']) {
       dataInsert = this.getChildren(this.esquema['allOf']);
-    } else {
+    } /*else {
       dataInsert = this.getOnlyChild();
       this.loadLiteralParent();
-    }
+    }*/
     this.dataSource.data = dataInsert;
   }
 
@@ -147,8 +165,12 @@ export class ContentComponent implements OnInit {
       let literaleu = (this.literaleseu[code] ? this.literaleseu[code] : this.literaleseu[code.toLowerCase()]);
       let esquema = this.todoEsquema[code];
 
-      let node: EsquemaNode = { name: code, literal: literal, literaleu: literaleu, esquema: esquema, comentarios: [], cntComentarios: 0 };
-      this.getCntCommentsSubPath(this.todoEsquema[code]['path']).then(data => node.cntComentarios = data);
+      let node: EsquemaNode = { name: code, literal: literal, literaleu: literaleu, esquema: esquema, comentarios: [], cntComentariosSubpath: 0 };
+      this.getCntCommentsSubPath(this.todoEsquema[code]['path']).then(data => node.cntComentariosSubpath = data);
+      this.getCommentsByPath(this.todoEsquema[code]['path']).then(data => {
+        node.comentarios = data;
+        node.cntComentariosActivos = this.countActiveComments(node.comentarios);
+      });
 
       if (this.todoEsquema[code]['properties']) {
         node.children = this.getChildren(this.todoEsquema[code]['properties']);
@@ -164,12 +186,12 @@ export class ContentComponent implements OnInit {
     return children;
   }
 
-  getOnlyChild() {
+  /*getOnlyChild() {
     let child: EsquemaNode[] = [];
     let tableItems: any[] = [];
     let node: EsquemaNode = { name: this.link, literal: this.literal, literaleu: this.literaleu, esquema: this.esquema, comentarios: [] };
     this.getCommentsByPath(this.todoEsquema[this.link]['path']).then(data => node.comentarios = data);
-    this.getCntCommentsSubPath(this.todoEsquema[this.link]['path']).then(data => node.cntComentarios = data);
+    this.getCntCommentsSubPath(this.todoEsquema[this.link]['path']).then(data => node.cntComentariosSubpath = data);
     tableItems.push(node);
     child.push({ tableItems: tableItems });
 
@@ -182,7 +204,7 @@ export class ContentComponent implements OnInit {
     let code = pathArray[pathArray.length - 2];
     this.literal = this.literaleses[code] ? this.literaleses[code] : this.literaleses[code.toLowerCase()];
     this.literaleu = this.literaleseu[code] ? this.literaleseu[code] : this.literaleseu[code.toLowerCase()];
-  }
+  }*/
 
   async getCommentsByPath(path: string): Promise<Comment[]> {
     let comments: Comment[] = [];
@@ -218,6 +240,27 @@ export class ContentComponent implements OnInit {
     return cnt;
   }
 
+  openDialogCommentsByPath(path: string) {
+    this.spinnerService.show();
+    this.getCommentsByPath(path).then(data => {
+      this.comentarios = data
+      let dialogRef = this.dialog.open(DialogCommentsComponent, {
+        data: {
+          commentList: this.comentarios,
+          path: path
+        }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        this.cntComentarios = this.countActiveComments(this.comentarios);
+      });
+      this.spinnerService.hide();
+    }, error => {
+      console.log(error);
+      this.spinnerService.hide();
+    });
+
+  }
+
   openDialogComments(node: EsquemaNode) {
     this.spinnerService.show();
     this.getCommentsByPath(node.esquema['path']).then(data => {
@@ -230,14 +273,17 @@ export class ContentComponent implements OnInit {
       });
       this.spinnerService.hide();
       dialogRef.afterClosed().subscribe(result => {
-        node.cntComentarios = this.countActiveComments(node.comentarios);
+        node.cntComentariosSubpath = this.countActiveComments(node.comentarios);
+        node.cntComentariosActivos = node.cntComentariosSubpath;
         this.updateCntComments(this.dataSource.data);
       });
+    }, error => {
+      console.log(error);
+      this.spinnerService.hide();
     });
   }
 
   openDialogEnumList(codigo: string, enumList: any[]) {
-    console.log(enumList)
     this.dialog.open(DialogEnumComponent, {
       data: {
         codigo: codigo,
@@ -257,19 +303,21 @@ export class ContentComponent implements OnInit {
       if (node.children && node.children.length > 0) {
         this.updateCntComments(node.children);
       }
-      node.cntComentarios = this.countChildrenActiveComments(node);
+      node.cntComentariosSubpath = this.countChildrenActiveComments(node);
     });
   }
 
   countChildrenActiveComments(node: EsquemaNode): number {
     let cnt = 0;
+    let cntComentariosActivos: number = node.cntComentariosActivos;
+    cnt += cntComentariosActivos ? cntComentariosActivos : 0;
     if (node.children && node.children.length > 0) {
       node.children.forEach(nodeChild => {
         cnt += this.countChildrenActiveComments(nodeChild);
       });
     } else {
       node.tableItems.forEach(item => {
-        let cntComentarios: number = item['cntComentarios'];
+        let cntComentarios: number = item['cntComentariosSubpath'];
         cnt += cntComentarios ? cntComentarios : 0;
       });
     }

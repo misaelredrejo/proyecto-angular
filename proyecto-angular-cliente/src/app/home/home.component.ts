@@ -73,8 +73,8 @@ export class HomeComponent implements OnInit {
       endDate: [new Date(), Validators.required]
     });
 
-    this.literaleses = globals.literaleses;
-    this.literaleseu = globals.literaleseu;
+    this.literaleses = this.globals.literaleses;
+    this.literaleseu = this.globals.literaleseu;
   }
 
 

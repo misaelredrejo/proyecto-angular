@@ -92,7 +92,7 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <!-- CONTENT -->
-            <form class="example-form" [formGroup]="formAdd" (ngSubmit)="addComment()">
+            <form class="example-form" [formGroup]="formAdd" #formDirective="ngForm" (ngSubmit)="addComment(formDirective)">
                 <mat-form-field class="example-full-width">
                     <mat-label>Comentario</mat-label>
                     <textarea matInput placeholder="Mensaje..." formControlName="comment"></textarea>

@@ -32,7 +32,7 @@
                     <th mat-header-cell *matHeaderCellDef> Literal </th>
                     <td mat-cell *matCellDef="let element">
                         <button mat-button color="primary"
-                            [routerLink]="['/content', element.path.split('/')[element.path.split('/').length-2]]">{{literaleses[element.path.split('/')[element.path.split('/').length-1]]}}</button>
+                            [routerLink]="['/content', element.path.split('/')[element.path.split('/').length-2]]">{{literaleses[element.path.split('/')[element.path.split('/').length-1]] ? literaleses[element.path.split('/')[element.path.split('/').length-1]] : literaleses[(element.path.split('/')[element.path.split('/').length-1]).toLowerCase()]}}</button>
 
                     </td>
                 </ng-container>
@@ -118,7 +118,7 @@
                     <th mat-header-cell *matHeaderCellDef > Literal </th>
                     <td mat-cell *matCellDef="let element">
                         <button mat-button color="primary"
-                            [routerLink]="['/content', element.path.split('/')[element.path.split('/').length-2]]">{{literaleses[element.path.split('/')[element.path.split('/').length-1]]}}</button>
+                            [routerLink]="['/content', element.path.split('/')[element.path.split('/').length-2]]">{{literaleses[element.path.split('/')[element.path.split('/').length-1]] ? literaleses[element.path.split('/')[element.path.split('/').length-1]] : literaleses[(element.path.split('/')[element.path.split('/').length-1]).toLowerCase()]}}</button>
                     </td>
                 </ng-container>
 
@@ -128,7 +128,6 @@
                         <mat-form-field>
                             <mat-label>Filtrar usuario</mat-label>
                             <input matInput [formControl]="usernameFilter" placeholder="TCSA\usuario" #input>
-                            <!--(keyup)="applyFilter($event)"-->
                         </mat-form-field>
                     </th>
                 </ng-container>

@@ -20,8 +20,8 @@ export class DialogEnumComponent implements OnInit {
     private globals: Globals,
     @Inject(MAT_DIALOG_DATA) public data: DialogDataEnum
   ) {
-    this.literaleses = globals.literaleses;
-    this.literaleseu = globals.literaleseu;
+    this.literaleses = this.globals.literaleses;
+    this.literaleseu = this.globals.literaleseu;
   }
 
   ngOnInit(): void {

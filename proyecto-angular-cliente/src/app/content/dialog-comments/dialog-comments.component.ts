@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormGroupDirective } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiService } from 'src/app/shared/services/api.service';
@@ -62,7 +62,7 @@ export class DialogCommentsComponent implements OnInit {
     this.indexComment = index;
   }
 
-  addComment() {
+  addComment(formDirective: FormGroupDirective) {
     if (this.formAdd.valid) {
       let text: string = this.formAdd.get('comment').value;
       let comment: Comment = {
@@ -75,7 +75,7 @@ export class DialogCommentsComponent implements OnInit {
       this.apiService.addCommentAsync(comment).subscribe(data => {
         switch (data.status) {
           case Status.Success:
-            this.formAdd.reset();
+            formDirective.resetForm();
             let comment: Comment = data.data;
             let log: Log = {
               logId: 0,
@@ -101,6 +101,7 @@ export class DialogCommentsComponent implements OnInit {
         console.log(err);
         this.spinnerService.hide();
       });
+      this.formAdd.reset();
     } else {
       this.toastr.error('El comentario no puede estar vacío.', 'ERROR');
     }
