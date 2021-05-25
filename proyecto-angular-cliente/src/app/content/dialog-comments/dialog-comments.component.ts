@@ -87,7 +87,7 @@ export class DialogCommentsComponent implements OnInit {
             }
             this.data.commentList.push(comment);
             this.addLog(log);
-            this.toastr.success(data.message, 'ATENCIÓN');
+            this.toastr.success(data.message, 'Comentario');
             break;
           case Status.NotFound:
             this.toastr.error(data.message, 'ERROR');
@@ -129,7 +129,7 @@ export class DialogCommentsComponent implements OnInit {
             this.data.commentList[this.indexComment] = comment;
             this.indexComment = undefined;
             this.addLog(log);
-            this.toastr.success(data.message, 'ATENCIÓN');
+            this.toastr.success(data.message, 'Comentario');
             break;
           case Status.NotFound:
             this.toastr.error(data.message, 'ERROR');
@@ -167,7 +167,7 @@ export class DialogCommentsComponent implements OnInit {
           };
           this.data.commentList[index] = comment;
           this.addLog(log);
-          this.toastr.success(data.message, 'ATENCIÓN');
+          this.toastr.success(data.message, 'Comentario');
           break;
         case Status.NotFound:
           this.toastr.error(data.message, 'ERROR');
@@ -201,7 +201,7 @@ export class DialogCommentsComponent implements OnInit {
           };
           this.data.commentList[index] = comment;
           this.addLog(log);
-          this.toastr.success(data.message, "ATENCIÓN");
+          this.toastr.success(data.message, "Comentario");
           break;
         case Status.NotFound:
           this.toastr.error(data.message, 'ERROR');

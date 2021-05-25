@@ -43,6 +43,7 @@ export class ContentComponent implements OnInit {
   esquema: {} = {};
   comentarios: Comment[] = [];
   cntComentarios: number = 0;
+  cntComentariosSubpath: number = 0;
   literal: string;
   literaleu: string;
   literalMaxLength: number = 50;
@@ -112,7 +113,9 @@ export class ContentComponent implements OnInit {
         let parentCode = this.path.split('/')[this.path.split('/').length -2];
         this.link = parentCode;
         this.esquema = this.todoEsquema[parentCode];
+        this.path = this.esquema['path'];
       }
+      this.getCntCommentsSubPath(this.path).then(data => this.cntComentariosSubpath = data);
       this.literal = (this.literaleses[this.link] ? this.literaleses[this.link] : this.literaleses[this.link.toLowerCase()]);
       this.literaleu = (this.literaleseu[this.link] ? this.literaleseu[this.link] : this.literaleseu[this.link.toLowerCase()]);
       if (this.user && this.user.rol == Rol.Desarrollador) {
@@ -148,10 +151,7 @@ export class ContentComponent implements OnInit {
       dataInsert = this.getChildren(this.esquema['properties']);
     } else if (this.esquema['allOf']) {
       dataInsert = this.getChildren(this.esquema['allOf']);
-    } /*else {
-      dataInsert = this.getOnlyChild();
-      this.loadLiteralParent();
-    }*/
+    }
     this.dataSource.data = dataInsert;
   }
 
@@ -185,27 +185,7 @@ export class ContentComponent implements OnInit {
     if (tableItems.length > 0) children.push({ tableItems: tableItems });
     return children;
   }
-
-  /*getOnlyChild() {
-    let child: EsquemaNode[] = [];
-    let tableItems: any[] = [];
-    let node: EsquemaNode = { name: this.link, literal: this.literal, literaleu: this.literaleu, esquema: this.esquema, comentarios: [] };
-    this.getCommentsByPath(this.todoEsquema[this.link]['path']).then(data => node.comentarios = data);
-    this.getCntCommentsSubPath(this.todoEsquema[this.link]['path']).then(data => node.cntComentariosSubpath = data);
-    tableItems.push(node);
-    child.push({ tableItems: tableItems });
-
-    return child;
-  }
-
-  loadLiteralParent(): void {
-    let path: string = this.esquema['path'];
-    let pathArray: string[] = path.split('/');
-    let code = pathArray[pathArray.length - 2];
-    this.literal = this.literaleses[code] ? this.literaleses[code] : this.literaleses[code.toLowerCase()];
-    this.literaleu = this.literaleseu[code] ? this.literaleseu[code] : this.literaleseu[code.toLowerCase()];
-  }*/
-
+  
   async getCommentsByPath(path: string): Promise<Comment[]> {
     let comments: Comment[] = [];
     await this.apiService.getCommentsByPathAsync(path).toPromise().then(result => {
@@ -269,7 +249,8 @@ export class ContentComponent implements OnInit {
         data: {
           commentList: node.comentarios,
           path: node.esquema['path']
-        }
+        },
+        width: '600px'
       });
       this.spinnerService.hide();
       dialogRef.afterClosed().subscribe(result => {

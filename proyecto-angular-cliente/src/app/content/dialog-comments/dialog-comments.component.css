@@ -29,4 +29,9 @@
 
   .dialog-close {
     float: right;
+    margin-right: -10px !important;
+  }
+
+  .dialog-close .mat-icon {
+    color: white;
   }

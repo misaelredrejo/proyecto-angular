@@ -3,3 +3,15 @@
     --tracasa-primary-color-light: #a6add6;
     --tracasa-foreground-color: #FAFAFA;
 }
+
+.mat-dialog-container {
+    padding-top: 0 !important;
+}
+
+.mat-dialog-title {
+    background-color: var(--tracasa-primary-color);
+    margin-left: -24px !important;
+    margin-right: -24px !important;
+    padding: 14px;
+    color: white;
+}

@@ -25,13 +25,12 @@ import {
   MultilevelMenuService
 } from "ng-material-multilevel-menu";
 import { MatSortModule } from '@angular/material/sort';
-import { LimitArrayPipe } from './pipes/limit-array.pipe';
 import { MatNativeDateModule } from '@angular/material/core';
 
 
 
 @NgModule({
-  declarations: [LimitArrayPipe],
+  declarations: [],
   exports: [
     CommonModule,
     MatIconModule,
@@ -54,7 +53,6 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatSelectModule,
     MatProgressSpinnerModule,
     MatSortModule,
-    LimitArrayPipe,
     MatDatepickerModule,
     MatNativeDateModule,
   ],

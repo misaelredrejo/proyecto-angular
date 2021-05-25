@@ -8,18 +8,17 @@
   <span *ngFor="let breadcrumb of breadcrumbs; let i = index">
     <span *ngIf="i > 0">></span>
     <button mat-button color="primary" [routerLink]="['/content', breadcrumb]">
-      {{breadcrumb}}
-      {{ literaleses[breadcrumb] ? literaleses[breadcrumb] : literaleses[breadcrumb.toLowerCase()] }}
+      <span *ngIf="user?.rol == 'Desarrollador'">{{breadcrumb}} </span>
+      <span>{{ literaleses[breadcrumb] ? literaleses[breadcrumb] : literaleses[breadcrumb.toLowerCase()] }}</span>
     </button>
   </span>
-<div>
-  <h5>{{ literal }}</h5>
-  <h5>{{ literaleu }}</h5>
+<div matBadge="{{cntComentariosSubpath}}" matBadgeColor="accent" [matBadgeHidden]="cntComentariosSubpath == 0"><h4>{{ literal }}</h4>
+  <h4>{{ literaleu }}</h4></div>
+  
   <button mat-icon-button color="primary" aria-label="Comments" matBadge="{{cntComentarios}}" matBadgeColor="primary"
     matTooltip="Ver comentarios" [matBadgeHidden]="cntComentarios == 0" (click)="openDialogCommentsByPath(path)">
     <mat-icon> comment</mat-icon>
   </button>
-</div>
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
     <!-- This is the tree node template for leaf nodes -->
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
@@ -92,7 +91,7 @@
           </span>
           <button mat-icon-button color="primary" aria-label="Comments" matBadge="{{node.cntComentariosActivos}}"
               matBadgeColor="primary" matTooltip="Ver comentarios" [matBadgeHidden]="node.cntComentariosActivos == 0"
-              (click)="openDialogComments(node)" class="ml-3">
+              (click)="openDialogComments(node)" class="ml-3" (click)="$event.stopPropagation()">
               <mat-icon> comment</mat-icon>
             </button>
         </div>

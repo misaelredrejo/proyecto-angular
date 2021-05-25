@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogDataEnum } from 'src/app/models/dialog-data-enum.model';
 import { Globals } from 'src/app/shared/globals';
+import { FormControl } from '@angular/forms';
 
 
 
@@ -15,6 +16,8 @@ export class DialogEnumComponent implements OnInit {
   literaleses: {} = {};
   literaleseu: {} = {};
   enumLiteralList: string[] = [];
+  filteredEnumLiteralList: string[] = [];
+  enumFilter = new FormControl('');
 
   constructor(
     private globals: Globals,
@@ -31,6 +34,30 @@ export class DialogEnumComponent implements OnInit {
       let literalEu = this.literaleseu[codigo];
       this.enumLiteralList.push(codigo + ' - ' + literalEs + ' - ' + literalEu);
     }
+    this.assignCopy();
+
+    this.enumFilter.valueChanges
+      .subscribe(
+        enumLiteral => {
+          this.filterEnum(enumLiteral);
+        }
+      );
   }
+
+  assignCopy(): void {
+    this.filteredEnumLiteralList = Object.assign([], this.enumLiteralList);
+  }
+
+  filterEnum(value):void {
+    console.log(value)
+    if(!value){
+        this.assignCopy();
+        return;
+    } // when nothing has typed
+    
+    this.filteredEnumLiteralList = Object.assign([], this.enumLiteralList).filter(
+       enumLiteral => enumLiteral.toLowerCase().indexOf(value.toLowerCase()) > -1
+    )
+ }
 
 }

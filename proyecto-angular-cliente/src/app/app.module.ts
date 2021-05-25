@@ -27,6 +27,8 @@ import { DatabaseComponent } from './error/database/database.component';
 import { MAT_DATE_LOCALE, DateAdapter } from '@angular/material/core';
 import { CustomDateAdapter } from './shared/custom-date-adapter';
 import { Globals } from './shared/globals';
+import { LimitPipe } from './shared/pipes/limit.pipe';
+import { LimitArrayPipe } from './shared/pipes/limit-array.pipe';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,8 @@ import { Globals } from './shared/globals';
     DialogEnumComponent,
     NotFoundComponent,
     ErrorComponent,
-    DatabaseComponent
+    DatabaseComponent,
+    LimitPipe, LimitArrayPipe
   ],
   imports: [
     BrowserModule,
@@ -53,6 +56,7 @@ import { Globals } from './shared/globals';
     FormsModule, ReactiveFormsModule
 
   ],
+  exports: [LimitPipe, LimitArrayPipe],
   providers: [{
     provide: HTTP_INTERCEPTORS,
     useClass: WinAuthInterceptor,
