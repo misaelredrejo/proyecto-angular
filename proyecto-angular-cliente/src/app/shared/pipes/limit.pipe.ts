@@ -16,7 +16,6 @@ export class LimitPipe implements PipeTransform {
   transform(value: string, numberCharacters: number = 50): string {
     let limitedStr = value.substr(0, numberCharacters);
     if (value.length > numberCharacters) limitedStr += '...';
-    console.log(limitedStr)
     return limitedStr;
   }
 

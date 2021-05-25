@@ -13,6 +13,7 @@ import { FormControl } from '@angular/forms';
 })
 export class DialogEnumComponent implements OnInit {
 
+  code: string;
   literaleses: {} = {};
   literaleseu: {} = {};
   enumLiteralList: string[] = [];
@@ -28,8 +29,9 @@ export class DialogEnumComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.code = this.data.codigo;
     for (var i = 0; i < this.data.enumList.length; i++) {
-      let codigo = this.data.codigo + '_' + this.data.enumList[i];
+      let codigo = this.code + '_' + this.data.enumList[i];
       let literalEs = this.literaleses[codigo];
       let literalEu = this.literaleseu[codigo];
       this.enumLiteralList.push(codigo + ' - ' + literalEs + ' - ' + literalEu);
@@ -57,7 +59,7 @@ export class DialogEnumComponent implements OnInit {
     
     this.filteredEnumLiteralList = Object.assign([], this.enumLiteralList).filter(
        enumLiteral => enumLiteral.toLowerCase().indexOf(value.toLowerCase()) > -1
-    )
+    );
  }
 
 }

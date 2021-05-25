@@ -3,18 +3,18 @@
   <mat-header-row *matHeaderRowDef="[]"></mat-header-row>
 </mat-table>
 <!--END LOAD TABLE-->
-<div class="m-5">
 
-  <span *ngFor="let breadcrumb of breadcrumbs; let i = index">
+<span *ngFor="let breadcrumb of breadcrumbs; let i = index">
     <span *ngIf="i > 0">></span>
     <button mat-button color="primary" [routerLink]="['/content', breadcrumb]">
       <span *ngIf="user?.rol == 'Desarrollador'">{{breadcrumb}} </span>
       <span>{{ literaleses[breadcrumb] ? literaleses[breadcrumb] : literaleses[breadcrumb.toLowerCase()] }}</span>
     </button>
   </span>
-<div matBadge="{{cntComentariosSubpath}}" matBadgeColor="accent" [matBadgeHidden]="cntComentariosSubpath == 0"><h4>{{ literal }}</h4>
-  <h4>{{ literaleu }}</h4></div>
-  
+
+<div class="m-5">
+  <h4>{{ literal }}<span matBadge="{{cntComentariosSubpath}}" matBadgeColor="accent" [matBadgeHidden]="cntComentariosSubpath == 0" class="ml-1"></span></h4>
+  <h4>{{ literaleu }}</h4>
   <button mat-icon-button color="primary" aria-label="Comments" matBadge="{{cntComentarios}}" matBadgeColor="primary"
     matTooltip="Ver comentarios" [matBadgeHidden]="cntComentarios == 0" (click)="openDialogCommentsByPath(path)">
     <mat-icon> comment</mat-icon>

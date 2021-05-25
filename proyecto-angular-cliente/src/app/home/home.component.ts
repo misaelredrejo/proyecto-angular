@@ -13,6 +13,7 @@ import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { FilterQuery } from '../models/filter-query.model';
 import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../shared/globals';
+import { DialogCommentsComponent } from '../content/dialog-comments/dialog-comments.component';
 
 @Component({
   selector: 'app-home',
@@ -297,6 +298,31 @@ export class HomeComponent implements OnInit {
       startDate: [date2WeeksAgo, Validators.required],
       endDate: [new Date(), Validators.required]
     });
+  }
+
+  openDialogComments(path: string) {
+    console.log(path)
+    this.spinnerService.show();
+    this.apiService.getCommentsByPathAsync(path).subscribe(data => {
+      switch(data.status) {
+        case Status.Success:
+            this.dialog.open(DialogCommentsComponent, {
+              data: {
+                commentList: data.data,
+                path: path
+              },
+              width: '600px'
+            });
+          break;
+          case Status.Error:
+            console.log(data.message);
+      }
+      this.spinnerService.hide();
+    }, error => {
+      console.log(error);
+      this.spinnerService.hide();
+    });
+
   }
 
 }

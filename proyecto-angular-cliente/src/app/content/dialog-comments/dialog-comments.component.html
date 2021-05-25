@@ -27,7 +27,7 @@
                                         <td class="w-100">
                                             <mat-form-field class="w-100">
                                                 <mat-label>Editar comentario...</mat-label>
-                                                <textarea matInput formControlName="comment"></textarea>
+                                                <textarea matInput formControlName="comment" cdkTextareaAutosize></textarea>
                                             </mat-form-field>
                                         </td>
                                         <td>
@@ -95,7 +95,7 @@
             <form class="example-form" [formGroup]="formAdd" #formDirective="ngForm" (ngSubmit)="addComment(formDirective)">
                 <mat-form-field class="example-full-width">
                     <mat-label>Comentario</mat-label>
-                    <textarea matInput placeholder="Mensaje..." formControlName="comment"></textarea>
+                    <textarea matInput placeholder="Mensaje..." formControlName="comment" cdkTextareaAutosize></textarea>
                 </mat-form-field>
                 <button mat-raised-button color="primary" type="submit" matTooltip="Añadir comentario">Añadir</button>
             </form>
