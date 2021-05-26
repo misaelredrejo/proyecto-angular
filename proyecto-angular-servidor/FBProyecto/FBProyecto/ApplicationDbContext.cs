@@ -18,6 +18,6 @@ namespace FBProyecto
         public DbSet<CommentLog> CommentLog { get; set; }
         public DbSet<Log> Log { get; set; }
         public DbSet<User> User { get; set; }
-
+        public DbSet<UserLog> UserLog { get; set; }
     }
 }
