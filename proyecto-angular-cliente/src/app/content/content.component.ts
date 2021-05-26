@@ -41,6 +41,7 @@ export class ContentComponent implements OnInit {
   literaleseu: {} = {};
   todoEsquema: {} = {};
   esquema: {} = {};
+  isArrayType = false;
   comentarios: Comment[] = [];
   cntComentarios: number = 0;
   cntComentariosSubpath: number = 0;
@@ -115,6 +116,7 @@ export class ContentComponent implements OnInit {
         this.esquema = this.todoEsquema[parentCode];
         this.path = this.esquema['path'];
       }
+      this.isArrayType = this.esquema['type'] == 'array';
       this.getCntCommentsSubPath(this.path).then(data => this.cntComentariosSubpath = data);
       this.literal = (this.literaleses[this.link] ? this.literaleses[this.link] : this.literaleses[this.link.toLowerCase()]);
       this.literaleu = (this.literaleseu[this.link] ? this.literaleseu[this.link] : this.literaleseu[this.link.toLowerCase()]);

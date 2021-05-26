@@ -37,7 +37,9 @@
 
 .highlighted {
   border: 1px solid;
-  background-color: var(--tracasa-primary-color-light)
+  border-radius: 5%;
+  padding: 1px;
+  background-color: var(--tracasa-primary-color-light);
 }
 
 table {

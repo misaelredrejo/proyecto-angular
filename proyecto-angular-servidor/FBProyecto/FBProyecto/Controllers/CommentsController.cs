@@ -106,7 +106,6 @@ namespace FBProyecto.Controllers
 
                 string sqlQuery = $"exec dbo.CommentLogsFilter @Username = {(filterQuery.Username != null ?  "'" + filterQuery.Username + "'" : "null")}, @Action = {(filterQuery.Action != null ? (int)filterQuery.Action : "null")}, @StartDate = '{startDate}', @EndDate = '{endDate}'";
                 var listCommentDTO = await _context.CommentLog.FromSqlRaw(sqlQuery).ToListAsync();
-               
 
                 myResponse.Status = Status.Success;
                 myResponse.Message = "";

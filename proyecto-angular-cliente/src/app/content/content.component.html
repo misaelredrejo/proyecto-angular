@@ -15,10 +15,12 @@
 <div class="m-5">
   <h4>{{ literal }}<span matBadge="{{cntComentariosSubpath}}" matBadgeColor="accent" [matBadgeHidden]="cntComentariosSubpath == 0" class="ml-1"></span></h4>
   <h4>{{ literaleu }}</h4>
+  <span class="highlighted" *ngIf="isArrayType" color="primary">Type: array, minItems: {{esquema['minItems']}}, maxItems: {{esquema['maxItems']}}</span>
   <button mat-icon-button color="primary" aria-label="Comments" matBadge="{{cntComentarios}}" matBadgeColor="primary"
     matTooltip="Ver comentarios" [matBadgeHidden]="cntComentarios == 0" (click)="openDialogCommentsByPath(path)">
     <mat-icon> comment</mat-icon>
-  </button>
+    </button>
+    
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
     <!-- This is the tree node template for leaf nodes -->
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
@@ -67,7 +69,6 @@
           </tbody>
         </table>
         <!-- FIN TABLA -->
-
       </li>
     </mat-tree-node>
     <!-- This is the tree node template for expandable nodes -->
