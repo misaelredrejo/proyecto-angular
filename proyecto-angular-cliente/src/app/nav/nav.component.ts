@@ -8,6 +8,7 @@ import { AuthenticationService } from '../core/authentication/authentication.ser
 import { Rol, Status } from '../models/enums.model';
 import { Globals } from '../shared/globals';
 import * as signalR from '@microsoft/signalr';
+import { MenuItem } from '../models/menu-item.model';
 
 @Component({
   selector: 'app-nav',
@@ -28,9 +29,9 @@ export class NavComponent implements OnDestroy {
   value: string;
   rolTypes: string[] = Object.keys(Rol).map(k => Rol[k as any]);
 
-  appitemsInsert = [];
-  appitems = [
-    { label: 'MENÚ' }
+  appitemsInsert: MenuItem[] = [];
+  appitems: MenuItem[] = [
+    { code: '0', literal: 'MENÚ', label: '0 - MENÚ' }
   ];
 
   config = {
@@ -54,8 +55,8 @@ export class NavComponent implements OnDestroy {
       title => {
         this.title = title;
       });
-    this.menuProfesional = globals.menuProfesional;
-    this.literaleses = globals.literaleses;
+    this.menuProfesional = this.globals.menuProfesional;
+    this.literaleses = this.globals.literaleses;
   }
 
   ngOnDestroy(): void {
@@ -86,9 +87,6 @@ export class NavComponent implements OnDestroy {
     this.authService.currentUser.subscribe(data => {
       this.user = data;
       this.fillMenu();
-      this.getPathHasUnreadLogsForUser(this.user.userId, '01').then(res => {
-        console.log(res);
-      });
     }, error => {
       console.log(error);
     });
@@ -106,27 +104,37 @@ export class NavComponent implements OnDestroy {
         } else {
           labelText = literales;
         }
+        let menuItem: MenuItem = {code: key, literal: literales, label: labelText};
+        this.getPathHasUnreadLogsForUser(this.user.userId, key).then(res => {
+          if (res) menuItem.icon = 'info';
+        });
         if (value && value.length > 0) { // Si tiene subniveles
-          this.appitemsInsert.push({ label: labelText, items: this.itemsSubMenu(value) });
+          menuItem.items = this.itemsSubMenu(value);
+          this.appitemsInsert.push(menuItem);
         } else {
-          this.appitemsInsert.push({ label: labelText, link: "/content/" + key, icon: 'notification_important' });
+          menuItem.link = "/content/" + key;
+          this.appitemsInsert.push(menuItem);
         }
       }
     });
     this.appitems = this.appitemsInsert;
   }
 
-  itemsSubMenu(items: string[]): any[] {
-    let itemsSubMenu = [];
-    items.forEach((element) => {
+  itemsSubMenu(items: string[]): MenuItem[] {
+    let itemsSubMenu: MenuItem[] = [];
+    items.forEach((key) => {
       let labelText = '';
-      let literales = (this.literaleses[element] ? this.literaleses[element] : this.literaleses[element.toLowerCase()]);
+      let literales = (this.literaleses[key] ? this.literaleses[key] : this.literaleses[key.toLowerCase()]);
       if (this.user && this.user.rol == Rol.Desarrollador) {
-        labelText = element + ' - ' + literales;
+        labelText = key + ' - ' + literales;
       } else {
         labelText = literales;
       }
-      itemsSubMenu.push({ label: labelText, link: "/content/" + element });
+      let menuItem: MenuItem = {code: key, literal: literales, label: labelText, link: "/content/" + key};
+      this.getPathHasUnreadLogsForUser(this.user.userId, key).then(res =>{
+        if (res) menuItem.icon = 'info';
+      });
+      itemsSubMenu.push(menuItem);
     });
     return itemsSubMenu;
   }
@@ -152,13 +160,20 @@ export class NavComponent implements OnDestroy {
     });
   }
 
+  updateMenu(): void { //TODO Actualizar iconos al recibir broadcast
+    if (!this.appitems) return;
+    this.appitems.forEach(menuItem => {
+      
+    });
+  }
+
   resetTitle(): void {
     this.titleService.resetTitle();
   }
 
   async getPathHasUnreadLogsForUser(userId: number, path: string): Promise<boolean> {
     let pathHasUnreadLogs = false;
-    await this.apiService.getPathHasUnreadLogsForUserAsync(this.user.userId, '01').toPromise().then(data => {
+    await this.apiService.getPathHasUnreadLogsForUserAsync(this.user.userId, path).toPromise().then(data => {
       switch (data.status) {
         case Status.Success:
           pathHasUnreadLogs = data.data;

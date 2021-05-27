@@ -23,22 +23,51 @@ namespace FBProyecto.Controllers
         }
 
         // GET api/<UserLogsController>/5/ruta
-        [HttpGet("{userId}/{*path}")]
+        [HttpGet("{userId}/{path}")]
         public async Task<ApiResponse> GetUserLog(int userId, string path)
         {
             ApiResponse myResponse = new ApiResponse();
             try
             {
-                path = path.Replace("%2F", "/");
                 bool commentsNotReadInPath = await _context.UserLog.AnyAsync(
-                    userLog => 
+                    userLog =>
                     userLog.Read == false &&
-                    userLog.User.UserId == userId &&
-                    userLog.Log.Comment.Path.ToLower().Contains(path.ToLower())
-                    );
+                    userLog.User.UserId == userId
+                    && (userLog.Log.Comment.Path.Contains("/" + path + "/")
+                        || userLog.Log.Comment.Path.StartsWith(path + "/")
+                        || userLog.Log.Comment.Path.EndsWith("/" + path))
+                    ); ;
                 myResponse.Status = Status.Success;
                 myResponse.Message = "";
                 myResponse.Data = commentsNotReadInPath;
+                return myResponse;
+            }
+            catch (Exception ex)
+            {
+                myResponse.Status = Status.Error;
+                myResponse.Message = ex.Message;
+                myResponse.Data = null;
+                return myResponse;
+            }
+        }
+
+        // DELETE api/<UserLogsController>
+        [HttpDelete("{userId}/{*path}")]
+        public async Task<ApiResponse> DeleteUserLog(int userId, string path)
+        {
+            ApiResponse myResponse = new ApiResponse();
+            try
+            {
+                path = path.Replace("%2F", "/");
+                var userLogs = await _context.UserLog.Where(userLog => userLog.User.UserId == userId && userLog.Log.Comment.Path == path).ToListAsync();
+                if (userLogs != null && userLogs.Count > 0)
+                {
+                    _context.RemoveRange(userLogs);
+                    await _context.SaveChangesAsync();
+                }
+                myResponse.Status = Status.Success;
+                myResponse.Message = "";
+                myResponse.Data = null;
                 return myResponse;
             }
             catch (Exception ex)

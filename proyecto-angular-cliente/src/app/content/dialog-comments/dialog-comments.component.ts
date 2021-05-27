@@ -44,6 +44,7 @@ export class DialogCommentsComponent implements OnInit {
   ngOnInit(): void {
     this.authService.currentUser.subscribe(data => {
       this.user = data;
+      this.deleteUserLog();
     });
   }
 
@@ -71,7 +72,7 @@ export class DialogCommentsComponent implements OnInit {
         text: text,
         isActive: true
       };
-      this.spinnerService.show();      
+      this.spinnerService.show();
       this.apiService.addCommentAsync(comment).subscribe(data => {
         switch (data.status) {
           case Status.Success:
@@ -231,6 +232,18 @@ export class DialogCommentsComponent implements OnInit {
     }, error => {
       console.log(error);
       this.spinnerService.hide();
+    });
+  }
+
+  deleteUserLog(): void {
+    this.apiService.deleteUserLogAsync(this.user.userId, this.data.path).subscribe(data => {
+      switch (data.status) {
+        case Status.Error:
+          console.log(data.message);
+          break;
+      }
+    }, error => {
+      console.log(error);
     });
   }
 

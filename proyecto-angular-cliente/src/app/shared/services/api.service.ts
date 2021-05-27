@@ -115,14 +115,18 @@ export class ApiService {
   //#endregion
 
   //#region Logs
-  public addLogAsync(log: Log) {
+  public addLogAsync(log: Log): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(this.myAppUrl + this.myApiLogsUrl, log);
   }
   //#endregion
 
   //#region UserLog -> Logs no leidos por cada usuario
-  public getPathHasUnreadLogsForUserAsync(userId: number, path: string) {
+  public getPathHasUnreadLogsForUserAsync(userId: number, path: string): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(this.myAppUrl + this.myApiUserLogsUrl + userId + '/' + path);
+  }
+
+  public deleteUserLogAsync(userId: number, path: string): Observable<ApiResponse> {
+    return this.http.delete<ApiResponse>(this.myAppUrl + this.myApiUserLogsUrl + userId + "/" + path);
   }
   //#endregion
 
