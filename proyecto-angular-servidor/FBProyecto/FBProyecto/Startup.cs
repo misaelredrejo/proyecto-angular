@@ -1,3 +1,4 @@
+using FBProyecto.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -58,6 +59,7 @@ namespace FBProyecto
                     .Build();
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -81,6 +83,7 @@ namespace FBProyecto
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<BroadcastHub>("/notify");
             });
         }
     }

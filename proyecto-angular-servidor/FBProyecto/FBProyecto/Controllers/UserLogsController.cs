@@ -22,17 +22,23 @@ namespace FBProyecto.Controllers
             _context = context;
         }
 
-        // GET api/<UserLogsController>/5/8
+        // GET api/<UserLogsController>/5/ruta
         [HttpGet("{userId}/{*path}")]
         public async Task<ApiResponse> GetUserLog(int userId, string path)
         {
             ApiResponse myResponse = new ApiResponse();
             try
             {
-                //bool commentsNotReadInPath = await _context.UserLog.AnyAsync(userLog => userLog.Read == false && userLog.User.UserId == userId && userLog.Log.Comment.Path == path);
+                path = path.Replace("%2F", "/");
+                bool commentsNotReadInPath = await _context.UserLog.AnyAsync(
+                    userLog => 
+                    userLog.Read == false &&
+                    userLog.User.UserId == userId &&
+                    userLog.Log.Comment.Path.ToLower().Contains(path.ToLower())
+                    );
                 myResponse.Status = Status.Success;
                 myResponse.Message = "";
-                myResponse.Data = null;
+                myResponse.Data = commentsNotReadInPath;
                 return myResponse;
             }
             catch (Exception ex)

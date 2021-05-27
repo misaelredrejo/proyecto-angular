@@ -156,7 +156,6 @@ namespace FBProyecto.Controllers
             {
                 _context.Comment.Add(comment);
                 await _context.SaveChangesAsync();
-
                 myResponse.Status = Status.Success;
                 myResponse.Message = "Comentario añadido correctamente.";
                 myResponse.Data = comment;

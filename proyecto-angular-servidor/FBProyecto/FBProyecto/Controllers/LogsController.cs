@@ -1,5 +1,6 @@
 ﻿using FBProyecto.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,12 @@ namespace FBProyecto.Controllers
     {
 
         private readonly ApplicationDbContext _context;
+        private readonly IHubContext<BroadcastHub, IHubClient> _hubContext;
 
-        public LogsController(ApplicationDbContext context)
+        public LogsController(ApplicationDbContext context, IHubContext<BroadcastHub, IHubClient> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
        
@@ -49,7 +52,24 @@ namespace FBProyecto.Controllers
                 }
                 _context.Entry(user).State = EntityState.Detached;
                 _context.Log.Update(log);
+
+                //Añadir Notificaciones
+                var users = await _context.User.ToListAsync();
+                foreach (User u in users)
+                {
+                    UserLog userLog = new UserLog()
+                    {
+                        UserLogId = 0,
+                        User = u,
+                        Log = log,
+                        Read = false
+                    };
+                    _context.UserLog.Add(userLog);
+                }
+
+
                 await _context.SaveChangesAsync();
+                await _hubContext.Clients.All.BroadcastMessage();
                 myResponse.Status = Status.Success;
                 myResponse.Message = "";
                 myResponse.Data = log;

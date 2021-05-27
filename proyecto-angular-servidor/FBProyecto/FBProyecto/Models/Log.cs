@@ -20,6 +20,7 @@ namespace FBProyecto.Models
         public int LogId { get; set; }
         [Required]
         public int CommentId { get; set; }
+        public Comment? Comment { get; set; }
         [Required]
         public User User { get; set; }
         [Required]

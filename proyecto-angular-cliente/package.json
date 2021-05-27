@@ -20,6 +20,7 @@
     "@angular/platform-browser": "~11.2.7",
     "@angular/platform-browser-dynamic": "~11.2.7",
     "@angular/router": "~11.2.7",
+    "@microsoft/signalr": "^5.0.6",
     "@ng-bootstrap/ng-bootstrap": "^9.1.0",
     "@sweetalert2/theme-material-ui": "^4.0.3",
     "bootstrap": "^4.5.0",

@@ -20,6 +20,7 @@ export class ApiService {
   private myApiCommentsUrl: string = 'api/comments/';
   private myApiUserUrl: string = 'api/user/';
   private myApiLogsUrl: string = 'api/logs/';
+  private myApiUserLogsUrl: string = 'api/userlogs/';
 
   constructor(private http: HttpClient) { 
   }
@@ -119,5 +120,10 @@ export class ApiService {
   }
   //#endregion
 
+  //#region UserLog -> Logs no leidos por cada usuario
+  public getPathHasUnreadLogsForUserAsync(userId: number, path: string) {
+    return this.http.get<ApiResponse>(this.myAppUrl + this.myApiUserLogsUrl + userId + '/' + path);
+  }
+  //#endregion
 
 }

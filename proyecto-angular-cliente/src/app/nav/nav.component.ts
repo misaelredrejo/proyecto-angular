@@ -7,6 +7,7 @@ import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
 import { Rol, Status } from '../models/enums.model';
 import { Globals } from '../shared/globals';
+import * as signalR from '@microsoft/signalr';
 
 @Component({
   selector: 'app-nav',
@@ -15,8 +16,11 @@ import { Globals } from '../shared/globals';
   providers: [TitleService]
 })
 export class NavComponent implements OnDestroy {
+
+  notifyUrl = "https://localhost:44361/notify";
+
   user: User;
-  
+
   menuProfesional: {}[] = [];
   literaleses: {} = {};
 
@@ -26,7 +30,7 @@ export class NavComponent implements OnDestroy {
 
   appitemsInsert = [];
   appitems = [
-    {label: 'MENÚ'}
+    { label: 'MENÚ' }
   ];
 
   config = {
@@ -37,7 +41,7 @@ export class NavComponent implements OnDestroy {
 
 
   mobileQuery: MediaQueryList;
-  
+
   subscription: Subscription;
 
   private _mobileQueryListener: () => void;
@@ -49,7 +53,7 @@ export class NavComponent implements OnDestroy {
     this.subscription = titleService.title$.subscribe(
       title => {
         this.title = title;
-    });
+      });
     this.menuProfesional = globals.menuProfesional;
     this.literaleses = globals.literaleses;
   }
@@ -60,12 +64,31 @@ export class NavComponent implements OnDestroy {
 
   ngOnInit() {
     this.checkUser();
+
+    const connection = new signalR.HubConnectionBuilder()
+      .configureLogging(signalR.LogLevel.Information)
+      .withUrl(this.notifyUrl)
+      .build();
+
+    connection.start().then(function () {
+      console.log('SignalR Connected!');
+    }).catch(function (err) {
+      return console.error(err.toString());
+    });
+
+    connection.on("BroadcastMessage", () => {
+      console.log('BroadcastMessage!');
+    });
+
   }
 
   checkUser(): void {
     this.authService.currentUser.subscribe(data => {
       this.user = data;
       this.fillMenu();
+      this.getPathHasUnreadLogsForUser(this.user.userId, '01').then(res => {
+        console.log(res);
+      });
     }, error => {
       console.log(error);
     });
@@ -81,13 +104,12 @@ export class NavComponent implements OnDestroy {
         if (this.user && this.user.rol == Rol.Desarrollador) {
           labelText = key + ' - ' + literales;
         } else {
-          labelText =  literales;
+          labelText = literales;
         }
-
         if (value && value.length > 0) { // Si tiene subniveles
-          this.appitemsInsert.push({ label: labelText, items: this.itemsSubMenu(value)});
+          this.appitemsInsert.push({ label: labelText, items: this.itemsSubMenu(value) });
         } else {
-          this.appitemsInsert.push({ label: labelText, link: "/content/" + key});
+          this.appitemsInsert.push({ label: labelText, link: "/content/" + key, icon: 'notification_important' });
         }
       }
     });
@@ -104,7 +126,7 @@ export class NavComponent implements OnDestroy {
       } else {
         labelText = literales;
       }
-      itemsSubMenu.push({ label: labelText, link: "/content/" + element});
+      itemsSubMenu.push({ label: labelText, link: "/content/" + element });
     });
     return itemsSubMenu;
   }
@@ -132,6 +154,24 @@ export class NavComponent implements OnDestroy {
 
   resetTitle(): void {
     this.titleService.resetTitle();
+  }
+
+  async getPathHasUnreadLogsForUser(userId: number, path: string): Promise<boolean> {
+    let pathHasUnreadLogs = false;
+    await this.apiService.getPathHasUnreadLogsForUserAsync(this.user.userId, '01').toPromise().then(data => {
+      switch (data.status) {
+        case Status.Success:
+          pathHasUnreadLogs = data.data;
+          break;
+      
+        case Status.Error:
+          console.log(data.message);
+          break;
+      }
+    }, error => {
+      console.log(error);
+    });
+    return pathHasUnreadLogs;
   }
 
 }
