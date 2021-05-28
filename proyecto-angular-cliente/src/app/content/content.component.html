@@ -80,6 +80,7 @@
               {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
             </mat-icon>
           </button>
+          <mat-icon *ngIf="node.hasUnreadLogs" color="primary">notification_important</mat-icon>
           <span matBadge="{{node.cntComentariosSubpath}}" matBadgeOverlap="false" matBadgeColor="accent"
             [matBadgeHidden]="node.cntComentariosSubpath == 0">
             <span *ngIf="user?.rol == 'Desarrollador'">{{node.name}} - </span>

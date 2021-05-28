@@ -173,6 +173,7 @@ export class ContentComponent implements OnInit {
         node.comentarios = data;
         node.cntComentariosActivos = this.countActiveComments(node.comentarios);
       });
+      this.getPathHasUnreadLogs(code).then(data => node.hasUnreadLogs = data);
 
       if (this.todoEsquema[code]['properties']) {
         node.children = this.getChildren(this.todoEsquema[code]['properties']);
@@ -220,6 +221,23 @@ export class ContentComponent implements OnInit {
       console.log(err);
     });
     return cnt;
+  }
+
+  async getPathHasUnreadLogs(path: string): Promise<boolean> {
+    let pathHasUnreadLogs = false;
+    await this.apiService.getPathHasUnreadLogsForUserAsync(this.user.userId, path).toPromise().then(result => {
+      switch (result.status) {
+        case Status.Success:
+          pathHasUnreadLogs = result.data;
+          break;
+        case Status.Error:
+          console.log(result.message);
+          break;
+      }
+    }).catch(err => {
+      console.log(err);
+    });
+    return pathHasUnreadLogs;
   }
 
   openDialogCommentsByPath(path: string) {

@@ -4,8 +4,6 @@ import { DialogDataEnum } from 'src/app/models/dialog-data-enum.model';
 import { Globals } from 'src/app/shared/globals';
 import { FormControl } from '@angular/forms';
 
-
-
 @Component({
   selector: 'app-dialog-enum',
   templateUrl: './dialog-enum.component.html',

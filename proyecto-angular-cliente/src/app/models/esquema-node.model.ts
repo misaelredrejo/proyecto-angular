@@ -9,4 +9,5 @@ export interface EsquemaNode {
     cntComentariosSubpath?: number;
     cntComentariosActivos?: number;
     tableItems?: any[];
+    hasUnreadLogs?: boolean;
   }
