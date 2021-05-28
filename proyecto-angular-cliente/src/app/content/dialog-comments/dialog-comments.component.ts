@@ -214,6 +214,7 @@ export class DialogCommentsComponent implements OnInit {
           break;
       }
     }, err => {
+      console.log(err);
       this.spinnerService.hide();
     });
   }

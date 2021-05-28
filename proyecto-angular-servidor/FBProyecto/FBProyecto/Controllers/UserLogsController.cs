@@ -1,5 +1,6 @@
 ﻿using FBProyecto.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,12 @@ namespace FBProyecto.Controllers
     {
 
         private readonly ApplicationDbContext _context;
+        private readonly IHubContext<BroadcastHub, IHubClient> _hubContext;
 
-        public UserLogsController(ApplicationDbContext context)
+        public UserLogsController(ApplicationDbContext context, IHubContext<BroadcastHub, IHubClient> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         // GET api/<UserLogsController>/5/ruta
@@ -65,6 +68,7 @@ namespace FBProyecto.Controllers
                     _context.RemoveRange(userLogs);
                     await _context.SaveChangesAsync();
                 }
+                await _hubContext.Clients.All.BroadcastMessage();
                 myResponse.Status = Status.Success;
                 myResponse.Message = "";
                 myResponse.Data = null;

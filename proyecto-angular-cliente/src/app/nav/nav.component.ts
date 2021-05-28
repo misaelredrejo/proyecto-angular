@@ -79,8 +79,8 @@ export class NavComponent implements OnDestroy {
 
     connection.on("BroadcastMessage", () => {
       console.log('BroadcastMessage!');
+      this.updateMenu(this.appitems);
     });
-
   }
 
   checkUser(): void {
@@ -160,10 +160,24 @@ export class NavComponent implements OnDestroy {
     });
   }
 
-  updateMenu(): void { //TODO Actualizar iconos al recibir broadcast
-    if (!this.appitems) return;
-    this.appitems.forEach(menuItem => {
-      
+  updateMenu(menuItems: MenuItem[]): void {
+    if (!menuItems || menuItems.length == 0) return;
+    menuItems.forEach(menuItem => {
+      if (menuItem.items && menuItem.items.length > 0) this.updateMenu(menuItem.items);
+      this.getPathHasUnreadLogsForUser(this.user.userId, menuItem.code).then(res =>{
+        if (res) menuItem.icon = 'info';
+        else menuItem.icon = '';
+      });
+    });
+  }
+
+  updateMenuItemsTitle(menuItems: MenuItem[]): void {
+    if (!menuItems || menuItems.length == 0) return;
+    menuItems.forEach(menuItem => {
+      if (menuItem.items && menuItem.items.length > 0) this.updateMenuItemsTitle(menuItem.items);
+      if (this.user && this.user.rol == Rol.Desarrollador) {
+        menuItem.label = menuItem.code + ' - ' + menuItem.literal;
+      } else menuItem.label = menuItem.literal;
     });
   }
 
