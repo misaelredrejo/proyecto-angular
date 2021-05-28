@@ -48,37 +48,14 @@ namespace FBProyecto.Controllers
 
         }
 
-        [HttpGet("commentlogs/last2weeks")]
-        public async Task<ApiResponse> GetCommentLogs()
-        {
-            ApiResponse myResponse = new ApiResponse();
-            try
-            {
-                string sqlQuery = $"exec dbo.CommentLogsFilter @Username = null, @Action = null, @StartDate = '{DateTime.Today.AddDays(-13).ToString("yyyy-MM-dd")}', @EndDate = '{DateTime.Today.ToString("yyyy-MM-dd")}'";
-                var listCommentDTO = await _context.CommentLog.FromSqlRaw(sqlQuery).ToListAsync();
-                myResponse.Status = Status.Success;
-                myResponse.Message = "";
-                myResponse.Data = listCommentDTO;
-                return myResponse;
-            }
-            catch (Exception ex)
-            {
-                myResponse.Status = Status.Error;
-                myResponse.Message = ex.Message;
-                myResponse.Data = null;
-                return myResponse;
-            }
-
-        }
-
         // GET api/<CommentsController>/path
-        [HttpGet("commentlogs/last10")]
-        public async Task<ApiResponse> GetLast10CommentLogs()
+        [HttpGet("commentlogs/last{n}")]
+        public async Task<ApiResponse> GetLast10CommentLogs(int n)
         {
             ApiResponse myResponse = new ApiResponse();
             try
             {
-                var listCommentDTO = await _context.CommentLog.FromSqlRaw("exec dbo.Last10Logs 10").ToListAsync();
+                var listCommentDTO = await _context.CommentLog.FromSqlRaw($"exec dbo.Last10Logs {n}").ToListAsync();
                 myResponse.Status = Status.Success;
                 myResponse.Message = "";
                 myResponse.Data = listCommentDTO;

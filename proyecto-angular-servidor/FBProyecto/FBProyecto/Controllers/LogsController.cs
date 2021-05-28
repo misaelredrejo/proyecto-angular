@@ -57,6 +57,7 @@ namespace FBProyecto.Controllers
                 var users = await _context.User.ToListAsync();
                 foreach (User u in users)
                 {
+                    //if (user.UserId == u.UserId) continue;
                     UserLog userLog = new UserLog()
                     {
                         UserLogId = 0,

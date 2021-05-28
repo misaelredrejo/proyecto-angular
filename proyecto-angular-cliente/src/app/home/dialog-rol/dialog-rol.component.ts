@@ -3,8 +3,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogDataRol } from 'src/app/models/dialog-data-rol.model';
 import { Rol } from 'src/app/models/enums.model';
 
-
-
 @Component({
   selector: 'app-dialog-rol',
   templateUrl: './dialog-rol.component.html',

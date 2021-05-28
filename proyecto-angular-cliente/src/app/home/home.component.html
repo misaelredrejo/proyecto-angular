@@ -64,7 +64,7 @@
     <mat-tab label="Toda actividad">
         <div class="container mt-3 mb-3">
             <!--  FORM BACKEND -->
-            <form [formGroup]="formBackendFilter" (ngSubmit)="filterTable()" class="w-100">
+            <form [formGroup]="formBackendFilter" (ngSubmit)="filterTableBackend()" class="w-100">
                 <mat-form-field class="ml-2">
                     <mat-label>Usuario</mat-label>
                     <mat-select formControlName="username">

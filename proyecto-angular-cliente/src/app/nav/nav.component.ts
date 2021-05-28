@@ -29,7 +29,6 @@ export class NavComponent implements OnDestroy {
   value: string;
   rolTypes: string[] = Object.keys(Rol).map(k => Rol[k as any]);
 
-  appitemsInsert: MenuItem[] = [];
   appitems: MenuItem[] = [
     { code: '0', literal: 'MENÚ', label: '0 - MENÚ' }
   ];
@@ -64,6 +63,7 @@ export class NavComponent implements OnDestroy {
   }
 
   ngOnInit() {
+    this.fillMenu();
     this.checkUser();
 
     const connection = new signalR.HubConnectionBuilder()
@@ -72,68 +72,49 @@ export class NavComponent implements OnDestroy {
       .build();
 
     connection.start().then(function () {
-      console.log('SignalR Connected!');
+      // SignalR connected
     }).catch(function (err) {
       return console.error(err.toString());
     });
 
     connection.on("BroadcastMessage", () => {
-      console.log('BroadcastMessage!');
       this.updateMenu(this.appitems);
     });
   }
 
   checkUser(): void {
-    this.authService.currentUser.subscribe(data => {
-      this.user = data;
-      this.fillMenu();
+    this.authService.currentUser.subscribe(user => {
+      this.user = user;
+      this.updateMenu(this.appitems);
     }, error => {
       console.log(error);
     });
   }
 
   fillMenu(): void {
-    this.appitemsInsert = [];
+    let appitemsInsert: MenuItem[] = [];
     this.menuProfesional.forEach((item) => {
       for (let key in item) {
         let value = item[key];
-        let labelText = '';
         let literales = (this.literaleses[key] ? this.literaleses[key] : this.literaleses[key.toLowerCase()]);
-        if (this.user && this.user.rol == Rol.Desarrollador) {
-          labelText = key + ' - ' + literales;
-        } else {
-          labelText = literales;
-        }
-        let menuItem: MenuItem = {code: key, literal: literales, label: labelText};
-        this.getPathHasUnreadLogsForUser(this.user.userId, key).then(res => {
-          if (res) menuItem.icon = 'info';
-        });
+        let menuItem: MenuItem = {code: key, literal: literales, label: key + ' - ' + literales};
         if (value && value.length > 0) { // Si tiene subniveles
           menuItem.items = this.itemsSubMenu(value);
-          this.appitemsInsert.push(menuItem);
+          appitemsInsert.push(menuItem);
         } else {
           menuItem.link = "/content/" + key;
-          this.appitemsInsert.push(menuItem);
+          appitemsInsert.push(menuItem);
         }
       }
     });
-    this.appitems = this.appitemsInsert;
+    this.appitems = appitemsInsert;
   }
 
   itemsSubMenu(items: string[]): MenuItem[] {
     let itemsSubMenu: MenuItem[] = [];
     items.forEach((key) => {
-      let labelText = '';
       let literales = (this.literaleses[key] ? this.literaleses[key] : this.literaleses[key.toLowerCase()]);
-      if (this.user && this.user.rol == Rol.Desarrollador) {
-        labelText = key + ' - ' + literales;
-      } else {
-        labelText = literales;
-      }
-      let menuItem: MenuItem = {code: key, literal: literales, label: labelText, link: "/content/" + key};
-      this.getPathHasUnreadLogsForUser(this.user.userId, key).then(res =>{
-        if (res) menuItem.icon = 'info';
-      });
+      let menuItem: MenuItem = {code: key, literal: literales, label: key + ' - ' + literales, link: "/content/" + key};
       itemsSubMenu.push(menuItem);
     });
     return itemsSubMenu;
@@ -165,16 +146,9 @@ export class NavComponent implements OnDestroy {
     menuItems.forEach(menuItem => {
       if (menuItem.items && menuItem.items.length > 0) this.updateMenu(menuItem.items);
       this.getPathHasUnreadLogsForUser(this.user.userId, menuItem.code).then(res =>{
-        if (res) menuItem.icon = 'info';
+        if (res) menuItem.icon = 'notification_important';
         else menuItem.icon = '';
       });
-    });
-  }
-
-  updateMenuItemsTitle(menuItems: MenuItem[]): void {
-    if (!menuItems || menuItems.length == 0) return;
-    menuItems.forEach(menuItem => {
-      if (menuItem.items && menuItem.items.length > 0) this.updateMenuItemsTitle(menuItem.items);
       if (this.user && this.user.rol == Rol.Desarrollador) {
         menuItem.label = menuItem.code + ' - ' + menuItem.literal;
       } else menuItem.label = menuItem.literal;
@@ -187,12 +161,11 @@ export class NavComponent implements OnDestroy {
 
   async getPathHasUnreadLogsForUser(userId: number, path: string): Promise<boolean> {
     let pathHasUnreadLogs = false;
-    await this.apiService.getPathHasUnreadLogsForUserAsync(this.user.userId, path).toPromise().then(data => {
+    await this.apiService.getPathHasUnreadLogsForUserAsync(userId, path).toPromise().then(data => {
       switch (data.status) {
         case Status.Success:
           pathHasUnreadLogs = data.data;
           break;
-      
         case Status.Error:
           console.log(data.message);
           break;
@@ -204,4 +177,3 @@ export class NavComponent implements OnDestroy {
   }
 
 }
-

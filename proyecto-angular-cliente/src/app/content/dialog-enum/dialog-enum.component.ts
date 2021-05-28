@@ -51,7 +51,6 @@ export class DialogEnumComponent implements OnInit {
   }
 
   filterEnum(value):void {
-    console.log(value)
     if(!value){
         this.assignCopy();
         return;

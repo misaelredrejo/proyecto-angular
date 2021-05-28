@@ -42,10 +42,8 @@ export class DialogCommentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.currentUser.subscribe(data => {
-      this.user = data;
-      this.deleteUserLog();
-    });
+    this.user = this.authService.currentUserValue;
+    this.deleteUserLog();
   }
 
   // Workaround for angular component issue #13870
@@ -58,7 +56,7 @@ export class DialogCommentsComponent implements OnInit {
 
   allowEditComment(index: number) {
     this.formEdit.patchValue({
-      comment: this.data.commentList[index]['text']
+      comment: this.data.commentList[index].text
     });
     this.indexComment = index;
   }

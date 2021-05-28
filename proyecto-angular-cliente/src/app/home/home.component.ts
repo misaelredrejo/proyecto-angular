@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogRolComponent } from './dialog-rol/dialog-rol.component';
 import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
-import { Status, Action } from '../models/enums.model';
+import { Status, Action, Rol } from '../models/enums.model';
 import { SpinnerService } from '../shared/services/spinner.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -25,8 +25,6 @@ export class HomeComponent implements OnInit {
   literaleseu: {} = {};
   user: User;
   commentLogList: CommentLog[] = [];
-  username: string;
-  rolValue: number;
 
   displayedColumns = ['username', 'action', 'date', 'path', 'commentText'];
   displayedColumnsForm = ['usernameForm', 'actionForm', 'rangeDateForm', 'commentTextForm'];//, 'literalForm'
@@ -51,6 +49,7 @@ export class HomeComponent implements OnInit {
     literal: '',
     commentText: ''
   };
+  date2WeeksAgo: Date;
   maxDate: Date;
   ActionType = Action;
 
@@ -66,13 +65,13 @@ export class HomeComponent implements OnInit {
     private toastrService: ToastrService,
 
   ) {
-    let date2WeeksAgo = new Date();
-    date2WeeksAgo.setDate(date2WeeksAgo.getDate() - 14);
+    this.date2WeeksAgo = new Date();
+    this.date2WeeksAgo.setDate(this.date2WeeksAgo.getDate() - 14);
     this.maxDate = new Date();
     this.formBackendFilter = this.fb.group({
       username: [''],
       action: [''],
-      startDate: [date2WeeksAgo, Validators.required],
+      startDate: [this.date2WeeksAgo, Validators.required],
       endDate: [new Date(), Validators.required]
     });
 
@@ -97,8 +96,9 @@ export class HomeComponent implements OnInit {
 
     this.spinnerService.show();
 
-    let p0 = this.apiService.getLast10CommentLogsAsync().toPromise();
-    let p1 = this.apiService.getLast2WeeksCommentLogsAsync().toPromise();
+    let p0 = this.apiService.getLastNCommentLogsAsync(10).toPromise();
+    let filterQuery: FilterQuery = {startDate: this.date2WeeksAgo.toDateString(), endDate: new Date().toDateString()};
+    let p1 = this.apiService.getCommentLogsByFilter(filterQuery).toPromise();
     let p2 = this.apiService.getUserAsync().toPromise();
 
     Promise.all([p0, p1, p2]).then(res => {
@@ -131,7 +131,6 @@ export class HomeComponent implements OnInit {
     });
 
     this.frontFiltersValueChanges();
-
   }
 
   frontFiltersValueChanges(): void {
@@ -167,14 +166,14 @@ export class HomeComponent implements OnInit {
           this.dataSource.filter = JSON.stringify(this.filterValues);
         }
       );
-      this.literalFilter.valueChanges
+    this.literalFilter.valueChanges
       .subscribe(
         literal => {
           this.filterValues.literal = literal;
           this.dataSource.filter = JSON.stringify(this.filterValues);
         }
       )
-      this.commentTextFilter.valueChanges
+    this.commentTextFilter.valueChanges
       .subscribe(
         commentText => {
           this.filterValues.commentText = commentText;
@@ -192,18 +191,12 @@ export class HomeComponent implements OnInit {
         if (Action[data.action] == action) containsAction = true;
       });
       if (searchTerms.action == null || searchTerms.action.length == 0) containsAction = true;
-      let path: string = data.path;
-      let pathArray = path.split('/');
-      let code = pathArray[pathArray.length-1];
-      //let literal = this.literaleses[code] ? this.literaleses[code] : this.literaleses[code.toLowerCase()];
-    
       return data.username.toLowerCase().indexOf(searchTerms.username.toLowerCase()) !== -1 &&
         containsAction &&
         data.date >= searchTerms.startDate &&
         data.date <= searchTerms.endDate &&
         data.commentText.toLowerCase().indexOf(searchTerms.commentText.toLowerCase()) !== -1
-        ;// && literal.toLowerCase().indexOf(searchTerms.literal.toLowerCase()) !== -1
-        
+        ;
     }
     return filterFunction;
   }
@@ -211,7 +204,7 @@ export class HomeComponent implements OnInit {
   openDialogChooseUserRol() {
     const dialogRef = this.dialog.open(DialogRolComponent, {
       width: '300px',
-      data: { rolValue: this.rolValue },
+      data: { rolValue: Rol.Desarrollador },
       disableClose: true
     });
 
@@ -226,67 +219,72 @@ export class HomeComponent implements OnInit {
             this.user = data.data;
             this.authenticationService.login(this.user);
             break;
-
           case Status.Error:
             console.log(data.message);
             break;
         }
       },
-      error => {
-        console.log(error);
-      });
+        error => {
+          console.log(error);
+        });
     });
   }
 
-  filterTable() {
+  filterTableBackend() {
     if (this.formBackendFilter.valid) {
       let username: string = this.formBackendFilter.get('username').value;
-      let actionStr: string = this.formBackendFilter.get('action').value
+      let actionStr: string = this.formBackendFilter.get('action').value;
       let startDate: Date = this.formBackendFilter.get('startDate').value;
       let endDate: Date = this.formBackendFilter.get('endDate').value;
-      let action: Action;
+      let action: Action = this.actionStrToAction(actionStr);
       let filterQuery: FilterQuery = {
         startDate: startDate.toDateString(),
         endDate: endDate.toDateString()
       }
-      if (actionStr) {
-        switch (actionStr) {
-          case 'Añadir':
-            action = Action.Aniadir;
-            break;
-          case 'Modificar':
-            action = Action.Modificar;
-            break;
-          case 'Eliminar':
-            action = Action.Eliminar;
-            break;
-          case 'Activar':
-            action = Action.Activar;
-            break;
-        }
-        filterQuery.action = action;
-      }
+      if (action != -1) filterQuery.action = action;
       if (username) filterQuery.username = username;
-
-      this.apiService.getCommentLogsByFilter(filterQuery).subscribe(data => {
-        switch (data.status) {
-          case Status.Success:
-            this.dataSource = new MatTableDataSource(data.data);
-            this.dataSource.sort = this.sort;
-            this.dataSource.filterPredicate = this.createFilter();
-            this.startDateFilter.reset();
-            this.endDateFilter.reset();
-            this.toastrService.success('Datos actualizados correctamente.', 'Actualizar tabla');
-            break;
-          case Status.Error:
-            this.toastrService.error(data.message, 'ERROR');
-            break;
-        }
-      });
+      this.getBackendCommentLogsByFilter(filterQuery);
     } else {
       this.toastrService.error('Formulario inválido, por favor revise los datos.', 'ERROR');
     }
+  }
 
+  actionStrToAction(actionStr: string): Action {
+    if (!actionStr) return -1;
+    let action: Action = -1;
+    switch (actionStr) {
+      case 'Añadir':
+        action = Action.Aniadir;
+        break;
+      case 'Modificar':
+        action = Action.Modificar;
+        break;
+      case 'Eliminar':
+        action = Action.Eliminar;
+        break;
+      case 'Activar':
+        action = Action.Activar;
+        break;
+    }
+    return action;
+  }
+
+  getBackendCommentLogsByFilter(filterQuery: FilterQuery): void {
+    this.apiService.getCommentLogsByFilter(filterQuery).subscribe(data => {
+      switch (data.status) {
+        case Status.Success:
+          this.dataSource = new MatTableDataSource(data.data);
+          this.dataSource.sort = this.sort;
+          this.dataSource.filterPredicate = this.createFilter();
+          this.startDateFilter.reset();
+          this.endDateFilter.reset();
+          this.toastrService.success('Datos actualizados correctamente.', 'Actualizar tabla');
+          break;
+        case Status.Error:
+          this.toastrService.error(data.message, 'ERROR');
+          break;
+      }
+    });
   }
 
   resetForm(): void {
@@ -301,21 +299,20 @@ export class HomeComponent implements OnInit {
   }
 
   openDialogComments(path: string) {
-    console.log(path)
     this.spinnerService.show();
     this.apiService.getCommentsByPathAsync(path).subscribe(data => {
-      switch(data.status) {
+      switch (data.status) {
         case Status.Success:
-            this.dialog.open(DialogCommentsComponent, {
-              data: {
-                commentList: data.data,
-                path: path
-              },
-              width: '600px'
-            });
+          this.dialog.open(DialogCommentsComponent, {
+            data: {
+              commentList: data.data,
+              path: path
+            },
+            width: '600px'
+          });
           break;
-          case Status.Error:
-            console.log(data.message);
+        case Status.Error:
+          console.log(data.message);
       }
       this.spinnerService.hide();
     }, error => {
