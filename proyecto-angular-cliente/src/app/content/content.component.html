@@ -5,22 +5,24 @@
 <!--END LOAD TABLE-->
 
 <span *ngFor="let breadcrumb of breadcrumbs; let i = index">
-    <span *ngIf="i > 0">></span>
-    <button mat-button color="primary" [routerLink]="['/content', breadcrumb]">
-      <span *ngIf="user?.rol == 'Desarrollador'">{{breadcrumb}} </span>
-      <span>{{ literaleses[breadcrumb] ? literaleses[breadcrumb] : literaleses[breadcrumb.toLowerCase()] }}</span>
-    </button>
-  </span>
+  <span *ngIf="i > 0">></span>
+  <button mat-button color="primary" [routerLink]="['/content', breadcrumb]">
+    <span *ngIf="user?.rol == 'Desarrollador'">{{breadcrumb}} </span>
+    <span>{{ literaleses[breadcrumb] ? literaleses[breadcrumb] : literaleses[breadcrumb.toLowerCase()] }}</span>
+  </button>
+</span>
 
 <div class="m-5">
-  <h4>{{ literal }}<span matBadge="{{cntComentariosSubpath}}" matBadgeColor="accent" [matBadgeHidden]="cntComentariosSubpath == 0" class="ml-1"></span></h4>
+  <h4>{{ literal }}<span matBadge="{{cntComentariosSubpath}}" matBadgeColor="accent"
+      [matBadgeHidden]="cntComentariosSubpath == 0" class="ml-1"></span></h4>
   <h4>{{ literaleu }}</h4>
-  <span class="highlighted" *ngIf="isArrayType" color="primary">Type: array, minItems: {{esquema['minItems']}}, maxItems: {{esquema['maxItems']}}</span>
+  <span class="highlighted" *ngIf="isArrayType" color="primary">Type: array, minItems: {{esquema['minItems']}},
+    maxItems: {{esquema['maxItems']}}</span>
   <button mat-icon-button color="primary" aria-label="Comments" matBadge="{{cntComentarios}}" matBadgeColor="primary"
     matTooltip="Ver comentarios" [matBadgeHidden]="cntComentarios == 0" (click)="openDialogCommentsByPath(path)">
     <mat-icon> comment</mat-icon>
-    </button>
-    
+  </button>
+
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
     <!-- This is the tree node template for leaf nodes -->
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
@@ -41,6 +43,7 @@
                 <button mat-raised-button matBadge="{{row.cntComentariosSubpath}}" matBadgeColor="accent"
                   matTooltip="Ver comentarios" (click)="openDialogComments(row)" class="table-button"
                   [matBadgeHidden]="row.cntComentariosSubpath == 0">
+                  <mat-icon *ngIf="row.hasUnreadLogs" color="primary">notification_important</mat-icon>
                   <span *ngIf="user?.rol == 'Desarrollador'">{{row.name}}<br></span>
                   <span *ngIf="row.literal?.length > literalMaxLength" matTooltip="{{row.literal}}">
                     {{row.literal | slice:0:literalMaxLength}}...
@@ -92,10 +95,10 @@
             </span>
           </span>
           <button mat-icon-button color="primary" aria-label="Comments" matBadge="{{node.cntComentariosActivos}}"
-              matBadgeColor="primary" matTooltip="Ver comentarios" [matBadgeHidden]="node.cntComentariosActivos == 0"
-              (click)="openDialogComments(node)" class="ml-3" (click)="$event.stopPropagation()">
-              <mat-icon> comment</mat-icon>
-            </button>
+            matBadgeColor="primary" matTooltip="Ver comentarios" [matBadgeHidden]="node.cntComentariosActivos == 0"
+            (click)="openDialogComments(node)" class="ml-3" (click)="$event.stopPropagation()">
+            <mat-icon> comment</mat-icon>
+          </button>
         </div>
         <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
           <ng-container matTreeNodeOutlet></ng-container>

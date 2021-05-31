@@ -17,6 +17,7 @@ import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
 import { SpinnerService } from '../shared/services/spinner.service';
 import { Globals } from '../shared/globals';
+import { threadId } from 'worker_threads';
 
 @Component({
   selector: 'app-content',
@@ -264,7 +265,7 @@ export class ContentComponent implements OnInit {
   openDialogComments(node: EsquemaNode) {
     this.spinnerService.show();
     this.getCommentsByPath(node.esquema['path']).then(data => {
-      node.comentarios = data
+      node.comentarios = data;
       let dialogRef = this.dialog.open(DialogCommentsComponent, {
         data: {
           commentList: node.comentarios,
@@ -277,6 +278,7 @@ export class ContentComponent implements OnInit {
         node.cntComentariosSubpath = this.countActiveComments(node.comentarios);
         node.cntComentariosActivos = node.cntComentariosSubpath;
         this.updateCntComments(this.dataSource.data);
+        this.updateNotifications(this.dataSource.data);
       });
     }, error => {
       console.log(error);
@@ -323,6 +325,20 @@ export class ContentComponent implements OnInit {
       });
     }
     return cnt;
+  }
+
+  updateNotifications(nodes: EsquemaNode[]): void {
+    nodes.forEach(node => {
+      if (node.children && node.children.length > 0) {
+        this.updateNotifications(node.children);
+      }
+      this.getPathHasUnreadLogs(node.name).then(data => node.hasUnreadLogs = data);
+      if (node.tableItems && node.tableItems.length > 0) {
+        node.tableItems.forEach(item => {
+        this.getPathHasUnreadLogs(item['name']).then(data => item['hasUnreadLogs'] = data);
+        });
+      }
+    });
   }
 
 }
