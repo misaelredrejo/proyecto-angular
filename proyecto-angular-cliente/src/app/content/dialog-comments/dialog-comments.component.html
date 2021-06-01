@@ -2,7 +2,9 @@
     <mat-icon>close</mat-icon>
 </button>
 
-<h2 mat-dialog-title cdkFocusRegionstart><mat-icon>comment</mat-icon> Comentarios</h2>
+<h2 mat-dialog-title cdkFocusRegionstart>
+    <mat-icon>comment</mat-icon> Comentarios
+</h2>
 
 <mat-dialog-content>
 
@@ -27,7 +29,8 @@
                                         <td class="w-100">
                                             <mat-form-field class="w-100">
                                                 <mat-label>Editar comentario...</mat-label>
-                                                <textarea matInput formControlName="comment" cdkTextareaAutosize></textarea>
+                                                <textarea matInput formControlName="comment"
+                                                    cdkTextareaAutosize></textarea>
                                             </mat-form-field>
                                         </td>
                                         <td>
@@ -36,8 +39,7 @@
                                             </button>
                                         </td>
                                         <td>
-                                            <button mat-icon-button
-                                                (click)="indexComment=undefined"
+                                            <button mat-icon-button (click)="indexComment=undefined"
                                                 matTooltip="Cancelar">
                                                 <mat-icon color="warn">close</mat-icon>
                                             </button>
@@ -48,6 +50,8 @@
                             <table *ngIf="indexComment != i" class="w-100">
                                 <tr>
                                     <td class="w-100">
+                                        <mat-icon *ngIf="commentsId.indexOf(comment.commentId) !== -1">
+                                            notification_important</mat-icon>
                                         <span [className]="!comment.isActive ? 'strikethrough' : ''">{{i+1}}.-
                                             {{comment['text']}}</span>
                                     </td>
@@ -92,10 +96,12 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <!-- CONTENT -->
-            <form class="example-form" [formGroup]="formAdd" #formDirective="ngForm" (ngSubmit)="addComment(formDirective)">
+            <form class="example-form" [formGroup]="formAdd" #formDirective="ngForm"
+                (ngSubmit)="addComment(formDirective)">
                 <mat-form-field class="example-full-width">
                     <mat-label>Comentario</mat-label>
-                    <textarea matInput placeholder="Mensaje..." formControlName="comment" cdkTextareaAutosize></textarea>
+                    <textarea matInput placeholder="Mensaje..." formControlName="comment"
+                        cdkTextareaAutosize></textarea>
                 </mat-form-field>
                 <button mat-raised-button color="primary" type="submit" matTooltip="Añadir comentario">Añadir</button>
             </form>

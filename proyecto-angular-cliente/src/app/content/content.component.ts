@@ -17,7 +17,6 @@ import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
 import { SpinnerService } from '../shared/services/spinner.service';
 import { Globals } from '../shared/globals';
-import { threadId } from 'worker_threads';
 
 @Component({
   selector: 'app-content',
@@ -84,7 +83,6 @@ export class ContentComponent implements OnInit {
   hasChild = (_: number, node: EsquemaNode) => !!node.children && node.children.length > 0;
 
   ngOnInit(): void {
-    console.log(this.scrollTarget)
     this.checkUser();
     this.subscribeParams();
   }
@@ -235,7 +233,6 @@ export class ContentComponent implements OnInit {
     });
     return cnt;
   }
-
   async getPathHasUnreadLogs(path: string): Promise<boolean> {
     let pathHasUnreadLogs = false;
     await this.apiService.getPathHasUnreadLogsForUserAsync(this.user.userId, path).toPromise().then(result => {

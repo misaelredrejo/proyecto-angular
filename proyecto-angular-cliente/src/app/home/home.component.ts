@@ -273,6 +273,7 @@ export class HomeComponent implements OnInit {
   }
 
   getBackendCommentLogsByFilter(filterQuery: FilterQuery): void {
+    this.spinnerService.show();
     this.apiService.getCommentLogsByFilter(filterQuery).subscribe(data => {
       switch (data.status) {
         case Status.Success:
@@ -283,11 +284,16 @@ export class HomeComponent implements OnInit {
           this.endDateFilter.reset();
           this.toastrService.success('Datos actualizados correctamente.', 'Actualizar tabla');
           this.setMinMaxDateFrontFilter();
+          this.spinnerService.hide();
           break;
         case Status.Error:
           this.toastrService.error(data.message, 'ERROR');
+          this.spinnerService.hide();
           break;
       }
+    }, error => {
+      console.log(error);
+      this.spinnerService.hide();
     });
   }
 

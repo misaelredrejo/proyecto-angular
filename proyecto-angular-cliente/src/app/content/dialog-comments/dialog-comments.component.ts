@@ -10,6 +10,7 @@ import { Log } from 'src/app/models/log.model';
 import { DialogDataComments } from 'src/app/models/dialog-data-comments.model';
 import { AuthenticationService } from 'src/app/core/authentication/authentication.service';
 import { SpinnerService } from 'src/app/shared/services/spinner.service';
+import { UserLog } from 'src/app/models/user-log.mode';
 
 
 @Component({
@@ -19,6 +20,8 @@ import { SpinnerService } from 'src/app/shared/services/spinner.service';
 })
 export class DialogCommentsComponent implements OnInit {
 
+  userLogs: UserLog[] = [];
+  commentsId: number[] = [];
   formAdd: FormGroup;
   formEdit: FormGroup;
   indexComment: number | undefined;
@@ -43,7 +46,7 @@ export class DialogCommentsComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.authService.currentUserValue;
-    this.deleteUserLog();
+    this.getUserLogs();
   }
 
   // Workaround for angular component issue #13870
@@ -234,6 +237,30 @@ export class DialogCommentsComponent implements OnInit {
     });
   }
 
+  getUserLogs(): void {
+    let codePath: string = this.data.path.split('/').pop();
+    this.apiService.getUserLogsByPathAsync(this.user.userId, codePath).subscribe(data => {
+      switch (data.status) {
+        case Status.Success:
+          this.userLogs = data.data;
+          this.loadUnreadCommentsId();
+          this.deleteUserLog();
+          break;
+        case Status.Error:
+          this.toastr.error(data.message, 'ERROR');
+          break;
+      }
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  loadUnreadCommentsId(): void {
+    this.userLogs.forEach(userLog => {
+      this.commentsId.push(userLog.log.commentId);
+    });
+  }
+
   deleteUserLog(): void {
     this.apiService.deleteUserLogAsync(this.user.userId, this.data.path).subscribe(data => {
       switch (data.status) {
@@ -245,5 +272,6 @@ export class DialogCommentsComponent implements OnInit {
       console.log(error);
     });
   }
+
 
 }

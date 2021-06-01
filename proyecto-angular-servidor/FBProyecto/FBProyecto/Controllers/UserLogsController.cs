@@ -32,16 +32,44 @@ namespace FBProyecto.Controllers
             ApiResponse myResponse = new ApiResponse();
             try
             {
-                bool commentsNotReadInPath = await _context.UserLog.AnyAsync(
+                var userLogsByPath = await _context.UserLog.Where(
                     userLog =>
                     userLog.User.UserId == userId
                     && (userLog.Log.Comment.Path.Contains("/" + path + "/")
                         || userLog.Log.Comment.Path.StartsWith(path + "/")
                         || userLog.Log.Comment.Path.EndsWith("/" + path))
-                    ); ;
+                    ).Include(userLog => userLog.Log).ToListAsync();
                 myResponse.Status = Status.Success;
                 myResponse.Message = "";
-                myResponse.Data = commentsNotReadInPath;
+                myResponse.Data = userLogsByPath;
+                return myResponse;
+            }
+            catch (Exception ex)
+            {
+                myResponse.Status = Status.Error;
+                myResponse.Message = ex.Message;
+                myResponse.Data = null;
+                return myResponse;
+            }
+        }
+
+        // GET api/<UserLogsController>/5/ruta
+        [HttpGet("has/{userId}/{path}")]
+        public async Task<ApiResponse> GetHasUserLog(int userId, string path)
+        {
+            ApiResponse myResponse = new ApiResponse();
+            try
+            {
+                bool hasUserLogsByPath = await _context.UserLog.AnyAsync(
+                    userLog =>
+                    userLog.User.UserId == userId
+                    && (userLog.Log.Comment.Path.Contains("/" + path + "/")
+                        || userLog.Log.Comment.Path.StartsWith(path + "/")
+                        || userLog.Log.Comment.Path.EndsWith("/" + path))
+                    );
+                myResponse.Status = Status.Success;
+                myResponse.Message = "";
+                myResponse.Data = hasUserLogsByPath;
                 return myResponse;
             }
             catch (Exception ex)

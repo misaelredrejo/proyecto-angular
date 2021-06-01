@@ -118,6 +118,10 @@ export class ApiService {
 
   //#region UserLog -> Logs no leidos por cada usuario
   public getPathHasUnreadLogsForUserAsync(userId: number, path: string): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(this.myAppUrl + this.myApiUserLogsUrl + 'has/' + userId + '/' + path);
+  }
+
+  public getUserLogsByPathAsync(userId: number, path: string): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(this.myAppUrl + this.myApiUserLogsUrl + userId + '/' + path);
   }
 
