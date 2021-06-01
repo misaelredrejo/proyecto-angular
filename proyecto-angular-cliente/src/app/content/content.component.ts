@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ApiService } from '../shared/services/api.service';
@@ -36,6 +36,7 @@ export class ContentComponent implements OnInit {
 
   breadcrumbs: string[];
 
+  cellNameToScroll: undefined | string;
   link: string;
   path: string;
   literaleses: {} = {};
@@ -57,6 +58,14 @@ export class ContentComponent implements OnInit {
   treeControl = new NestedTreeControl<EsquemaNode>(node => node.children);
   dataSource = new MatTreeNestedDataSource<EsquemaNode>();
 
+  private scrollTarget: ElementRef;
+
+  @ViewChild('scrollTarget') set content(content: ElementRef) {
+     if(content) { // initially setter gets called with undefined
+          this.scrollTarget = content;
+          this.scrollTarget.nativeElement.scrollIntoView({ behavior: "smooth", block: "center" });
+     }
+  }
 
   constructor(
     private globals: Globals,
@@ -75,6 +84,7 @@ export class ContentComponent implements OnInit {
   hasChild = (_: number, node: EsquemaNode) => !!node.children && node.children.length > 0;
 
   ngOnInit(): void {
+    console.log(this.scrollTarget)
     this.checkUser();
     this.subscribeParams();
   }
@@ -104,6 +114,7 @@ export class ContentComponent implements OnInit {
 
   subscribeParams(): void {
     this.route.params.subscribe(params => {
+      this.cellNameToScroll = undefined;
       this.link = params['link'];
       this.esquema = this.todoEsquema[this.link];
       if (this.esquema == null) {
@@ -112,6 +123,7 @@ export class ContentComponent implements OnInit {
       }
       this.path = this.esquema['path'];
       if (!this.esquema['allOf'] && !this.esquema['properties']) {
+        this.cellNameToScroll = this.link;
         let parentCode = this.path.split('/')[this.path.split('/').length -2];
         this.link = parentCode;
         this.esquema = this.todoEsquema[parentCode];
@@ -291,7 +303,8 @@ export class ContentComponent implements OnInit {
       data: {
         codigo: codigo,
         enumList: enumList
-      }
+      },
+      width: '1000px'
     });
   }
 

@@ -62,8 +62,7 @@ namespace FBProyecto.Controllers
                     {
                         UserLogId = 0,
                         User = u,
-                        Log = log,
-                        Read = false
+                        Log = log
                     };
                     _context.UserLog.Add(userLog);
                 }

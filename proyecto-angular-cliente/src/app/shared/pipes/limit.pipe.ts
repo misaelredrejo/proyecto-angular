@@ -14,6 +14,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class LimitPipe implements PipeTransform {
 
   transform(value: string, numberCharacters: number = 50): string {
+    if (!value) return '';
     let limitedStr = value.substr(0, numberCharacters);
     if (value.length > numberCharacters) limitedStr += '...';
     return limitedStr;

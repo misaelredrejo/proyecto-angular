@@ -26,8 +26,8 @@ export class HomeComponent implements OnInit {
   user: User;
   commentLogList: CommentLog[] = [];
 
-  displayedColumns = ['username', 'action', 'date', 'path', 'commentText'];
-  displayedColumnsForm = ['usernameForm', 'actionForm', 'rangeDateForm', 'commentTextForm'];//, 'literalForm'
+  displayedColumns = ['username', 'action', 'date', 'commentText', 'path'];
+  displayedColumnsForm = ['usernameForm', 'actionForm', 'rangeDateForm', 'commentTextForm', 'literalForm'];
   dataSource: MatTableDataSource<CommentLog>;
   dataSourceLast2Weeks: MatTableDataSource<CommentLog>;
 
@@ -51,6 +51,8 @@ export class HomeComponent implements OnInit {
   };
   date2WeeksAgo: Date;
   maxDate: Date;
+  maxDateFrontFilter: Date;
+  minDateFrontFilter: Date;
   ActionType = Action;
 
   @ViewChild(MatSort) sort: MatSort;
@@ -74,7 +76,8 @@ export class HomeComponent implements OnInit {
       startDate: [this.date2WeeksAgo, Validators.required],
       endDate: [new Date(), Validators.required]
     });
-
+    this.minDateFrontFilter = this.date2WeeksAgo;
+    this.maxDateFrontFilter = this.maxDate;
     this.literaleses = this.globals.literaleses;
     this.literaleseu = this.globals.literaleseu;
   }
@@ -279,12 +282,18 @@ export class HomeComponent implements OnInit {
           this.startDateFilter.reset();
           this.endDateFilter.reset();
           this.toastrService.success('Datos actualizados correctamente.', 'Actualizar tabla');
+          this.setMinMaxDateFrontFilter();
           break;
         case Status.Error:
           this.toastrService.error(data.message, 'ERROR');
           break;
       }
     });
+  }
+
+  setMinMaxDateFrontFilter(): void {
+    this.minDateFrontFilter = this.formBackendFilter.controls.startDate.value;
+    this.maxDateFrontFilter = this.formBackendFilter.controls.endDate.value;
   }
 
   resetForm(): void {

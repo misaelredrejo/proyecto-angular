@@ -14,7 +14,5 @@ namespace FBProyecto.Models
         public User User { get; set; }
         [Required]
         public Log Log { get; set; }
-        [Required]
-        public bool Read { get; set; }
     }
 }

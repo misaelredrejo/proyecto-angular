@@ -63,3 +63,11 @@ table {
 .mat-row:hover {
   background-color: whitesmoke;
 }
+
+.black-icon {
+  color: black;
+}
+
+.highlight-row {
+  background-color: #E0E0E0;
+}

@@ -38,12 +38,14 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="mat-row" *ngFor="let row of node.tableItems">
+            <tr class="mat-row" *ngFor="let row of node.tableItems" [ngClass]="{'highlight-row': cellNameToScroll && cellNameToScroll == row.name}">
               <td class="mat-cell mat-cell-button">
                 <button mat-raised-button matBadge="{{row.cntComentariosSubpath}}" matBadgeColor="accent"
                   matTooltip="Ver comentarios" (click)="openDialogComments(row)" class="table-button"
                   [matBadgeHidden]="row.cntComentariosSubpath == 0">
-                  <mat-icon *ngIf="row.hasUnreadLogs" color="primary">notification_important</mat-icon>
+
+                  <span *ngIf="cellNameToScroll && cellNameToScroll == row.name" #scrollTarget></span>
+                  <mat-icon *ngIf="row.hasUnreadLogs" class="black-icon">notification_important</mat-icon>
                   <span *ngIf="user?.rol == 'Desarrollador'">{{row.name}}<br></span>
                   <span *ngIf="row.literal?.length > literalMaxLength" matTooltip="{{row.literal}}">
                     {{row.literal | slice:0:literalMaxLength}}...
@@ -83,7 +85,7 @@
               {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
             </mat-icon>
           </button>
-          <mat-icon *ngIf="node.hasUnreadLogs" color="primary">notification_important</mat-icon>
+          <mat-icon *ngIf="node.hasUnreadLogs" >notification_important</mat-icon>
           <span matBadge="{{node.cntComentariosSubpath}}" matBadgeOverlap="false" matBadgeColor="accent"
             [matBadgeHidden]="node.cntComentariosSubpath == 0">
             <span *ngIf="user?.rol == 'Desarrollador'">{{node.name}} - </span>

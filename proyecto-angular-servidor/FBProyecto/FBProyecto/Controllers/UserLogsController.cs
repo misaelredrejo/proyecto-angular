@@ -34,7 +34,6 @@ namespace FBProyecto.Controllers
             {
                 bool commentsNotReadInPath = await _context.UserLog.AnyAsync(
                     userLog =>
-                    userLog.Read == false &&
                     userLog.User.UserId == userId
                     && (userLog.Log.Comment.Path.Contains("/" + path + "/")
                         || userLog.Log.Comment.Path.StartsWith(path + "/")
