@@ -1,19 +1,20 @@
 <h2 mat-dialog-title>Enum - {{code}}</h2>
 <mat-dialog-content>
-    <mat-form-field *ngIf="enumLiteralList.length > 8" class="w-100">
+    <mat-form-field *ngIf="enumItemList.length > 8" class="w-100">
         <mat-label>Filtrar enum literal</mat-label>
         <input matInput [formControl]="enumFilter" placeholder="literal..." #input>
         <button mat-button *ngIf="enumFilter.value" matSuffix mat-icon-button aria-label="Clear" (click)="enumFilter.reset()">
             <mat-icon>close</mat-icon>
         </button>
     </mat-form-field>
-    <mat-list role="list">
-        <span></span>
-        <mat-list-item role="listitem" *ngFor="let enum of filteredEnumLiteralList">
-            {{enum}}
+
+    <mat-list>
+        <mat-list-item *ngFor="let enum of filteredEnumItemList">
+                <h5 matLine> {{enum.code}} </h5>
+                <p matLine class="ml-3"> {{enum.literales}} </p>
+                <p matLine class="ml-3"> {{enum.literaleu}} </p>
             <mat-divider></mat-divider>
         </mat-list-item>
-
     </mat-list>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

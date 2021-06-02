@@ -52,3 +52,10 @@
     font-size: 70%;
   }
   
+  .example-viewport {
+    height: 200px;
+  }
+  
+  .example-item {
+    height: 50px;
+  }

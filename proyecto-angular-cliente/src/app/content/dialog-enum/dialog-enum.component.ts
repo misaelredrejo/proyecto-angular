@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogDataEnum } from 'src/app/models/dialog-data-enum.model';
 import { Globals } from 'src/app/shared/globals';
 import { FormControl } from '@angular/forms';
+import { EnumItem } from 'src/app/models/enum-item.model';
 
 @Component({
   selector: 'app-dialog-enum',
@@ -14,8 +15,8 @@ export class DialogEnumComponent implements OnInit {
   code: string;
   literaleses: {} = {};
   literaleseu: {} = {};
-  enumLiteralList: string[] = [];
-  filteredEnumLiteralList: string[] = [];
+  enumItemList: EnumItem[] = [];
+  filteredEnumItemList: EnumItem[] = [];
   enumFilter = new FormControl('');
 
   constructor(
@@ -29,10 +30,16 @@ export class DialogEnumComponent implements OnInit {
   ngOnInit(): void {
     this.code = this.data.codigo;
     for (var i = 0; i < this.data.enumList.length; i++) {
-      let codigo = this.code + '_' + this.data.enumList[i];
-      let literalEs = this.literaleses[codigo];
-      let literalEu = this.literaleseu[codigo];
-      this.enumLiteralList.push(codigo + ' - ' + literalEs + ' - ' + literalEu);
+      let enumCode = this.code + '_' + this.data.enumList[i];
+      let literales = this.literaleses[enumCode];
+      let literaleu = this.literaleseu[enumCode];
+      let enumItem: EnumItem = {
+        code: enumCode,
+        literales: literales,
+        literaleu: literaleu,
+        toString: enumCode+literales+literaleu
+      }
+      this.enumItemList.push(enumItem);
     }
     this.assignCopy();
 
@@ -45,7 +52,7 @@ export class DialogEnumComponent implements OnInit {
   }
 
   assignCopy(): void {
-    this.filteredEnumLiteralList = Object.assign([], this.enumLiteralList);
+    this.filteredEnumItemList = Object.assign([], this.enumItemList);
   }
 
   filterEnum(value):void {
@@ -54,8 +61,8 @@ export class DialogEnumComponent implements OnInit {
         return;
     } // when nothing has typed
     
-    this.filteredEnumLiteralList = Object.assign([], this.enumLiteralList).filter(
-       enumLiteral => enumLiteral.toLowerCase().indexOf(value.toLowerCase()) > -1
+    this.filteredEnumItemList = Object.assign([], this.enumItemList).filter(
+       enumItem => enumItem.toString.toLowerCase().indexOf(value.toLowerCase()) > -1
     );
  }
 

@@ -10,7 +10,7 @@ import { Log } from 'src/app/models/log.model';
 import { DialogDataComments } from 'src/app/models/dialog-data-comments.model';
 import { AuthenticationService } from 'src/app/core/authentication/authentication.service';
 import { SpinnerService } from 'src/app/shared/services/spinner.service';
-import { UserLog } from 'src/app/models/user-log.mode';
+import { UserLog } from 'src/app/models/user-log.model';
 
 
 @Component({

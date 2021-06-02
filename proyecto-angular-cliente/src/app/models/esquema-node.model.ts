@@ -1,5 +1,5 @@
 import { Comment } from './comment.model';
-import { UserLog } from './user-log.mode';
+import { UserLog } from './user-log.model';
 export interface EsquemaNode {
     name?: string;
     literal?: string;

@@ -2,13 +2,15 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { ApiService } from '../shared/services/api.service';
 import { TitleService } from '../shared/services/title.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
 import { Rol, Status } from '../models/enums.model';
 import { Globals } from '../shared/globals';
 import * as signalR from '@microsoft/signalr';
 import { MenuItem } from '../models/menu-item.model';
+import { FormControl } from '@angular/forms';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-nav',
@@ -22,10 +24,15 @@ export class NavComponent implements OnDestroy {
 
   user: User;
 
+  esquema: {} = {};
   menuProfesional: {}[] = [];
   literaleses: {} = {};
+  options: string[] = ['One', 'Two', 'Three'];
+  filteredOptions: string[];
+  height: string = '200px';
 
   title: string;
+  searchControl = new FormControl('');
   value: string;
   rolTypes: string[] = Object.keys(Rol).map(k => Rol[k as any]);
 
@@ -56,6 +63,7 @@ export class NavComponent implements OnDestroy {
       });
     this.menuProfesional = this.globals.menuProfesional;
     this.literaleses = this.globals.literaleses;
+    this.esquema = this.globals.esquema;
   }
 
   ngOnDestroy(): void {
@@ -63,6 +71,21 @@ export class NavComponent implements OnDestroy {
   }
 
   ngOnInit() {
+    this.options = Object.keys(this.esquema);
+    this.filteredOptions = this.options;
+
+    this.searchControl.valueChanges.subscribe(
+      value =>
+      {
+        this.filteredOptions = this._filter(value);
+        if (this.filteredOptions.length < 4) {
+          this.height = (this.filteredOptions.length * 50) + 'px';
+        } else {
+          this.height = '200px'
+        }
+      }
+    );
+    
     this.fillMenu();
     this.checkUser();
 
@@ -174,6 +197,13 @@ export class NavComponent implements OnDestroy {
       console.log(error);
     });
     return pathHasUnreadLogs;
+  }
+
+
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
 }
