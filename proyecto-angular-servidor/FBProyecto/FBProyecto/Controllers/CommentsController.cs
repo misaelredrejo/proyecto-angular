@@ -108,7 +108,7 @@ namespace FBProyecto.Controllers
             try
             {
                 path = path.Replace("%2F", "/");
-                int cntCommentsSubPath = await _context.Comment.Where(c => c.Path.Contains(path) && c.IsActive).CountAsync();
+                int cntCommentsSubPath = await _context.Comment.Where(c => (c.Path.Contains("/" + path + "/") || c.Path.StartsWith(path + "/") || c.Path.EndsWith("/" + path)) && c.IsActive).CountAsync();
                 myResponse.Status = Status.Success;
                 myResponse.Message = "";
                 myResponse.Data = cntCommentsSubPath;

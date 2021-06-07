@@ -38,13 +38,13 @@ export class NavComponent implements OnDestroy {
   rolTypes: string[] = Object.keys(Rol).map(k => Rol[k as any]);
 
   appitems: MenuItem[] = [
-    { code: '0', literal: 'MENÚ', label: '0 - MENÚ' }
+    { code: '0', literal: 'MENÚ', label: '0 - MENÚ', cntCommentsSubPath: 0 }
   ];
 
   config: Configuration = {
     interfaceWithRoute: true,
     customTemplate: true
-}
+  }
 
 
   mobileQuery: MediaQueryList;
@@ -75,8 +75,7 @@ export class NavComponent implements OnDestroy {
     this.filteredOptions = this.options;
 
     this.searchControl.valueChanges.subscribe(
-      value =>
-      {
+      value => {
         this.filteredOptions = this._filter(value);
         if (this.filteredOptions.length < 4) {
           this.height = (this.filteredOptions.length * 50) + 'px';
@@ -85,7 +84,7 @@ export class NavComponent implements OnDestroy {
         }
       }
     );
-    
+
     this.fillMenu();
     this.checkUser();
 
@@ -120,7 +119,8 @@ export class NavComponent implements OnDestroy {
       for (let key in item) {
         let value = item[key];
         let literales = (this.literaleses[key] ? this.literaleses[key] : this.literaleses[key.toLowerCase()]);
-        let menuItem: MenuItem = {code: key, literal: literales, label: key + ' - ' + literales};
+        let menuItem: MenuItem = { code: key, literal: literales, label: key + ' - ' + literales, cntCommentsSubPath: 0 };
+        this.getCntCommentsSubPath(key).then(data => menuItem.cntCommentsSubPath = data);
         if (value && value.length > 0) { // Si tiene subniveles
           menuItem.items = this.itemsSubMenu(value);
           appitemsInsert.push(menuItem);
@@ -137,7 +137,8 @@ export class NavComponent implements OnDestroy {
     let itemsSubMenu: MenuItem[] = [];
     items.forEach((key) => {
       let literales = (this.literaleses[key] ? this.literaleses[key] : this.literaleses[key.toLowerCase()]);
-      let menuItem: MenuItem = {code: key, literal: literales, label: key + ' - ' + literales, link: "/content/" + key};
+      let menuItem: MenuItem = { code: key, literal: literales, label: key + ' - ' + literales, link: "/content/" + key, cntCommentsSubPath: 0 };
+      this.getCntCommentsSubPath(key).then(data => menuItem.cntCommentsSubPath = data);
       itemsSubMenu.push(menuItem);
     });
     return itemsSubMenu;
@@ -168,10 +169,11 @@ export class NavComponent implements OnDestroy {
     if (!menuItems || menuItems.length == 0) return;
     menuItems.forEach(menuItem => {
       if (menuItem.items && menuItem.items.length > 0) this.updateMenu(menuItem.items);
-      this.getPathHasUnreadLogsForUser(this.user.userId, menuItem.code).then(res =>{
+      this.getPathHasUnreadLogsForUser(this.user.userId, menuItem.code).then(res => {
         if (res) menuItem.icon = 'notification_important';
         else menuItem.icon = '';
       });
+      this.getCntCommentsSubPath(menuItem.code).then(data => menuItem.cntCommentsSubPath = data);
       if (this.user && this.user.rol == Rol.Desarrollador) {
         menuItem.label = menuItem.code + ' - ' + menuItem.literal;
       } else menuItem.label = menuItem.literal;
@@ -193,10 +195,23 @@ export class NavComponent implements OnDestroy {
           console.log(data.message);
           break;
       }
-    }, error => {
-      console.log(error);
-    });
+    }).catch(error => console.log(error));
     return pathHasUnreadLogs;
+  }
+
+  async getCntCommentsSubPath(path: string): Promise<number> {
+    let cntCommentsSubPath: number = 0;
+    await this.apiService.getCntCommentsSubPathAsync(path).toPromise().then(data => {
+      switch (data.status) {
+        case Status.Success:
+          cntCommentsSubPath = data.data;
+          break;
+        case Status.Error:
+          console.log(data.message);
+          break;
+      }
+    }).catch(error => console.log(error));;
+    return cntCommentsSubPath;
   }
 
   private _filter(value: string): string[] {
@@ -206,8 +221,8 @@ export class NavComponent implements OnDestroy {
 
   getClass(item) {
     return {
-        [item.faIcon]: true
+      [item.faIcon]: true
     }
-}
+  }
 
 }

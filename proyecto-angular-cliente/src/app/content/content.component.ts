@@ -128,7 +128,7 @@ export class ContentComponent implements OnInit {
         this.path = this.esquema['path'];
       }
       this.isArrayType = this.esquema['type'] == 'array';
-      this.getCntCommentsSubPath(this.path).then(data => this.cntComentariosSubpath = data);
+      this.getCntCommentsSubPath(this.link).then(data => this.cntComentariosSubpath = data);
       this.literal = (this.literaleses[this.link] ? this.literaleses[this.link] : this.literaleses[this.link.toLowerCase()]);
       this.literaleu = (this.literaleseu[this.link] ? this.literaleseu[this.link] : this.literaleseu[this.link.toLowerCase()]);
       if (this.user && this.user.rol == Rol.Desarrollador) {
@@ -179,7 +179,7 @@ export class ContentComponent implements OnInit {
       let esquema = this.todoEsquema[code];
 
       let node: EsquemaNode = { name: code, literal: literal, literaleu: literaleu, esquema: esquema, comentarios: [], cntComentariosSubpath: 0 };
-      this.getCntCommentsSubPath(this.todoEsquema[code]['path']).then(data => node.cntComentariosSubpath = data);
+      this.getCntCommentsSubPath(code).then(data => node.cntComentariosSubpath = data);
       this.getCommentsByPath(this.todoEsquema[code]['path']).then(data => {
         node.comentarios = data;
         node.cntComentariosActivos = this.countActiveComments(node.comentarios);
