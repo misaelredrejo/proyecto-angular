@@ -1,0 +1,619 @@
+﻿{
+    "DFO_190_1": {
+        "modelo": "DFM_190",
+        "filtro": {
+            "properties": {
+                "DFC_190_CLAVE": { "enum": [ "Y" ] },
+                "DFC_190_SUBCLAVE": { "enum": [ "01" ] }
+            },
+            "required": [ "DFC_190_CLAVE", "DFC_190_SUBCLAVE" ]
+        }
+    },
+
+    "DFO_190_2": {
+        "modelo": "DFM_190",
+        "filtro": {
+            "properties": {
+                "DFC_190_CLAVE": { "enum": [ "H" ] }
+            },
+            "required": [ "DFC_190_CLAVE" ]
+        }
+    },
+
+    "DFO_190_3": {
+        "modelo": "DFM_190",
+        "filtro": {
+            "oneOf": [
+                {
+                    "properties": {
+                        "DFC_190_CLAVE": { "enum": [ "A", "C", "E", "M", "Y", "" ] }
+                    },
+                    "required": [ "DFC_190_CLAVE" ]
+                },
+                {
+                    "properties": {
+                        "DFC_190_CLAVE": { "enum": [ "B" ] },
+                        "DFC_190_SUBCLAVE": { "not": { "enum": [ "11", "12" ] } }
+
+                    },
+                    "required": [ "DFC_190_CLAVE", "DFC_190_SUBCLAVE" ]
+                }
+            ]
+
+        }
+    },
+
+    "DFO_190_4": {
+        "modelo": "DFM_190",
+        "filtro": {
+            "properties": {
+                "DFC_190_CLAVE": { "enum": [ "B" ] },
+                "DFC_190_SUBCLAVE": { "enum": [ "11" ] }
+            },
+            "required": [ "DFC_190_CLAVE", "DFC_190_SUBCLAVE" ]
+        }
+    },
+
+    "DFO_190_5": {
+        "modelo": "DFM_190",
+        "filtro": {
+            "properties": {
+                "DFC_190_CLAVE": { "enum": [ "B" ] },
+                "DFC_190_SUBCLAVE": { "enum": [ "12" ] }
+            },
+            "required": [ "DFC_190_CLAVE", "DFC_190_SUBCLAVE" ]
+        }
+    },
+
+    "DFO_190_6": {
+        "modelo": "DFM_190",
+        "filtro": {
+            "properties": {
+                "DFC_190_CLAVE": { "enum": [ "G", "F", "I" ] }
+            },
+            "required": [ "DFC_190_CLAVE" ]
+        }
+    },
+
+    "DFO_190_7": {
+        "modelo": "DFM_190",
+        "filtro": {
+            "properties": {
+                "DFC_190_CLAVE": { "enum": [ "K" ] }
+            },
+            "required": [ "DFC_190_CLAVE" ]
+        }
+    },
+
+    "DFO_190_8": {
+        "modelo": "DFM_190",
+        "filtro": {
+            "properties": {
+                "DFC_190_CLAVE": { "enum": [ "L" ] },
+                "DFC_190_SUBCLAVE": { "not": { "enum": [ "01" ] } }
+            },
+            "required": [ "DFC_190_CLAVE", "DFC_190_SUBCLAVE" ]
+        }
+    },
+
+    "DFO_190_9": {
+        "modelo": "DFM_190",
+        "filtro": {
+            "properties": {
+                "DFC_190_CLAVE": { "enum": [ "H" ] },
+                "DFC_190_SUBCLAVE": { "enum": [ "25", "74" ] }
+            },
+            "required": [ "DFC_190_CLAVE", "DFC_190_SUBCLAVE" ]
+        }
+    },
+
+    "DFO_190_10": {
+        "modelo": "DFM_190",
+        "filtro": {
+            "properties": {
+                "DFC_190_CLAVE": { "enum": [ "Z" ] }
+            },
+            "required": [ "DFC_190_CLAVE" ]
+        }
+    },
+
+	"DFO_190_Resto": {
+        "modelo": "DFM_190",
+        "filtro": {
+            "oneOf": [
+                {
+                    "properties": {
+                        "DFC_190_CLAVE": { "enum": [ "L" ] },
+                        "DFC_190_SUBCLAVE": { "not": { "enum": [ "01" ] } }
+                    },
+                    "required": [ "DFC_190_CLAVE", "DFC_190_SUBCLAVE" ]
+                },
+                {
+                    "properties": {
+                        "DFC_190_CLAVE": { "enum": [ "Y" ] },
+                        "DFC_190_SUBCLAVE": { "not": { "enum": [ "01" ] } }
+                    },
+                    "required": [ "DFC_190_CLAVE", "DFC_190_SUBCLAVE" ]
+                },
+                {
+                    "properties": {
+                        "DFC_190_CLAVE": { "enum": [ "C", "D", "E", "M" ] }
+                    },
+                    "required": [ "DFC_190_CLAVE" ]
+                }
+            ]
+
+        }
+    },
+
+
+
+    "DFO_193_1": {
+        "modelo": "DFM_193",
+        "filtro": {
+            "properties": {
+                "DFC_193_CLAVE": { "enum": [ "A" ] },
+                "DFC_193_SUBCLAVE": { "enum": [ "01", "02", "03" ] }
+            },
+            "required": [ "DFC_193_CLAVE", "DFC_193_SUBCLAVE" ]
+        }
+    },
+
+    "DFO_193_2": {
+        "modelo": "DFM_193",
+        "filtro": {
+            "properties": {
+                "DFC_193_CLAVE": { "enum": [ "B" ] },
+                "DFC_193_SUBCLAVE": { "not": { "enum": [ "04" ] } }
+            },
+            "required": [ "DFC_193_CLAVE", "DFC_193_SUBCLAVE" ]
+        }
+    },
+
+    "DFO_193_3": {
+        "modelo": "DFM_193",
+        "filtro": {
+            "properties": {
+                "DFC_193_CLAVE": { "enum": [ "B" ] },
+                "DFC_193_SUBCLAVE": { "enum": [ "04" ] }
+            },
+            "required": [ "DFC_193_CLAVE", "DFC_193_SUBCLAVE" ]
+        }
+    },
+
+    "DFO_193_4": {
+        "modelo": "DFM_193",
+        "filtro": {
+            "properties": {
+                "DFC_193_CLAVE": { "enum": [ "C" ] },
+                "DFC_193_SUBCLAVE": { "enum": [ "05", "12" ] }
+            },
+            "required": [ "DFC_193_CLAVE", "DFC_193_SUBCLAVE" ]
+        }
+    },
+
+    "DFO_193_5": {
+        "modelo": "DFM_193",
+        "filtro": {
+            "properties": {
+                "DFC_193_CLAVE": { "enum": [ " " ] }
+            },
+            "required": [ "DFC_193_CLAVE" ]
+        }
+    },
+
+    "DFO_193_6": {
+        "modelo": "DFM_193",
+        "filtro": {
+            "properties": {
+                "DFC_193_CLAVE": { "enum": [ "A" ] },
+                "DFC_193_SUBCLAVE": { "not": { "enum": [ "01", "02", "03" ] } }
+            },
+            "required": [ "DFC_193_CLAVE", "DFC_193_SUBCLAVE" ]
+        }
+    },
+
+    "DFO_193_7": {
+        "modelo": "DFM_193",
+        "filtro": {
+            "properties": {
+                "DFC_193_CLAVE": { "enum": [ "D" ] },
+                "DFC_193_SUBCLAVE": { "not": { "enum": [ "07" ] } }
+            },
+            "required": [ "DFC_193_CLAVE", "DFC_193_SUBCLAVE" ]
+        }
+    },
+
+    "DFO_193_8": {
+        "modelo": "DFM_193",
+        "filtro": {
+            "properties": {
+                "DFC_193_CLAVE": { "enum": [ "C" ] },
+                "DFC_193_SUBCLAVE": { "not": { "enum": [ "05", "11", "12" ] } }
+            },
+            "required": [ "DFC_193_CLAVE", "DFC_193_SUBCLAVE" ]
+        }
+    },
+	
+	"DFO_193_Resto": {
+        "modelo": "DFM_193",
+        "filtro": {
+            "properties": {
+                "DFC_193_CLAVE": { "enum": [ "5" ] }
+            },
+            "required": [ "DFC_193_CLAVE" ]
+        }
+    },
+
+
+    "DFO_345_1": {
+        "modelo": "DFM_345",
+        "filtro": {
+            "oneOf": [
+                {
+                    "properties": {
+                        "DFC_345_SISTEMAPREVISION": { "enum": [ "G" ] }
+                    },
+                    "required": [ "DFC_345_SISTEMAPREVISION" ]
+                },
+                {
+                    "properties": {
+                        "DFC_345_SISTEMAPREVISION": { "enum": [ "C" ] },
+                        "DFC_345_SUBCLAVE": { "enum": [ 1 ] }
+
+                    },
+                    "required": [ "DFC_345_SISTEMAPREVISION", "DFC_345_SUBCLAVE" ]
+                },
+                {
+                    "properties": {
+                        "DFC_345_SISTEMAPREVISION": { "enum": [ "J" ] },
+                        "DFC_345_SUBCLAVE": { "enum": [ 9 ] }
+                    },
+                    "required": [ "DFC_345_SISTEMAPREVISION", "DFC_345_SUBCLAVE" ]
+                }
+            ]
+
+        }
+    },
+
+    "DFO_345_2": {
+        "modelo": "DFM_345",
+        "filtro": {
+            "oneOf": [
+                {
+                    "properties": {
+                        "DFC_345_SISTEMAPREVISION": { "enum": [ "E", "A", "H", "K", "F", "I" ] }
+                    },
+                    "required": [ "DFC_345_SISTEMAPREVISION" ]
+                },
+                {
+                    "properties": {
+                        "DFC_345_SISTEMAPREVISION": { "enum": [ "J" ] },
+                        "DFC_345_SUBCLAVE": { "enum": [ 8 ] }
+
+                    },
+                    "required": [ "DFC_345_SISTEMAPREVISION", "DFC_345_SUBCLAVE" ]
+                }
+            ]
+
+        }
+    },
+
+    "DFO_345_3": {
+        "modelo": "DFM_345",
+        "filtro": {
+            "oneOf": [
+                {
+                    "properties": {
+                        "DFC_345_SISTEMAPREVISION": { "enum": [ "E", "A", "H", "K", "F", "I" ] }
+                    },
+                    "required": [ "DFC_345_SISTEMAPREVISION" ]
+                },
+                {
+                    "properties": {
+                        "DFC_345_SISTEMAPREVISION": { "enum": [ "J" ] },
+                        "DFC_345_SUBCLAVE": { "enum": [ 8 ] }
+
+                    },
+                    "required": [ "DFC_345_SISTEMAPREVISION", "DFC_345_SUBCLAVE" ]
+                }
+            ]
+
+        }
+    },
+
+	"DFO_345_Resto": {
+        "modelo": "DFM_345",
+        "filtro": {
+            "properties": {
+                "DFC_345_SISTEMAPREVISION": { "enum": [ "C" ] },
+                "DFC_345_SUBCLAVE": { "enum": [ 0, 2 ] }
+
+            },
+            "required": [ "DFC_345_SISTEMAPREVISION", "DFC_345_SUBCLAVE" ]
+        }
+    },
+
+
+    "DFO_Subv_1": {
+        "modelo": "DFM_Sub",
+        "filtro": {
+            "properties": {
+                "DFC_Sub_CODIGO": { "enum": [ 101, 103, 105, 131, 132, 109, 115, 415, 116, 118, 418, 130, 430, 107, 146 ] }
+            },
+            "required": [ "DFC_Sub_CODIGO" ]
+        }
+    },
+
+    "DFO_Subv_2": {
+        "modelo": "DFM_Sub",
+        "filtro": {
+            "properties": {
+                "DFC_Sub_CODIGO": { "enum": [ 11, 12, 13, 14, 15 ] }
+            },
+            "required": [ "DFC_Sub_CODIGO" ]
+        }
+    },
+
+    "DFO_Subv_3": {
+        "modelo": "DFM_Sub",
+        "filtro": {
+            "properties": {
+                "DFC_Sub_CODIGO": { "enum": [ 70, 99 ] }
+            },
+            "required": [ "DFC_Sub_CODIGO" ]
+        }
+    },
+
+    "DFO_Subv_4": {
+        "modelo": "DFM_Sub",
+        "filtro": {
+            "properties": {
+                "DFC_Sub_CODIGO": { "enum": [ 301, 302, 351 ] }
+            },
+            "required": [ "DFC_Sub_CODIGO" ]
+        }
+    },
+
+    "DFO_Subv_5": {
+        "modelo": "DFM_Sub",
+        "filtro": {
+            "properties": {
+                "DFC_Sub_CODIGO": { "enum": [ 701, 702, 703, 704, 705, 706, 707, 708, 709, 710, 711, 712, 713, 714, 715, 716, 717, 718, 719, 720, 721, 722, 723, 724, 725, 726, 727, 728, 729, 730, 731, 732, 733, 734, 735, 736, 737, 738, 739, 740, 741, 742, 743, 744, 745, 746, 747, 748, 749, 750, 751, 752, 753, 754, 755, 756, 757, 758, 759, 760, 761, 762, 763, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777, 778, 779, 780, 781, 782, 783, 784, 785, 786, 787, 788, 789, 790, 791, 792, 793, 794, 795, 796, 797, 798, 799, 800 ] }
+            },
+            "required": [ "DFC_Sub_CODIGO" ]
+        }
+    },
+
+	"DFO_Subv_Resto": {
+        "modelo": "DFM_Sub",
+        "filtro": {
+            "properties": {
+                "DFC_Sub_CODIGO":  { "not": { "enum": [ 101, 103, 105, 131, 132, 109, 115, 415, 116, 118, 418, 130, 430, 107, 146, 11, 12, 13, 14, 15, 70, 99, 301, 302, 351, 701, 702, 703, 704, 705, 706, 707, 708, 709, 710, 711, 712, 713, 714, 715, 716, 717, 718, 719, 720, 721, 722, 723, 724, 725, 726, 727, 728, 729, 730, 731, 732, 733, 734, 735, 736, 737, 738, 739, 740, 741, 742, 743, 744, 745, 746, 747, 748, 749, 750, 751, 752, 753, 754, 755, 756, 757, 758, 759, 760, 761, 762, 763, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777, 778, 779, 780, 781, 782, 783, 784, 785, 786, 787, 788, 789, 790, 791, 792, 793, 794, 795, 796, 797, 798, 799, 800 ] } }
+            },
+            "required": [ "DFC_Sub_CODIGO" ]
+        }
+    },
+
+
+    "DFO_182_1": {
+        "modelo": "DFM_182",
+        "filtro": {
+            "properties": {
+                "DFC_182_APORTACIONES": { "not": { "enum": [ 0 ] } }
+            },
+            "required": [ "DFC_182_APORTACIONES" ]
+        }
+    },
+
+    "DFO_182_2": {
+        "modelo": "DFM_182",
+        "filtro": {
+            "properties": {
+                "DFC_182_APORTACIONES": { "not": { "enum": [ 0 ] } }
+            },
+            "required": [ "DFC_182_APORTACIONES" ]
+        }
+    },
+
+    "DFO_182_3": {
+        "modelo": "DFM_182",
+        "filtro": {
+            "properties": {
+                "DFC_182_APORTACIONES": { "not": { "enum": [ 0 ] } }
+            },
+            "required": [ "DFC_182_APORTACIONES" ]
+        }
+    },
+
+    "DFO_182_4": {
+        "modelo": "DFM_182",
+        "filtro": {
+            "properties": {
+                "DFC_182_DONATIVOS": { "not": { "enum": [ 0 ] } }
+            },
+            "required": [ "DFC_182_DONATIVOS" ]
+        }
+    },
+
+	"DFO_182_5": {
+        "modelo": "DFM_182",
+        "filtro": {
+			"oneOf": [
+			{
+				"properties": {
+					"DFC_182_IMPCOLEGIOS": { "not": { "enum": [ 0 ] } }
+				},
+				"required": [ "DFC_182_IMPCOLEGIOS" ]
+			},
+			{
+				"properties": {
+					"DFC_182_SINDIPROF": { "not": { "enum": [ 0 ] } }
+				},
+				"required": [ "DFC_182_SINDIPROF" ]
+			}
+			]
+		}
+    },
+
+	"DFO_182_6": {
+        "modelo": "DFM_182",
+        "filtro": {
+			"oneOf": [
+			{
+				"properties": {
+					"DFC_182_IMPSINDICATOS": { "not": { "enum": [ 0 ] } }
+				},
+				"required": [ "DFC_182_IMPSINDICATOS" ]
+			},
+			{
+				"properties": {
+					"DFC_182_SINDIPROF": { "not": { "enum": [ 0 ] } }
+				},
+				"required": [ "DFC_182_SINDIPROF" ]
+			}
+			]
+		}
+    },
+
+    "DFO_190_11": {
+        "modelo": "DFM_190",
+        "filtro": {
+            "properties": {
+                "DFC_190_GASTOS": { "not": { "enum": [ 0 ] } }
+            },
+            "required": [ "DFC_190_GASTOS" ]
+        }
+    },
+
+    "DFO_190_12": {
+        "modelo": "DFM_190",
+        "filtro": {
+            "oneOf": [
+                {
+                    "properties": {
+                        "DFC_190_CLAVE": { "enum": [ "A", "C", "E", "M", "Y", "" ] },
+                        "DFC_190_REDUCCION": { "not": { "enum": [ 0 ] } }
+                    },
+                    "required": [ "DFC_190_CLAVE", "DFC_190_REDUCCION" ]
+                },
+                {
+                    "properties": {
+                        "DFC_190_CLAVE": { "enum": [ "B" ] },
+                        "DFC_190_SUBCLAVE": { "not": { "enum": [ "11", "12" ] } },
+                        "DFC_190_REDUCCION": { "not": { "enum": [ 0 ] } }
+                    },
+                    "required": [ "DFC_190_CLAVE", "DFC_190_SUBCLAVE", "DFC_190_REDUCCION" ]
+                }
+            ]
+
+        }
+    },
+
+    "DFO_192_1": {
+        "modelo": "DFM_192",
+        "filtro": { }
+    },
+	
+    "DFO_180_1": {
+        "modelo": "DFM_180",
+        "filtro": { }
+    },
+	
+    "DFO_196_1": {
+        "modelo": "DFM_196",
+        "filtro": { }
+    },
+	
+    "DFO_198_1": {
+        "modelo": "DFM_198",
+        "filtro": { }
+    },
+	
+    "DFO_184_1": {
+        "modelo": "DFM_184",
+        "filtro": { }
+    },
+	
+    "DFO_181_1": {
+        "modelo": "DFM_181",
+        "filtro": { }
+    },
+	
+    "DFO_186_1": {
+        "modelo": "DFM_186",
+        "filtro": { }
+    },
+	
+    "DFO_H70_1": {
+        "modelo": "DFM_170",
+        "filtro": { }
+    },
+	
+    "DFO_187_1": {
+        "modelo": "DFM_187",
+        "filtro": { }
+    },
+	
+    "DFO_188_1": {
+        "modelo": "DFM_188",
+        "filtro": { }
+    },
+	
+    "DFO_194_1": {
+        "modelo": "DFM_194",
+        "filtro": { }
+    },
+	
+    "DFO_F50_1": {
+        "modelo": "DFM_F50",
+        "filtro": { }
+    },
+	
+    "DFO_Soc_1": {
+        "modelo": "DFM_Soc",
+        "filtro": { }
+    },
+	
+    "DFO_Fis_1": {
+        "modelo": "DFM_Fis",
+        "filtro": { }
+    },
+	
+    "DFO_PN_1": {
+        "modelo": "DFM_PNotari",
+        "filtro": { }
+    },
+	
+    "DFO_Ant_1": {
+        "modelo": "DFM_Ant",
+        "filtro": { }
+    },
+
+    "DFO_IUr_1": {
+        "modelo": "DFM_Cat",
+        "filtro": { }
+    },
+
+    "DFO_280_1": {
+        "modelo": "DFM_280",
+        "filtro": {
+            "properties": {
+                "DFC_280_RDTOSPOSITIVOS": { "not": { "enum": [ 0 ] } }
+            },
+            "required": [ "DFC_280_RDTOSPOSITIVOS" ]
+        }
+    },
+
+    "DFO_280_2": {
+        "modelo": "DFM_280",
+        "filtro": {
+            "properties": {
+                "DFC_280_RDTOSIMPUTABLES": { "not": { "enum": [ 0 ] } }
+            },
+            "required": [ "DFC_280_RDTOSIMPUTABLES" ]
+        }
+    }
+
+	
+}

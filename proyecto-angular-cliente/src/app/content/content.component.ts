@@ -115,7 +115,6 @@ export class ContentComponent implements OnInit {
       this.cellNameToScroll = undefined;
       this.link = params['link'];
       this.esquema = this.todoEsquema[this.link];
-      console.log(this.esquema)
       if (this.esquema == null) {
         this.router.navigate(['/error/404']);
         return;

@@ -1,0 +1,218 @@
+[
+  {
+    "Origen": "DFO_190_1",
+    "Nodos": "A3I_050101,A3I_0502"
+  },
+  {
+    "Origen": "DFO_190_2",
+    "Nodos": "07"
+  },
+  {
+    "Origen": "DFO_190_3",
+    "Nodos": "RT_RDVector,RT_REVector"
+  },
+  {
+    "Origen": "DFO_190_4",
+    "Nodos": "04"
+  },
+  {
+    "Origen": "DFO_190_5",
+    "Nodos": "A6RR"
+  },
+  {
+    "Origen": "DFO_190_6",
+    "Nodos": "04"
+  },
+  {
+    "Origen": "DFO_190_7",
+    "Nodos": "A1F"
+  },
+  {
+    "Origen": "DFO_190_8",
+    "Nodos": "09"
+  },
+  {
+    "Origen": "DFO_190_9",
+    "Nodos": "06"
+  },
+  {
+    "Origen": "DFO_190_10",
+    "Nodos": "020Vector"
+  },
+  {
+    "Origen": "DFO_190_11",
+    "Nodos": "0017Vector"
+  },
+  {
+    "Origen": "DFO_190_12",
+    "Nodos": "01_02"
+  },
+  {
+    "Origen": "DFO_196_1",
+    "Nodos": "0037Vector"
+  },
+  {
+    "Origen": "DFO_193_1",
+    "Nodos": "0031Vector"
+  },
+  {
+    "Origen": "DFO_193_2",
+    "Nodos": "0037Vector"
+  },
+  {
+    "Origen": "DFO_193_3",
+    "Nodos": "0040Vector"
+  },
+  {
+    "Origen": "DFO_193_4",
+    "Nodos": "0041Vector"
+  },
+  {
+    "Origen": "DFO_193_5",
+    "Nodos": "02B_02"
+  },
+  {
+    "Origen": "DFO_193_6",
+    "Nodos": "1031Vector"
+  },
+  {
+    "Origen": "DFO_193_7",
+    "Nodos": "1037Vector"
+  },
+  {
+    "Origen": "DFO_193_8",
+    "Nodos": "1041Vector"
+  },
+  {
+    "Origen": "DFO_188_1",
+    "Nodos": "13_SVI,0041Vector,0039Vector"
+  },
+  {
+    "Origen": "DFO_181_1",
+    "Nodos": "A3I_050101,A3I_0502"
+  },
+  {
+    "Origen": "DFO_186_1",
+    "Nodos": "A3I_0101"
+  },
+  {
+    "Origen": "DFO_H70_1",
+    "Nodos": "A3I_0301"
+  },
+  {
+    "Origen": "DFO_Subv_1",
+    "Nodos": "07"
+  },
+  {
+    "Origen": "DFO_Subv_2",
+    "Nodos": "A1B"
+  },
+  {
+    "Origen": "DFO_Subv_3",
+    "Nodos": "A1F"
+  },
+  {
+    "Origen": "DFO_Subv_4",
+    "Nodos": "A6RR"
+  },
+  {
+    "Origen": "DFO_Subv_5",
+    "Nodos": "09"
+  },
+  {
+    "Origen": "DFO_187_1",
+    "Nodos": "A1C,A1E"
+  },
+  {
+    "Origen": "DFO_PN_1",
+    "Nodos": "A1A_BA,A1A_IO,A1A_VH"
+  },
+  {
+    "Origen": "DFO_198_1",
+    "Nodos": "0039Vector,0045Vector"
+  },
+  {
+    "Origen": "DFO_180_1",
+    "Nodos": "03"
+  },
+  {
+    "Origen": "DFO_192_1",
+    "Nodos": "0039Vector,0045Vector"
+  },
+  {
+    "Origen": "DFO_345_1",
+    "Nodos": "020Vector"
+  },
+  {
+    "Origen": "DFO_345_2",
+    "Nodos": "11_11,11_A4L,11_12,11_13"
+  },
+  {
+    "Origen": "DFO_345_3",
+    "Nodos": "04"
+  },
+  {
+    "Origen": "DFO_194_1",
+    "Nodos": "1037Vector,0037Vector,0039Vector"
+  },
+  {
+    "Origen": "DFO_182_1",
+    "Nodos": "065Vector"
+  },
+  {
+    "Origen": "DFO_182_2",
+    "Nodos": "0066Vector"
+  },
+  {
+    "Origen": "DFO_182_3",
+    "Nodos": "08_02_P"
+  },
+  {
+    "Origen": "DFO_182_4",
+    "Nodos": "13_D"
+  },
+  {
+    "Origen": "DFO_182_5",
+    "Nodos": "1018Vector"
+  },
+  {
+    "Origen": "DFO_184_1",
+    "Nodos": "03"
+  },
+  {
+    "Origen": "DFO_Soc_1",
+    "Nodos": "04,05,06,07"
+  },
+  {
+    "Origen": "DFO_Fis_1",
+    "Nodos": "13_IAE,04,05,06,07"
+  },
+  {
+    "Origen": "DFO_F50_1",
+    "Nodos": "04,05,06,07"
+  },
+  {
+    "Origen": "DFO_193_Resto",
+    "Nodos": "A5X"
+  },
+  {
+    "Origen": "DFO_345_Resto",
+    "Nodos": "A5X"
+  },
+  {
+    "Origen": "DFO_Subv_Resto",
+    "Nodos": "A5X"
+  },
+  {
+    "Origen": "DFO_190_Resto",
+    "Nodos": "A5X"
+  },
+  {
+    "Origen": "DFO_280_1",
+    "Nodos": "09"
+  },
+  {
+    "Origen": "DFO_280_2",
+    "Nodos": "0039Vector"
+  }
+]

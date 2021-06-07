@@ -10,13 +10,14 @@ import { Globals } from '../shared/globals';
 import * as signalR from '@microsoft/signalr';
 import { MenuItem } from '../models/menu-item.model';
 import { FormControl } from '@angular/forms';
-import { startWith, map } from 'rxjs/operators';
+import { MultilevelNodes, Configuration, ExpandedRTL, ExpandedLTR } from 'ng-material-multilevel-menu';
 
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.css'],
-  providers: [TitleService]
+  providers: [TitleService],
+  animations: [ExpandedRTL, ExpandedLTR]
 })
 export class NavComponent implements OnDestroy {
 
@@ -40,11 +41,10 @@ export class NavComponent implements OnDestroy {
     { code: '0', literal: 'MENÚ', label: '0 - MENÚ' }
   ];
 
-  config = {
-    paddingAtStart: true,
-    classname: 'my-custom-class',
-    fontColor: 'rgb(8, 54, 71)',
-  };
+  config: Configuration = {
+    interfaceWithRoute: true,
+    customTemplate: true
+}
 
 
   mobileQuery: MediaQueryList;
@@ -199,11 +199,15 @@ export class NavComponent implements OnDestroy {
     return pathHasUnreadLogs;
   }
 
-
-
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
+
+  getClass(item) {
+    return {
+        [item.faIcon]: true
+    }
+}
 
 }

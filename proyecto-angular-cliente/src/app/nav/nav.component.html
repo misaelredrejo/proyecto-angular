@@ -17,7 +17,7 @@
           <mat-icon>search</mat-icon>
         </button>
         <mat-autocomplete #auto="matAutocomplete">
-          
+
           <cdk-virtual-scroll-viewport class="example-viewport" [ngStyle]="{'height': height}" itemSize="25">
             <mat-option *cdkVirtualFor="let option of filteredOptions" [value]="option" class="example-item">
               {{option}}
@@ -54,13 +54,35 @@
     <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
       fixedTopGap="56">
 
-      <ng-material-multilevel-menu [configuration]='config' [items]='appitems'>
+      <!--<ng-material-multilevel-menu [configuration]='config' [items]='appitems'>
+      </ng-material-multilevel-menu>-->
+      <ng-material-multilevel-menu [items]='appitems' [configuration]='config'>
+          <ng-template #listTemplate let-item="item" let-configuration="configuration">
+              <div class="my-cool-menu-item" [dir]="configuration.rtlLayout  ? 'rtl' : 'ltr'">
+                  <div class="title-and-image">
+                      <div class="icon-container">
+                          <span [ngClass]="getClass(item)"></span>
+                          <mat-icon>{{item.icon}}</mat-icon>
+                      </div>
+                      <div class="label-container">
+                          <span matTooltip="{{item.label}}" [matTooltipDisabled]="item.label.length <=30">{{item.label | limit:30}}</span>
+                      </div>
+                  </div>
+                  <div class="icon-arrow-container" *ngIf='item.hasChilden'>
+                      <mat-icon *ngIf="!configuration.rtlLayout" [@ExpandedLTR]="item.expanded ? 'yes' : 'no'">
+                          keyboard_arrow_down
+                      </mat-icon>
+                      <mat-icon *ngIf="configuration.rtlLayout" [@ExpandedRTL]="item.expanded ? 'yes' : 'no'">
+                          keyboard_arrow_down
+                      </mat-icon>
+                  </div>
+              </div>
+          </ng-template>
       </ng-material-multilevel-menu>
 
     </mat-sidenav>
 
     <mat-sidenav-content>
-      test
       <router-outlet></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>
