@@ -9,14 +9,18 @@ import { ModeloDF } from '../models/modelo-df.model';
 })
 export class ContentModelosDFComponent implements OnInit {
 
+  displayedColumns: string[] = ['columnas', 'tiposColumnas'];
+  dataSource = [];
+
   modelosDF: ModeloDF[] = [];
 
   constructor(globals: Globals) { 
     this.modelosDF = globals.modelosDF;
+    this.dataSource = this.modelosDF;
   }
 
   ngOnInit(): void {
-    console.log(this.modelosDF);
+    console.log(this.modelosDF)
   }
 
 }

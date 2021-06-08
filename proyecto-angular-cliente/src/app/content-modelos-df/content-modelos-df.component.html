@@ -1,1 +1,16 @@
-<p>content-modelos-df works!</p>
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <!-- Columnas Column -->
+    <ng-container matColumnDef="columnas">
+      <mat-header-cell *matHeaderCellDef> Columnas </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.columnas}} </mat-cell>
+    </ng-container>
+  
+    <!-- TiposColumnas Column -->
+    <ng-container matColumnDef="tiposColumnas">
+      <mat-header-cell *matHeaderCellDef> Tipos de columna </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.tiposColumnas}} </mat-cell>
+    </ng-container>
+  
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
