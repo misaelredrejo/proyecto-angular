@@ -29,6 +29,7 @@ import { CustomDateAdapter } from './shared/custom-date-adapter';
 import { Globals } from './shared/globals';
 import { LimitPipe } from './shared/pipes/limit.pipe';
 import { LimitArrayPipe } from './shared/pipes/limit-array.pipe';
+import { ContentModelosDFComponent } from './content-modelos-df/content-modelos-df.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,7 @@ import { LimitArrayPipe } from './shared/pipes/limit-array.pipe';
     NotFoundComponent,
     ErrorComponent,
     DatabaseComponent,
-    LimitPipe, LimitArrayPipe
+    LimitPipe, LimitArrayPipe, ContentModelosDFComponent
   ],
   imports: [
     BrowserModule,

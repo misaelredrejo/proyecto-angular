@@ -7,6 +7,7 @@ import { ErrorComponent } from './error/error.component';
 import { componentFactoryName } from '@angular/compiler';
 import { NotFoundComponent } from './error/not-found/not-found.component';
 import { DatabaseComponent } from './error/database/database.component';
+import { ContentModelosDFComponent } from './content-modelos-df/content-modelos-df.component';
 
 const routes: Routes = [
   {
@@ -24,24 +25,29 @@ const routes: Routes = [
     canActivate: [AuthenticationGuard],
   },
   {
+    path: 'content-modelos-df',
+    component: ContentModelosDFComponent
+  },
+  {
     path: 'error',
     component: ErrorComponent,
     children: [
-     { 
-      path: '404',
-      component: NotFoundComponent
-    },
-    { 
-      path: 'database',
-      component: DatabaseComponent
-    },
+      {
+        path: '404',
+        component: NotFoundComponent
+      },
+      {
+        path: 'database',
+        component: DatabaseComponent
+      },
     ]
   },
   {
     path: '**',
     redirectTo: '/error/404'
   }
-  
+
+
 ];
 
 @NgModule({
