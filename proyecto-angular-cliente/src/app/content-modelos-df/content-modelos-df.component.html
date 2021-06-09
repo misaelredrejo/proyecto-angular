@@ -1,16 +1,96 @@
-<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    <!-- Columnas Column -->
-    <ng-container matColumnDef="columnas">
-      <mat-header-cell *matHeaderCellDef> Columnas </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.columnas}} </mat-cell>
-    </ng-container>
-  
-    <!-- TiposColumnas Column -->
-    <ng-container matColumnDef="tiposColumnas">
-      <mat-header-cell *matHeaderCellDef> Tipos de columna </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.tiposColumnas}} </mat-cell>
-    </ng-container>
-  
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-  </mat-table>
+<!--TABLE TO LOAD MAT TABLE STYLES-->
+<mat-table style="display: none">
+  <mat-header-row *matHeaderRowDef="[]"></mat-header-row>
+</mat-table>
+<!--END LOAD TABLE-->
+
+<div class="container mt-3">
+
+  <form>
+    <mat-form-field class="example-form-field">
+      <input matInput type="text" placeholder="Buscar por modelo" name="textSearch" [formControl]="searchControl"
+        [matAutocomplete]="auto">
+
+      <button *ngIf="searchControl.value != ''" matSuffix mat-icon-button aria-label="Clear" (click)="searchControl.setValue('')">
+        <mat-icon>clear</mat-icon>
+      </button>
+
+      <mat-autocomplete #auto="matAutocomplete">
+        <cdk-virtual-scroll-viewport class="example-viewport" [ngStyle]="{'height': height}" itemSize="25">
+          <mat-option *cdkVirtualFor="let option of filteredOptions" [value]="option" class="example-item">
+            {{option}}
+          </mat-option>
+        </cdk-virtual-scroll-viewport>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+
+
+
+  <mat-card *ngFor="let modelo of filteredModelosDF" class="mat-elevation-z4 mb-3">
+    <mat-card-header>
+      <mat-card-title>Modelo: {{modelo.modelo}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div fxLayout="row" fxLayoutGap="20px">
+        <div fxFlex="50%">
+          <mat-card class="mat-elevation-z8">
+            <p><b>Indice:</b> {{modelo.indice}}</p>
+            <p><b>Descripción:</b> {{modelo.descripcion}}</p>
+            <p><b>Etiqueta registro:</b> {{modelo.etiquetaRegistro}}</p>
+            <p><b>Columna DNI:</b> {{modelo.columnaDNI}}</p>
+            <p><b>Columnas excluidas:</b> {{modelo.columnasExcluidas.join(', ')}}</p>
+            <p>
+              <span matTooltip="Indica si el modelo no se ha incluido en el programa">
+                  <mat-checkbox [checked]="modelo.excluir" (click)="$event.preventDefault()" labelPosition="before">
+                      <b>Excluir: </b></mat-checkbox>
+              </span>
+            </p>
+            <div class="foo row-dni"></div>
+            <p class="pt-1">Columna DNI</p>
+            <div class="foo row-columna-excluida"></div>
+            <p class="pt-1">Columnas excluidas</p>
+          </mat-card>
+
+
+        </div>
+        <div fxFlex="50%">
+          <table class="mat-table mat-elevation-z8 w-100">
+            <thead>
+              <tr class="mat-header-row">
+                <th class="mat-header-cell">Columnas</th>
+                <th class="mat-header-cell">Tipos columnas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="mat-row" *ngFor="let columna of modelo.columnas; index as i"
+                [ngClass]="{'row-dni': columna === modelo.columnaDNI, 'row-columna-excluida': modelo.columnasExcluidas.indexOf(columna) !== -1}">
+                <td class="mat-cell">{{columna}}</td>
+                <td class="mat-cell">{{modelo.tiposColumnas[i]}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+<!--
+  <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+   Columnas Column 
+  <ng-container matColumnDef="columnas">
+    <mat-header-cell *matHeaderCellDef> Columnas </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.columnas}} </mat-cell>
+  </ng-container>
+
+   TiposColumnas Column 
+  <ng-container matColumnDef="tiposColumnas">
+    <mat-header-cell *matHeaderCellDef> Tipos de columna </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.tiposColumnas}} </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+-->

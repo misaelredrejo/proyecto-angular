@@ -6,15 +6,19 @@
     <button mat-icon-button [routerLink]="['/home']" (click)="resetTitle()" matTooltip="Página inicio">
       <mat-icon>home</mat-icon>
     </button>
-    <button mat-button [routerLink]="['/content-modelos-df']" (click)="resetTitle()" matTooltip="Modelos DF">
-      modelosDF
+    <button mat-icon-button [routerLink]="['/content-modelos-df']" matTooltip="Modelos DF">
+      <mat-icon> table_chart</mat-icon>
     </button>
     <h1 class="example-app-name mr-2">{{title}}</h1>
 
     <form class="form-search ml-auto mr-2">
-      <mat-form-field>
+      <mat-form-field class="form-field">
         <input matInput type="text" placeholder="Buscar por código" name="textSearch" [formControl]="searchControl"
           [matAutocomplete]="auto">
+        <button *ngIf="searchControl.value != ''" matSuffix mat-icon-button aria-label="Clear"
+          (click)="searchControl.setValue('')">
+          <mat-icon>clear</mat-icon>
+        </button>
         <button mat-button mat-icon-button matSuffix aria-label="Search icon"
           [routerLink]="['/content', searchControl.value]" matTooltip="Buscar" (click)="$event.stopPropagation()">
           <mat-icon>search</mat-icon>
@@ -60,27 +64,29 @@
       <!--<ng-material-multilevel-menu [configuration]='config' [items]='appitems'>
       </ng-material-multilevel-menu>-->
       <ng-material-multilevel-menu [items]='appitems' [configuration]='config'>
-          <ng-template #listTemplate let-item="item" let-configuration="configuration">
-              <div class="my-cool-menu-item" [dir]="configuration.rtlLayout  ? 'rtl' : 'ltr'">
-                  <div class="title-and-image">
-                      <div class="icon-container">
-                          <span [ngClass]="getClass(item)"></span>
-                          <mat-icon>{{item.icon}}</mat-icon>
-                      </div>
-                      <div class="label-container">
-                          <span matTooltip="{{item.label}}" [matTooltipDisabled]="item.label.length <=30" matBadge="{{item.cntCommentsSubPath}}" [matBadgeHidden]="item.cntCommentsSubPath == 0" matBadgeOverlap="false" matBadgeColor="accent" matBadgeSize="small">{{item.label | limit:30}}</span>
-                      </div>
-                  </div>
-                  <div class="icon-arrow-container" *ngIf='item.hasChilden'>
-                      <mat-icon *ngIf="!configuration.rtlLayout" [@ExpandedLTR]="item.expanded ? 'yes' : 'no'">
-                          keyboard_arrow_down
-                      </mat-icon>
-                      <mat-icon *ngIf="configuration.rtlLayout" [@ExpandedRTL]="item.expanded ? 'yes' : 'no'">
-                          keyboard_arrow_down
-                      </mat-icon>
-                  </div>
+        <ng-template #listTemplate let-item="item" let-configuration="configuration">
+          <div class="my-cool-menu-item" [dir]="configuration.rtlLayout  ? 'rtl' : 'ltr'">
+            <div class="title-and-image">
+              <div class="icon-container">
+                <span [ngClass]="getClass(item)"></span>
+                <mat-icon>{{item.icon}}</mat-icon>
               </div>
-          </ng-template>
+              <div class="label-container">
+                <span matTooltip="{{item.label}}" [matTooltipDisabled]="item.label.length <=30"
+                  matBadge="{{item.cntCommentsSubPath}}" [matBadgeHidden]="item.cntCommentsSubPath == 0"
+                  matBadgeOverlap="false" matBadgeColor="accent" matBadgeSize="small">{{item.label | limit:30}}</span>
+              </div>
+            </div>
+            <div class="icon-arrow-container" *ngIf='item.hasChilden'>
+              <mat-icon *ngIf="!configuration.rtlLayout" [@ExpandedLTR]="item.expanded ? 'yes' : 'no'">
+                keyboard_arrow_down
+              </mat-icon>
+              <mat-icon *ngIf="configuration.rtlLayout" [@ExpandedRTL]="item.expanded ? 'yes' : 'no'">
+                keyboard_arrow_down
+              </mat-icon>
+            </div>
+          </div>
+        </ng-template>
       </ng-material-multilevel-menu>
 
     </mat-sidenav>

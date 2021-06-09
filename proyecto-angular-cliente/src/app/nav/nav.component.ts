@@ -28,13 +28,12 @@ export class NavComponent implements OnDestroy {
   esquema: {} = {};
   menuProfesional: {}[] = [];
   literaleses: {} = {};
-  options: string[] = ['One', 'Two', 'Three'];
+  options: string[] = [];
   filteredOptions: string[];
   height: string = '200px';
 
   title: string;
   searchControl = new FormControl('');
-  value: string;
   rolTypes: string[] = Object.keys(Rol).map(k => Rol[k as any]);
 
   appitems: MenuItem[] = [

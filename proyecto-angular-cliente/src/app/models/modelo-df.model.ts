@@ -3,9 +3,9 @@ export interface ModeloDF {
     indice: number,
     descripcion: string,
     etiquetaRegistro: string,
-    columnas: string,
-    tiposColumnas: string,
+    columnas: string[],
+    tiposColumnas: string[],
     columnaDNI: string,
-    columnasExcluidas: string,
+    columnasExcluidas: string[],
     excluir: false
 }

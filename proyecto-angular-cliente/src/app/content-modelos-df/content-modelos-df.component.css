@@ -1,0 +1,31 @@
+.example-form-field {
+    width: 250px;
+}
+
+.mat-header-row {
+    background-color: var(--tracasa-primary-color-light);
+}
+
+.mat-header-cell {
+    font-weight: bold;
+}
+
+.row-dni {
+  background-color: lightblue;
+}
+
+.row-columna-excluida {
+    background-color:#ffcccb;
+}
+
+.foo {
+    float: left;
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+    border: 2px solid rgba(0, 0, 0, .2);
+}
+
+.pointer {
+    cursor: pointer;
+}

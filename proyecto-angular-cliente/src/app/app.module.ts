@@ -30,6 +30,8 @@ import { Globals } from './shared/globals';
 import { LimitPipe } from './shared/pipes/limit.pipe';
 import { LimitArrayPipe } from './shared/pipes/limit-array.pipe';
 import { ContentModelosDFComponent } from './content-modelos-df/content-modelos-df.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
+
 
 @NgModule({
   declarations: [
@@ -44,7 +46,7 @@ import { ContentModelosDFComponent } from './content-modelos-df/content-modelos-
     NotFoundComponent,
     ErrorComponent,
     DatabaseComponent,
-    LimitPipe, LimitArrayPipe, ContentModelosDFComponent
+    LimitPipe, LimitArrayPipe, ContentModelosDFComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,7 +56,8 @@ import { ContentModelosDFComponent } from './content-modelos-df/content-modelos-
     AppRoutingModule,
     MaterialModule,
     ToastrModule.forRoot(),
-    FormsModule, ReactiveFormsModule
+    FormsModule, ReactiveFormsModule,
+    FlexLayoutModule
 
   ],
   exports: [LimitPipe, LimitArrayPipe],

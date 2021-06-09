@@ -38,6 +38,10 @@
     font-size: 70%;
   }
 
+  .form-field {
+    width: 200px;
+  }
+
   .example-viewport {
     height: 200px;
   }
@@ -48,7 +52,7 @@
 
   .my-cool-menu-item {
     display: flex;
-    padding-left: 5px;
+    padding-left: 10px;
     padding-right: 10px;
     border-bottom: solid 1px rgba(0,0,0,.12);
     height: 48px;
