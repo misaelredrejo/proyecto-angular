@@ -42,7 +42,7 @@
             <p><b>Columnas excluidas:</b> {{modelo.columnasExcluidas.join(', ')}}</p>
             <p>
               <span matTooltip="Indica si el modelo no se ha incluido en el programa">
-                  <mat-checkbox [checked]="modelo.excluir" (click)="$event.preventDefault()" labelPosition="before">
+                  <mat-checkbox [checked]="modelo.excluir" (click)="$event.preventDefault()" labelPosition="before" class="cursor-default">
                       <b>Excluir: </b></mat-checkbox>
               </span>
             </p>
@@ -76,21 +76,3 @@
     </mat-card-content>
   </mat-card>
 </div>
-<!--
-  <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-   Columnas Column 
-  <ng-container matColumnDef="columnas">
-    <mat-header-cell *matHeaderCellDef> Columnas </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.columnas}} </mat-cell>
-  </ng-container>
-
-   TiposColumnas Column 
-  <ng-container matColumnDef="tiposColumnas">
-    <mat-header-cell *matHeaderCellDef> Tipos de columna </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.tiposColumnas}} </mat-cell>
-  </ng-container>
-
-  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-</mat-table>
--->

@@ -42,10 +42,8 @@ export class ContentModelosDFComponent implements OnInit {
         } else {
           this.height = '200px'
         }
-        console.log(value)
       }
     );
-
   }
 
   private _filter(value: string): string[] {

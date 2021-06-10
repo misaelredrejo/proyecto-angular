@@ -42,6 +42,7 @@ export class DialogCommentsComponent implements OnInit {
     this.formEdit = this.fb.group({
       comment: ['', Validators.required]
     });
+    //this.toastr.toastrConfig.positionClass = 'toast-bottom-center';
   }
 
   ngOnInit(): void {

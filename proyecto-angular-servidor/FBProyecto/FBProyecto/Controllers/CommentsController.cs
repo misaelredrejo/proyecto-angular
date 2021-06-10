@@ -55,7 +55,7 @@ namespace FBProyecto.Controllers
             ApiResponse myResponse = new ApiResponse();
             try
             {
-                var listCommentDTO = await _context.CommentLog.FromSqlRaw($"exec dbo.Last10Logs {n}").ToListAsync();
+                var listCommentDTO = await _context.CommentLog.FromSqlRaw($"exec dbo.LastNLogs {n}").ToListAsync();
                 myResponse.Status = Status.Success;
                 myResponse.Message = "";
                 myResponse.Data = listCommentDTO;
