@@ -22,7 +22,7 @@
     matTooltip="Ver comentarios" [matBadgeHidden]="cntComentarios == 0" (click)="openDialogCommentsByPath(path)">
     <mat-icon> comment</mat-icon>
   </button>
-  <button mat-button *ngFor="let origen of origenes" [routerLink]="['/content-modelos-df', origen]">{{origen}}</button>
+  <button mat-button *ngFor="let origen of origenes" [routerLink]="['/content-modelos-df']" [queryParams]="{ origen: origen }">{{origen}}</button>
 
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
     <!-- This is the tree node template for leaf nodes -->

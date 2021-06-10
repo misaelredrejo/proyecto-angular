@@ -38,12 +38,12 @@ export class ContentModelosDFComponent implements OnInit {
 
   ngOnInit(): void {
 
-    /*
+    
     for (let key in this.origenesDF) {
       let value = this.origenesDF[key];
+      this.pushOrigenDFtoModeloDFByModelo(value['modelo'], value);
+    }
 
-    }*/
-    
     this.filteredModelosDF = this.modelosDF;
     this.options = this.modelosDF.map(modeloDF => <string>modeloDF.modelo);
     this.filteredOptions = this.options;
@@ -59,12 +59,11 @@ export class ContentModelosDFComponent implements OnInit {
         }
       }
     );
-    this.route.firstChild.params.subscribe(params => {
+    this.route.queryParams.subscribe(params => {
       let origen = params['origen'];
-      let modelo = this.origenesDF[origen]['modelo'];
-      console.log(modelo);
-      this.searchControl.setValue(modelo);
-    });
+        let modelo = this.origenesDF[origen]['modelo'];
+        this.searchControl.setValue(modelo);
+    })
   }
 
   private _filter(value: string): string[] {
@@ -76,6 +75,13 @@ export class ContentModelosDFComponent implements OnInit {
     this.filteredModelosDF = this.modelosDF.filter( modeloDF => modeloDF.modelo.toLowerCase().indexOf(this.searchControl.value.toLowerCase()) !== -1);
   }
 
-
+  pushOrigenDFtoModeloDFByModelo(modelo: string, origenDF: {}): void {
+    this.modelosDF.forEach(modeloDF => {
+      if (modeloDF.modelo == modelo) {
+        modeloDF.origenDF = origenDF;
+        return;
+      }
+    });
+  }
 
 }

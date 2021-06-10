@@ -26,13 +26,7 @@ const routes: Routes = [
   },
   {
     path: 'content-modelos-df',
-    component: ContentModelosDFComponent,
-    children: [
-      {
-        path: ':origen',
-        component: ContentModelosDFComponent
-      }
-    ]
+    component: ContentModelosDFComponent
   },
   {
     path: 'error',
