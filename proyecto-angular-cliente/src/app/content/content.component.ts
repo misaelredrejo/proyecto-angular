@@ -17,6 +17,7 @@ import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
 import { SpinnerService } from '../shared/services/spinner.service';
 import { Globals } from '../shared/globals';
+import { NodosOrigenDF } from '../models/nodos-origen-df.model';
 
 @Component({
   selector: 'app-content',
@@ -59,6 +60,10 @@ export class ContentComponent implements OnInit {
 
   private scrollTarget: ElementRef;
 
+  nodosOrigenesDF: NodosOrigenDF[] = [];
+  origenes: string[] = [];
+
+
   @ViewChild('scrollTarget') set content(content: ElementRef) {
      if(content) { // initially setter gets called with undefined
           this.scrollTarget = content;
@@ -79,10 +84,14 @@ export class ContentComponent implements OnInit {
     this.todoEsquema = this.globals.esquema;
     this.literaleses = this.globals.literaleses;
     this.literaleseu = this.globals.literaleseu;
+    this.nodosOrigenesDF = this.globals.nodosOrigenesDF;
   }
   hasChild = (_: number, node: EsquemaNode) => !!node.children && node.children.length > 0;
 
   ngOnInit(): void {
+    
+    
+
     this.checkUser();
     this.subscribeParams();
   }
@@ -137,6 +146,7 @@ export class ContentComponent implements OnInit {
         this.titleService.changeTitle(this.literal + ' - ' + this.literaleu);
       }
 
+      this.origenes = this.origenesByNodo(this.link);
       this.loadComentarios(this.esquema['path']);
       this.loadBreadcrumbs();
       this.fillTree();
@@ -268,7 +278,6 @@ export class ContentComponent implements OnInit {
       console.log(error);
       this.spinnerService.hide();
     });
-
   }
 
   openDialogComments(node: EsquemaNode) {
@@ -349,6 +358,14 @@ export class ContentComponent implements OnInit {
         });
       }
     });
+  }
+
+  origenesByNodo(nodo: string): string[] {
+    let origenes: string[] = [];
+    this.nodosOrigenesDF.forEach(nodosOrigenDF => {
+      if (nodosOrigenDF.nodos.indexOf(nodo) !== -1) origenes.push(nodosOrigenDF.origen);
+    });
+    return origenes;
   }
 
 }

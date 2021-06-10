@@ -80,7 +80,7 @@ export class HomeComponent implements OnInit {
     this.maxDateFrontFilter = this.maxDate;
     this.literaleses = this.globals.literaleses;
     this.literaleseu = this.globals.literaleseu;
-    //this.toastrService.toastrConfig.positionClass = 'toast-bottom-center';
+    this.toastrService.toastrConfig.positionClass = 'toast-bottom-right';
   }
 
 

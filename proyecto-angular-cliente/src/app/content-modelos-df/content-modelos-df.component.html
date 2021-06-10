@@ -4,7 +4,7 @@
 </mat-table>
 <!--END LOAD TABLE-->
 
-<div class="container mt-3">
+<div class="m-5">
 
   <form>
     <mat-form-field class="example-form-field">
@@ -36,10 +36,8 @@
         <div fxFlex="50%">
           <mat-card class="mat-elevation-z8">
             <p><b>Indice:</b> {{modelo.indice}}</p>
-            <p><b>Descripción:</b> {{modelo.descripcion}}</p>
-            <p><b>Etiqueta registro:</b> {{modelo.etiquetaRegistro}}</p>
-            <p><b>Columna DNI:</b> {{modelo.columnaDNI}}</p>
-            <p><b>Columnas excluidas:</b> {{modelo.columnasExcluidas.join(', ')}}</p>
+            <p><b>Descripción:</b> {{modelo.descripcion}} - {{literaleses[modelo.descripcion]}} - {{literaleseu[modelo.descripcion]}}</p>
+            <p><b>Etiqueta registro:</b> {{modelo.etiquetaRegistro}} - {{literaleses[modelo.etiquetaRegistro]}} - {{literaleseu[modelo.etiquetaRegistro]}}</p>
             <p>
               <span matTooltip="Indica si el modelo no se ha incluido en el programa">
                   <mat-checkbox [checked]="modelo.excluir" (click)="$event.preventDefault()" labelPosition="before" class="cursor-default">
@@ -65,7 +63,7 @@
             <tbody>
               <tr class="mat-row" *ngFor="let columna of modelo.columnas; index as i"
                 [ngClass]="{'row-dni': columna === modelo.columnaDNI, 'row-columna-excluida': modelo.columnasExcluidas.indexOf(columna) !== -1}">
-                <td class="mat-cell">{{columna}}</td>
+                <td class="mat-cell">{{columna}} - {{literaleses[columna]}} - {{literaleseu[columna]}}</td>
                 <td class="mat-cell">{{modelo.tiposColumnas[i]}}</td>
               </tr>
             </tbody>

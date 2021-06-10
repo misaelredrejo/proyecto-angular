@@ -3,6 +3,7 @@ import { Globals } from '../shared/globals';
 import { ModeloDF } from '../models/modelo-df.model';
 import { FormControl } from '@angular/forms';
 import { TitleService } from '../shared/services/title.service';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -12,6 +13,8 @@ import { TitleService } from '../shared/services/title.service';
 })
 export class ContentModelosDFComponent implements OnInit {
 
+  literaleses: {};
+  literaleseu: {};
   displayedColumns: string[] = ['columnas', 'tiposColumnas'];
   dataSource = [];
   searchControl = new FormControl('');
@@ -21,14 +24,26 @@ export class ContentModelosDFComponent implements OnInit {
 
   modelosDF: ModeloDF[] = [];
   filteredModelosDF: ModeloDF[] = [];
+  origenesDF: {} = {};
 
-  constructor(globals: Globals, private titleService: TitleService) { 
-    this.modelosDF = globals.modelosDF;
+
+  constructor(private globals: Globals, private titleService: TitleService, private route: ActivatedRoute,) {
+    this.literaleses = this.globals.literaleses;
+    this.literaleseu = this.globals.literaleseu;
+    this.modelosDF = this.globals.modelosDF;
     this.dataSource = this.modelosDF;
+    this.origenesDF = this.globals.origenesDF;
     this.titleService.changeTitle('Modelos Datos Fiscales');
   }
 
   ngOnInit(): void {
+
+    /*
+    for (let key in this.origenesDF) {
+      let value = this.origenesDF[key];
+
+    }*/
+    
     this.filteredModelosDF = this.modelosDF;
     this.options = this.modelosDF.map(modeloDF => <string>modeloDF.modelo);
     this.filteredOptions = this.options;
@@ -44,6 +59,12 @@ export class ContentModelosDFComponent implements OnInit {
         }
       }
     );
+    this.route.firstChild.params.subscribe(params => {
+      let origen = params['origen'];
+      let modelo = this.origenesDF[origen]['modelo'];
+      console.log(modelo);
+      this.searchControl.setValue(modelo);
+    });
   }
 
   private _filter(value: string): string[] {
@@ -54,5 +75,7 @@ export class ContentModelosDFComponent implements OnInit {
   filterModelosDF(value: string): void {
     this.filteredModelosDF = this.modelosDF.filter( modeloDF => modeloDF.modelo.toLowerCase().indexOf(this.searchControl.value.toLowerCase()) !== -1);
   }
+
+
 
 }

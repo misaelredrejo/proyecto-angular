@@ -42,7 +42,7 @@ export class DialogCommentsComponent implements OnInit {
     this.formEdit = this.fb.group({
       comment: ['', Validators.required]
     });
-    //this.toastr.toastrConfig.positionClass = 'toast-bottom-center';
+    this.toastr.toastrConfig.positionClass = 'toast-bottom-right';
   }
 
   ngOnInit(): void {
@@ -56,7 +56,6 @@ export class DialogCommentsComponent implements OnInit {
     // timeout required to avoid the dreaded 'ExpressionChangedAfterItHasBeenCheckedError'
     setTimeout(() => this.disableAnimation = false);
   }
-
 
   allowEditComment(index: number) {
     this.formEdit.patchValue({
