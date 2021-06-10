@@ -102,6 +102,7 @@
             (click)="openDialogComments(node)" class="ml-3" (click)="$event.stopPropagation()">
             <mat-icon> comment</mat-icon>
           </button>
+          <span *ngIf="origenesNodoDF[node.name]">{{origenesNodoDF[node.name]}}</span>
         </div>
         <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
           <ng-container matTreeNodeOutlet></ng-container>

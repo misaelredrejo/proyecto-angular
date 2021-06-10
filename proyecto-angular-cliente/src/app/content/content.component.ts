@@ -62,6 +62,8 @@ export class ContentComponent implements OnInit {
 
   nodosOrigenesDF: NodosOrigenDF[] = [];
   origenes: string[] = [];
+  //TESTTTT
+  origenesNodoDF: {[key: string]: string[]} = {};
 
 
   @ViewChild('scrollTarget') set content(content: ElementRef) {
@@ -89,6 +91,15 @@ export class ContentComponent implements OnInit {
   hasChild = (_: number, node: EsquemaNode) => !!node.children && node.children.length > 0;
 
   ngOnInit(): void {
+    //TESTT
+    this.nodosOrigenesDF.forEach(nodosOrigen => {
+      nodosOrigen.nodos.forEach(nodo => {
+        if(!this.origenesNodoDF[nodo]) this.origenesNodoDF[nodo] = [];
+        this.origenesNodoDF[nodo].push(nodosOrigen.origen);
+      })
+    });
+    console.log(this.origenesNodoDF)
+
     this.checkUser();
     this.subscribeParams();
   }
