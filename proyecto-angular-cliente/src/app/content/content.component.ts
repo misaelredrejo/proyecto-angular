@@ -89,9 +89,6 @@ export class ContentComponent implements OnInit {
   hasChild = (_: number, node: EsquemaNode) => !!node.children && node.children.length > 0;
 
   ngOnInit(): void {
-    
-    
-
     this.checkUser();
     this.subscribeParams();
   }

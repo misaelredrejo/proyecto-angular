@@ -4,6 +4,8 @@ import { ModeloDF } from '../models/modelo-df.model';
 import { FormControl } from '@angular/forms';
 import { TitleService } from '../shared/services/title.service';
 import { ActivatedRoute } from '@angular/router';
+import { User } from '../models/user.model';
+import { AuthenticationService } from '../core/authentication/authentication.service';
 
 
 @Component({
@@ -12,6 +14,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./content-modelos-df.component.css']
 })
 export class ContentModelosDFComponent implements OnInit {
+
+  user: User;
 
   literaleses: {};
   literaleseu: {};
@@ -27,7 +31,7 @@ export class ContentModelosDFComponent implements OnInit {
   origenesDF: {} = {};
 
 
-  constructor(private globals: Globals, private titleService: TitleService, private route: ActivatedRoute,) {
+  constructor(private globals: Globals, private titleService: TitleService, private route: ActivatedRoute, private authService: AuthenticationService) {
     this.literaleses = this.globals.literaleses;
     this.literaleseu = this.globals.literaleseu;
     this.modelosDF = this.globals.modelosDF;
@@ -38,7 +42,13 @@ export class ContentModelosDFComponent implements OnInit {
 
   ngOnInit(): void {
 
-    
+    this.authService.currentUser.subscribe(data => {
+      this.user = data;
+    }, error => {
+      console.log(error);
+    });
+
+
     for (let key in this.origenesDF) {
       let value = this.origenesDF[key];
       this.pushOrigenDFtoModeloDFByModelo(value['modelo'], value);
@@ -61,8 +71,9 @@ export class ContentModelosDFComponent implements OnInit {
     );
     this.route.queryParams.subscribe(params => {
       let origen = params['origen'];
-        let modelo = this.origenesDF[origen]['modelo'];
-        this.searchControl.setValue(modelo);
+      if (!origen) return;
+      let modelo = this.origenesDF[origen]['modelo'];
+      this.searchControl.setValue(modelo);
     })
   }
 
@@ -72,7 +83,7 @@ export class ContentModelosDFComponent implements OnInit {
   }
 
   filterModelosDF(value: string): void {
-    this.filteredModelosDF = this.modelosDF.filter( modeloDF => modeloDF.modelo.toLowerCase().indexOf(this.searchControl.value.toLowerCase()) !== -1);
+    this.filteredModelosDF = this.modelosDF.filter(modeloDF => modeloDF.modelo.toLowerCase().indexOf(this.searchControl.value.toLowerCase()) !== -1);
   }
 
   pushOrigenDFtoModeloDFByModelo(modelo: string, origenDF: {}): void {
