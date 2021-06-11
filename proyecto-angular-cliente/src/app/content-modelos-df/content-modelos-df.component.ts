@@ -19,8 +19,6 @@ export class ContentModelosDFComponent implements OnInit {
 
   literaleses: {};
   literaleseu: {};
-  displayedColumns: string[] = ['columnas', 'tiposColumnas'];
-  dataSource = [];
   searchControl = new FormControl('');
   options: string[] = [];
   filteredOptions: string[] = [];
@@ -35,23 +33,22 @@ export class ContentModelosDFComponent implements OnInit {
     this.literaleses = this.globals.literaleses;
     this.literaleseu = this.globals.literaleseu;
     this.modelosDF = this.globals.modelosDF;
-    this.dataSource = this.modelosDF;
     this.origenesDF = this.globals.origenesDF;
-    this.titleService.changeTitle('Modelos Datos Fiscales');
+    this.titleService.changeTitleToModelosDF();
   }
 
   ngOnInit(): void {
-
     this.authService.currentUser.subscribe(data => {
       this.user = data;
     }, error => {
       console.log(error);
     });
 
-
     for (let key in this.origenesDF) {
       let value = this.origenesDF[key];
-      this.pushOrigenDFtoModeloDFByModelo(value['modelo'], value);
+      let origenDF = {};
+      origenDF[key] = value;
+      this.pushOrigenDFToModeloDFByModelo(value['modelo'], origenDF);
     }
 
     this.filteredModelosDF = this.modelosDF;
@@ -74,7 +71,7 @@ export class ContentModelosDFComponent implements OnInit {
       if (!origen) return;
       let modelo = this.origenesDF[origen]['modelo'];
       this.searchControl.setValue(modelo);
-    })
+    });
   }
 
   private _filter(value: string): string[] {
@@ -83,13 +80,13 @@ export class ContentModelosDFComponent implements OnInit {
   }
 
   filterModelosDF(value: string): void {
-    this.filteredModelosDF = this.modelosDF.filter(modeloDF => modeloDF.modelo.toLowerCase().indexOf(this.searchControl.value.toLowerCase()) !== -1);
+    this.filteredModelosDF = this.modelosDF.filter(modeloDF => modeloDF.modelo.toLowerCase().indexOf(value.toLowerCase()) !== -1);
   }
 
-  pushOrigenDFtoModeloDFByModelo(modelo: string, origenDF: {}): void {
+  pushOrigenDFToModeloDFByModelo(modelo: string, origenDF: {}): void {
     this.modelosDF.forEach(modeloDF => {
       if (modeloDF.modelo == modelo) {
-        modeloDF.origenDF = origenDF;
+        modeloDF.origenesDF.push(origenDF);
         return;
       }
     });

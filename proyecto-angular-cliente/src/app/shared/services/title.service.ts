@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class TitleService {
 
   private defaultTitle = 'Configuración NPR';
+  private modelosDFTitle = 'Modelos Datos Fiscales';
 
   // Observable string sources
   private titleSource: BehaviorSubject<string>;
@@ -17,11 +18,22 @@ export class TitleService {
   }
 
   // Service message commands
-  changeTitle(title: string) {
+  changeTitle(title: string): void {
     this.titleSource.next(title);
   }
 
-  resetTitle() {
+  changeTitleFromContent(title: string): void {
+    let currentTitle = this.currentTitleValue;
+    if (currentTitle != this.defaultTitle && currentTitle != this.modelosDFTitle) {
+      this.titleSource.next(title);
+    }
+  }
+
+  changeTitleToModelosDF(): void {
+    this.titleSource.next(this.modelosDFTitle);
+  }
+
+  resetTitle(): void {
     this.titleSource.next(this.defaultTitle);
   }
 

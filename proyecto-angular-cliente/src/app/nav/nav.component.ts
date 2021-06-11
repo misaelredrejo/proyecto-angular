@@ -10,7 +10,7 @@ import { Globals } from '../shared/globals';
 import * as signalR from '@microsoft/signalr';
 import { MenuItem } from '../models/menu-item.model';
 import { FormControl } from '@angular/forms';
-import { MultilevelNodes, Configuration, ExpandedRTL, ExpandedLTR } from 'ng-material-multilevel-menu';
+import { Configuration, ExpandedRTL, ExpandedLTR } from 'ng-material-multilevel-menu';
 
 @Component({
   selector: 'app-nav',

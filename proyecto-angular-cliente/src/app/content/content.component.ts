@@ -50,7 +50,6 @@ export class ContentComponent implements OnInit {
   literal: string;
   literaleu: string;
   literalMaxLength: number = 50;
-  defaultTitle = 'Configuración NPR';
 
   ALL_TABLE_COLS = ['type', 'format', 'minimum', 'maximum', 'minLength', 'maxLength', 'enum', 'expandible', 'readOnly', 'multipleOf', 'required', 'path'];
   TABLE_COLS = ['type', 'format', 'minimum', 'maximum', 'minLength', 'maxLength', 'enum', 'expandible', 'readOnly', 'multipleOf', 'required', 'path'];
@@ -62,7 +61,6 @@ export class ContentComponent implements OnInit {
 
   nodosOrigenesDF: NodosOrigenDF[] = [];
   origenes: string[] = [];
-  //TESTTTT
   origenesNodoDF: {[key: string]: string[]} = {};
 
 
@@ -91,14 +89,13 @@ export class ContentComponent implements OnInit {
   hasChild = (_: number, node: EsquemaNode) => !!node.children && node.children.length > 0;
 
   ngOnInit(): void {
-    //TESTT
+
     this.nodosOrigenesDF.forEach(nodosOrigen => {
       nodosOrigen.nodos.forEach(nodo => {
         if(!this.origenesNodoDF[nodo]) this.origenesNodoDF[nodo] = [];
         this.origenesNodoDF[nodo].push(nodosOrigen.origen);
       })
     });
-    console.log(this.origenesNodoDF)
 
     this.checkUser();
     this.subscribeParams();
@@ -122,9 +119,8 @@ export class ContentComponent implements OnInit {
     } else {
       this.TABLE_COLS = Object.assign([], this.ALL_TABLE_COLS);
     }
-    if (this.titleService.currentTitleValue != this.defaultTitle) {
-      this.titleService.changeTitle((this.user.rol == Rol.Desarrollador ? this.link + ' - ' : '') + this.literal + ' - ' + this.literaleu);
-    }
+
+    this.titleService.changeTitleFromContent((this.user.rol == Rol.Desarrollador ? this.link + ' - ' : '') + this.literal + ' - ' + this.literaleu);
   }
 
   subscribeParams(): void {

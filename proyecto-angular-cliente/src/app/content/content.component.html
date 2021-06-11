@@ -102,7 +102,9 @@
             (click)="openDialogComments(node)" class="ml-3" (click)="$event.stopPropagation()">
             <mat-icon> comment</mat-icon>
           </button>
-          <span *ngIf="origenesNodoDF[node.name]">{{origenesNodoDF[node.name]}}</span>
+          <button mat-button (click)="$event.stopPropagation()"
+          *ngFor="let origenNodoDF of (origenesNodoDF[node.name] ? origenesNodoDF[node.name] : [])"
+          [routerLink]="['/content-modelos-df']" [queryParams]="{ origen: origenNodoDF }">{{origenNodoDF}}</button>
         </div>
         <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
           <ng-container matTreeNodeOutlet></ng-container>
