@@ -49,8 +49,8 @@
                             </form>
                             <table *ngIf="indexComment != i" class="w-100">
                                 <tr>
-                                    <td class="w-100">
-                                        <mat-icon *ngIf="commentsId.indexOf(comment.commentId) !== -1">
+                                    <td class="w-100 testt">
+                                        <mat-icon *ngIf="commentsId.indexOf(comment.commentId) !== -1" class="float-left">
                                             notification_important</mat-icon>
                                         <span [className]="!comment.isActive ? 'strikethrough' : ''">{{i+1}}.-
                                             {{comment['text']}}</span>

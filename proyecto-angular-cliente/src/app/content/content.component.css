@@ -17,6 +17,10 @@
   background-color: var(--tracasa-foreground-color);
 }
 
+button {
+  white-space: pre-wrap;
+}
+
 .table-button {
   background-color: whitesmoke;
   width: 100%;
@@ -24,7 +28,6 @@
   max-width: 300px;
   font-size: 12px;
   font-weight: 600;
-  white-space: pre-wrap;
 }
 
 .mat-cell-button {
@@ -36,7 +39,7 @@
 .cursor-default {cursor: default;}
 
 .highlighted {
-  border: 1px solid;
+  border: 2px solid;
   border-radius: 5%;
   padding: 1px;
   background-color: var(--tracasa-primary-color-light);

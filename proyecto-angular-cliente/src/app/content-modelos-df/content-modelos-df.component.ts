@@ -44,6 +44,9 @@ export class ContentModelosDFComponent implements OnInit {
       console.log(error);
     });
 
+    this.modelosDF.forEach(modeloDF => {
+      modeloDF.origenesDF = []; 
+    });
     for (let key in this.origenesDF) {
       let value = this.origenesDF[key];
       let origenDF = {};

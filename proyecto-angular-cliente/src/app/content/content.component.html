@@ -12,17 +12,29 @@
   </button>
 </span>
 
-<div class="m-5">
-  <h4>{{ literal }}<span matBadge="{{cntComentariosSubpath}}" matBadgeColor="accent"
-      [matBadgeHidden]="cntComentariosSubpath == 0" class="ml-1"></span></h4>
-  <h4>{{ literaleu }}</h4>
-  <span class="highlighted" *ngIf="isArrayType" color="primary">Type: array, minItems: {{esquema['minItems']}},
-    maxItems: {{esquema['maxItems']}}</span>
-  <button mat-icon-button color="primary" aria-label="Comments" matBadge="{{cntComentarios}}" matBadgeColor="primary"
-    matTooltip="Ver comentarios" [matBadgeHidden]="cntComentarios == 0" (click)="openDialogCommentsByPath(path)">
-    <mat-icon> comment</mat-icon>
-  </button>
-  <button mat-button *ngFor="let origen of origenes" [routerLink]="['/content-modelos-df']" [queryParams]="{ origen: origen }">{{origen}}</button>
+<div class="ml-5 mr-5 mt-4 mb-4">
+  <mat-card class="mat-elevation-z4 mb-3">
+    <button mat-icon-button class="float-right" color="primary" aria-label="Comments" matBadge="{{cntComentarios}}"
+      matBadgeColor="primary" matTooltip="Ver comentarios" [matBadgeHidden]="cntComentarios == 0"
+      (click)="openDialogCommentsByPath(path)">
+      <mat-icon> comment</mat-icon>
+    </button>
+    <h4>
+      {{ literal }}
+      <span matBadge="{{cntComentariosSubpath}}" matBadgeColor="accent" [matBadgeHidden]="cntComentariosSubpath == 0"
+        matBadgeOverlap="false">
+      </span>
+    </h4>
+    <h4>{{ literaleu }}</h4>
+    <span *ngIf="isArrayType" color="primary"><b>Type:</b> array, minItems: {{esquema['minItems']}},
+      maxItems: {{esquema['maxItems']}}</span>
+    <button mat-button color="primary" *ngFor="let origen of origenes" [routerLink]="['/content-modelos-df']"
+      [queryParams]="{ origen: origen }">
+      <span *ngIf="user?.rol == 'Desarrollador'">{{origen}} - </span>
+      {{literaleses[origen]}} {{literaleseu[origen]}}
+    </button>
+
+  </mat-card>
 
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
     <!-- This is the tree node template for leaf nodes -->
@@ -39,7 +51,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="mat-row" *ngFor="let row of node.tableItems" [ngClass]="{'highlight-row': cellNameToScroll && cellNameToScroll == row.name}">
+            <tr class="mat-row" *ngFor="let row of node.tableItems"
+              [ngClass]="{'highlight-row': cellNameToScroll && cellNameToScroll == row.name}">
               <td class="mat-cell mat-cell-button">
                 <button mat-raised-button matBadge="{{row.cntComentariosSubpath}}" matBadgeColor="accent"
                   matTooltip="Ver comentarios" (click)="openDialogComments(row)" class="table-button"
@@ -86,7 +99,7 @@
               {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
             </mat-icon>
           </button>
-          <mat-icon *ngIf="node.hasUnreadLogs" >notification_important</mat-icon>
+          <mat-icon *ngIf="node.hasUnreadLogs">notification_important</mat-icon>
           <span matBadge="{{node.cntComentariosSubpath}}" matBadgeOverlap="false" matBadgeColor="accent"
             [matBadgeHidden]="node.cntComentariosSubpath == 0">
             <span *ngIf="user?.rol == 'Desarrollador'">{{node.name}} - </span>
@@ -103,8 +116,8 @@
             <mat-icon> comment</mat-icon>
           </button>
           <button mat-button (click)="$event.stopPropagation()"
-          *ngFor="let origenNodoDF of (origenesNodoDF[node.name] ? origenesNodoDF[node.name] : [])"
-          [routerLink]="['/content-modelos-df']" [queryParams]="{ origen: origenNodoDF }">{{origenNodoDF}}</button>
+            *ngFor="let origenNodoDF of (origenesNodoDF[node.name] ? origenesNodoDF[node.name] : [])"
+            [routerLink]="['/content-modelos-df']" [queryParams]="{ origen: origenNodoDF }">{{origenNodoDF}}</button>
         </div>
         <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
           <ng-container matTreeNodeOutlet></ng-container>
