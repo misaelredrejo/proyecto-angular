@@ -96,7 +96,8 @@ export class DialogCommentsComponent implements OnInit {
             this.spinnerService.hide();
             break;
           case Status.Error:
-            this.toastr.error(data.message, 'ERROR');
+            this.toastr.error('Error al añadir comentario', 'ERROR');
+            console.log(data.message);
             this.spinnerService.hide();
             break;
         }
@@ -138,7 +139,8 @@ export class DialogCommentsComponent implements OnInit {
             this.spinnerService.hide();
             break;
           case Status.Error:
-            this.toastr.error(data.message, 'ERROR');
+            this.toastr.error('Error al editar comentario', 'ERROR');
+            console.log(data.message);
             this.spinnerService.hide();
             break;
         }
@@ -176,7 +178,8 @@ export class DialogCommentsComponent implements OnInit {
           this.spinnerService.hide();
           break;
         case Status.Error:
-          this.toastr.error(data.message, 'ERROR');
+          this.toastr.error('Error al eliminar comentario', 'ERROR');
+          console.log(data.message);
           this.spinnerService.hide();
           break;
       }
@@ -210,7 +213,8 @@ export class DialogCommentsComponent implements OnInit {
           this.spinnerService.hide();
           break;
         case Status.Error:
-          this.toastr.error(data.message, 'ERROR');
+          this.toastr.error('Error al activar comentario', 'ERROR');
+          console.log(data.message);
           this.spinnerService.hide();
           break;
       }

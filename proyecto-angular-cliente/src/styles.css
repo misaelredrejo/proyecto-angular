@@ -15,3 +15,11 @@
     padding: 14px;
     color: white;
 }
+
+.cursor-pointer {cursor: pointer;}
+.cursor-default {cursor: default;}
+
+
+.mat-tooltip {
+    font-size: 12px !important;
+}

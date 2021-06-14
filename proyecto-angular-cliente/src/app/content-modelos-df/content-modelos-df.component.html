@@ -4,7 +4,7 @@
 </mat-table>
 <!--END LOAD TABLE-->
 
-<div class="m-5">
+<div class="ml-5 mr-5 mt-4 mb-4">
 
   <form>
     <mat-form-field class="example-form-field">
@@ -28,7 +28,7 @@
 
 
 
-  <mat-card *ngFor="let modelo of filteredModelosDF" class="mat-elevation-z4 mb-3">
+  <mat-card *ngFor="let modelo of filteredModelosDF" class="mat-elevation-z4 mb-3 cursor-default">
     <mat-card-header>
       <mat-card-title>Modelo: {{modelo.modelo}}</mat-card-title>
     </mat-card-header>
@@ -43,8 +43,7 @@
               </span>{{literaleses[modelo.etiquetaRegistro]}} - {{literaleseu[modelo.etiquetaRegistro]}}</p>
             <p>
               <span matTooltip="Indica si el modelo no se ha incluido en el programa">
-                <mat-checkbox [checked]="modelo.excluir" (click)="$event.preventDefault()" labelPosition="before"
-                  class="cursor-default">
+                <mat-checkbox class="cursor-default" [checked]="modelo.excluir" (click)="$event.preventDefault()" labelPosition="before">
                   <b>Excluir: </b></mat-checkbox>
               </span>
             </p>
@@ -74,7 +73,7 @@
             </tbody>
           </table>-->
 
-          <table class="mat-table mat-elevation-z8 w-100">
+          <table class="mat-table mat-elevation-z8 w-100 cursor-default">
             <thead>
               <tr class="mat-header-row">
                 <th *ngIf="user?.rol == 'Desarrollador'" class="mat-header-cell">Columna</th>

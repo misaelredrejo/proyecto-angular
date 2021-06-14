@@ -288,7 +288,8 @@ export class HomeComponent implements OnInit {
           this.spinnerService.hide();
           break;
         case Status.Error:
-          this.toastrService.error(data.message, 'ERROR');
+          this.toastrService.error('Error al actualizar los datos.', 'ERROR');
+          console.log(data.message);
           this.spinnerService.hide();
           break;
       }

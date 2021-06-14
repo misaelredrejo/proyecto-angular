@@ -2,7 +2,7 @@
     <mat-tab label="Actividad reciente">
         <div class="container mt-3 mb-3">
 
-            <table mat-table [dataSource]="dataSourceLast2Weeks" class="mat-elevation-z8">
+            <table mat-table [dataSource]="dataSourceLast2Weeks" class="mat-elevation-z8 cursor-default">
 
                 <!-- Username Column -->
                 <ng-container matColumnDef="username">
@@ -107,7 +107,7 @@
             </form>
             <!-- END FORM BACKEND -->
 
-            <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 cursor-default">
                 <!-- Username Column -->
                 <ng-container matColumnDef="username">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Usuario</th>

@@ -10,6 +10,10 @@
     font-weight: bold;
 }
 
+.mat-cell {
+    padding: 0 8px 0 8px;
+}
+
 .row-dni {
   background-color: lightblue;
 }
@@ -26,6 +30,10 @@
     border: 2px solid rgba(0, 0, 0, .2);
 }
 
-.cursor-default {
+.mat-checkbox {
     cursor: default;
+}
+
+::ng-deep .mat-checkbox-ripple {
+    display: none;
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SpinnerService } from '../shared/services/spinner.service';
 
 @Component({
   selector: 'app-error',
@@ -7,9 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ErrorComponent implements OnInit {
 
-  constructor() { }
+  constructor(private spinnerService: SpinnerService) { }
 
   ngOnInit(): void {
+    this.spinnerService.hide();
   }
 
 }

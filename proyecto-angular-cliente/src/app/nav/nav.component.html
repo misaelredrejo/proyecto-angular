@@ -34,19 +34,6 @@
       </mat-form-field>
     </form>
 
-    <!--
-
-    <form class="form-search ml-auto mr-2">
-      <mat-form-field>
-        <input matInput type="text" [(ngModel)]="value" placeholder="Buscar por código" name="textSearch"
-          autocomplete="off">
-        <button mat-button mat-icon-button matSuffix aria-label="Search icon" [routerLink]="['/content', value]"
-          matTooltip="Buscar">
-          <mat-icon>search</mat-icon>
-        </button>
-      </mat-form-field>
-    </form>-->
-
     <div *ngIf="user" matTooltip="Cambiar rol">
       <button mat-button [matMenuTriggerFor]="menu">{{user?.username}}({{user?.rol}})</button>
       <mat-menu #menu="matMenu">
@@ -61,8 +48,6 @@
     <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
       fixedTopGap="56">
 
-      <!--<ng-material-multilevel-menu [configuration]='config' [items]='appitems'>
-      </ng-material-multilevel-menu>-->
       <ng-material-multilevel-menu [items]='appitems' [configuration]='config'>
         <ng-template #listTemplate let-item="item" let-configuration="configuration">
           <div class="my-cool-menu-item" [dir]="configuration.rtlLayout  ? 'rtl' : 'ltr'">

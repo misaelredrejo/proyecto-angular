@@ -28,7 +28,7 @@
     <h4>{{ literaleu }}</h4>
     <span *ngIf="isArrayType" color="primary"><b>Type:</b> array, minItems: {{esquema['minItems']}},
       maxItems: {{esquema['maxItems']}}</span>
-    <button mat-button color="primary" *ngFor="let origen of origenes" [routerLink]="['/content-modelos-df']"
+    <button mat-button class="pl-0 pr-0" color="primary" *ngFor="let origen of origenes" [routerLink]="['/content-modelos-df']"
       [queryParams]="{ origen: origen }">
       <span *ngIf="user?.rol == 'Desarrollador'">{{origen}} - </span>
       {{literaleses[origen]}} {{literaleseu[origen]}}
@@ -115,7 +115,7 @@
             (click)="openDialogComments(node)" class="ml-3" (click)="$event.stopPropagation()">
             <mat-icon> comment</mat-icon>
           </button>
-          <button mat-button (click)="$event.stopPropagation()"
+          <button mat-button (click)="$event.stopPropagation()" color="primary"
             *ngFor="let origenNodoDF of (origenesNodoDF[node.name] ? origenesNodoDF[node.name] : [])"
             [routerLink]="['/content-modelos-df']" [queryParams]="{ origen: origenNodoDF }">{{origenNodoDF}}</button>
         </div>
