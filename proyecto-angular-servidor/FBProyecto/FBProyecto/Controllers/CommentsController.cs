@@ -124,6 +124,29 @@ namespace FBProyecto.Controllers
 
         }
 
+        // GET api/<ComentariosController>/5
+        [HttpGet("cntByPath/{path}", Name = "CntByPath")]
+        public async Task<ApiResponse> CntByPath(string path)
+        {
+            ApiResponse myResponse = new ApiResponse();
+            try
+            {
+                int cntCommentsPath = await _context.Comment.Where(c => c.Path == path && c.IsActive).CountAsync();
+                myResponse.Status = Status.Success;
+                myResponse.Message = "";
+                myResponse.Data = cntCommentsPath;
+                return myResponse;
+            }
+            catch (Exception ex)
+            {
+                myResponse.Status = Status.Error;
+                myResponse.Message = ex.Message;
+                myResponse.Data = null;
+                return myResponse;
+            }
+
+        }
+
         // POST api/<CommentsController>
         [HttpPost]
         public async Task<ApiResponse> Post([FromBody] Comment comment)

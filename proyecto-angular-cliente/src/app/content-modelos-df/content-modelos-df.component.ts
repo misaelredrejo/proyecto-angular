@@ -50,14 +50,24 @@ export class ContentModelosDFComponent implements OnInit {
     });
 
     this.modelosDF.forEach(modeloDF => {
+      this.apiService.getCntCommentsPathAsync(modeloDF.modelo).subscribe(data => {
+        switch (data.status) {
+          case Status.Success:
+            modeloDF.cntComentarios = data.data;
+            break;
+          case Status.Error:
+            console.log(data.message);
+            break;
+        }
+      }, error => {
+        console.log(error);
+      });
       modeloDF.origenesDF = {};
     });
     for (let key in this.origenesDF) {
       let value = this.origenesDF[key];
       this.pushOrigenDFToModeloDFByModelo(value['modelo'], key, value);
     }
-
-    //this.loadCntCommentsModeloFiltros();
 
     this.filteredModelosDF = this.modelosDF;
     this.options = this.modelosDF.map(modeloDF => <string>modeloDF.modelo);
@@ -104,12 +114,6 @@ export class ContentModelosDFComponent implements OnInit {
       }
     });
   }
-
-  /*loadCntCommentsModeloFiltros(): void {
-    this.modelosDF.forEach(modeloDF => {
-      
-    });
-  }*/
 
   openCommentsByPath(path: string): void {
     this.spinnerService.show();

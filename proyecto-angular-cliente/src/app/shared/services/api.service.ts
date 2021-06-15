@@ -85,6 +85,10 @@ export class ApiService {
 
   //#region Comentarios
 
+  public getCntCommentsPathAsync(path: string): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + "cntByPath/" + path);
+  }
+
   public getCntCommentsSubPathAsync(path: string): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(this.myAppUrl + this.myApiCommentsUrl + "subpath/" + path);
   }

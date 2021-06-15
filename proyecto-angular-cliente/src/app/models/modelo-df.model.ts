@@ -9,4 +9,5 @@ export interface ModeloDF {
     columnasExcluidas: string[];
     excluir: false;
     origenesDF: {};
+    cntComentarios: number;
 }
