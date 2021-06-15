@@ -57,6 +57,8 @@ export class ContentModelosDFComponent implements OnInit {
       this.pushOrigenDFToModeloDFByModelo(value['modelo'], key, value);
     }
 
+    //this.loadCntCommentsModeloFiltros();
+
     this.filteredModelosDF = this.modelosDF;
     this.options = this.modelosDF.map(modeloDF => <string>modeloDF.modelo);
     this.filteredOptions = this.options;
@@ -75,7 +77,12 @@ export class ContentModelosDFComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       let origen = params['origen'];
       if (!origen) return;
-      let modelo = this.origenesDF[origen]['modelo'];
+      let modelo = '';
+      if (this.origenesDF[origen]) { // Si es origen filtro por modelo.
+        modelo = this.origenesDF[origen]['modelo'];
+      } else { // Si no me han pasado el modelo para filtrar.
+        modelo = origen;
+      }
       this.searchControl.setValue(modelo);
     });
   }
@@ -97,6 +104,12 @@ export class ContentModelosDFComponent implements OnInit {
       }
     });
   }
+
+  /*loadCntCommentsModeloFiltros(): void {
+    this.modelosDF.forEach(modeloDF => {
+      
+    });
+  }*/
 
   openCommentsByPath(path: string): void {
     this.spinnerService.show();
