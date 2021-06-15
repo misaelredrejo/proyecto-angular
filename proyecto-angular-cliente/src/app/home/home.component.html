@@ -31,7 +31,10 @@
                 <ng-container matColumnDef="path">
                     <th mat-header-cell *matHeaderCellDef> Literal </th>
                     <td mat-cell *matCellDef="let element">
-                        <button mat-button color="primary"
+                        <button mat-button color="primary" *ngIf="element.path.indexOf('/') == -1" [routerLink]="['/content-modelos-df']">
+                            {{ (literaleses[element.path] ? literaleses[element.path] : literaleses[element.path.toLowerCase()]) | limit:30 }}
+                        </button>
+                        <button mat-button color="primary" *ngIf="element.path.indexOf('/') == 0"
                             [routerLink]="['/content', element.path.split('/')[element.path.split('/').length-1]]" matTooltip="Mostrar casilla">
                             {{ (literaleses[element.path.split('/')[element.path.split('/').length-1]] ? literaleses[element.path.split('/')[element.path.split('/').length-1]] : literaleses[(element.path.split('/')[element.path.split('/').length-1]).toLowerCase()]) | limit:30 }}
                         </button>

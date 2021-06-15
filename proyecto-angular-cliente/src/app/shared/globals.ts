@@ -32,7 +32,7 @@ export class Globals {
           columnaDNI: val.ColumnaDNI,
           columnasExcluidas: val.ColumnasExcluidas.split(','),
           excluir: val.Excluir,
-          origenesDF: []
+          origenesDF: {}
         });
 
         this.nodosOrigenesDF = nodosOrigenesDFJSON.map(val => <NodosOrigenDF> {

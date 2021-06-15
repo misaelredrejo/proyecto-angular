@@ -8,5 +8,5 @@ export interface ModeloDF {
     columnaDNI: string;
     columnasExcluidas: string[];
     excluir: false;
-    origenesDF: {}[];
+    origenesDF: {};
 }

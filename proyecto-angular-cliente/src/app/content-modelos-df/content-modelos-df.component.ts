@@ -6,6 +6,11 @@ import { TitleService } from '../shared/services/title.service';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '../models/user.model';
 import { AuthenticationService } from '../core/authentication/authentication.service';
+import { SpinnerService } from '../shared/services/spinner.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogCommentsComponent } from '../content/dialog-comments/dialog-comments.component';
+import { ApiService } from '../shared/services/api.service';
+import { Status } from '../models/enums.model';
 
 
 @Component({
@@ -29,7 +34,7 @@ export class ContentModelosDFComponent implements OnInit {
   origenesDF: {} = {};
 
 
-  constructor(private globals: Globals, private titleService: TitleService, private route: ActivatedRoute, private authService: AuthenticationService) {
+  constructor(private globals: Globals, private titleService: TitleService, private route: ActivatedRoute, private authService: AuthenticationService, private spinnerService: SpinnerService, public dialog: MatDialog, private apiService: ApiService) {
     this.literaleses = this.globals.literaleses;
     this.literaleseu = this.globals.literaleseu;
     this.modelosDF = this.globals.modelosDF;
@@ -45,13 +50,11 @@ export class ContentModelosDFComponent implements OnInit {
     });
 
     this.modelosDF.forEach(modeloDF => {
-      modeloDF.origenesDF = []; 
+      modeloDF.origenesDF = {};
     });
     for (let key in this.origenesDF) {
       let value = this.origenesDF[key];
-      let origenDF = {};
-      origenDF[key] = value;
-      this.pushOrigenDFToModeloDFByModelo(value['modelo'], origenDF);
+      this.pushOrigenDFToModeloDFByModelo(value['modelo'], key, value);
     }
 
     this.filteredModelosDF = this.modelosDF;
@@ -86,12 +89,34 @@ export class ContentModelosDFComponent implements OnInit {
     this.filteredModelosDF = this.modelosDF.filter(modeloDF => modeloDF.modelo.toLowerCase().indexOf(value.toLowerCase()) !== -1);
   }
 
-  pushOrigenDFToModeloDFByModelo(modelo: string, origenDF: {}): void {
+  pushOrigenDFToModeloDFByModelo(modelo: string, key: string, origenDF: {}): void {
     this.modelosDF.forEach(modeloDF => {
       if (modeloDF.modelo == modelo) {
-        modeloDF.origenesDF.push(origenDF);
+        modeloDF.origenesDF[key] = origenDF;
         return;
       }
+    });
+  }
+
+  openCommentsByPath(path: string): void {
+    this.spinnerService.show();
+    this.apiService.getCommentsByPathAsync(path).subscribe(data => {
+      switch (data.status) {
+        case Status.Success:
+            this.dialog.open(DialogCommentsComponent, {
+              width: '600px',
+              data: { commentList: data.data, path: path }
+            });
+            this.spinnerService.hide();
+          break;
+        case Status.Error:
+          console.log(data.message);
+          this.spinnerService.hide();
+          break;
+      }
+    }, error => {
+      console.log(error);
+      this.spinnerService.hide();
     });
   }
 

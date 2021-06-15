@@ -30,7 +30,7 @@
 
   <mat-card *ngFor="let modelo of filteredModelosDF" class="mat-elevation-z4 mb-3 cursor-default">
     <mat-card-header>
-      <mat-card-title>Modelo: {{modelo.modelo}}</mat-card-title>
+      <mat-card-title>Modelo: {{modelo.modelo}} <button mat-icon-button color="primary" aria-label="Comments" matTooltip="Ver comentarios"><mat-icon (click)="openCommentsByPath(modelo.modelo)">comment</mat-icon></button></mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div fxLayout="row" fxLayoutGap="20px">
@@ -51,28 +51,12 @@
             <p class="pt-1">Columna DNI</p>
             <div class="foo row-columna-excluida"></div>
             <p class="pt-1">Columnas excluidas</p>
-            <p *ngFor="let origenDF of modelo.origenesDF">{{ origenDF | json }}</p>
+            <p *ngFor="let origenDF of modelo.origenesDF | keyvalue">{{origenDF.key}}: {{ origenDF.value | json }} <button mat-icon-button color="primary" aria-label="Comments" matTooltip="Ver comentarios"><mat-icon (click)="openCommentsByPath(origenDF.key)">comment</mat-icon></button></p>
           </mat-card>
 
 
         </div>
         <div fxFlex="50%">
-          <!--<table class="mat-table mat-elevation-z8 w-100">
-            <thead>
-              <tr class="mat-header-row">
-                <th class="mat-header-cell">Columnas</th>
-                <th class="mat-header-cell">Tipos columnas</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="mat-row" *ngFor="let columna of modelo.columnas; index as i"
-                [ngClass]="{'row-dni': columna === modelo.columnaDNI, 'row-columna-excluida': modelo.columnasExcluidas.indexOf(columna) !== -1}">
-                <td class="mat-cell"><span *ngIf="user?.rol == 'Desarrollador'">{{columna}} - </span>{{literaleses[columna]}} - {{literaleseu[columna]}}</td>
-                <td class="mat-cell">{{modelo.tiposColumnas[i]}}</td>
-              </tr>
-            </tbody>
-          </table>-->
-
           <table class="mat-table mat-elevation-z8 w-100 cursor-default">
             <thead>
               <tr class="mat-header-row">
